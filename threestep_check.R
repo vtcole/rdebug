@@ -23,6 +23,10 @@ names.c2l1<-c('AMT8','AMT9','AMT10','AMT11','AMT12','AMT13','AMT14','AMT15','AMT
 all.names<-list(names.c1l0,names.c1l1,names.c2l0,names.c2l1)
 
 #Clunky -- loop through two sets of lists. k indexes each of the construct/length combinations in all.sets; j indexes each combination of DIF and impact within a given list (e.g., c1l0). i indexes replications.
+k=1
+j=1
+i=2
+
 for (k in 1:4){
   for (j in 1:4){ 
     for (i in 1:100) {
@@ -42,7 +46,8 @@ for (k in 1:4){
         
         df.1<-subset(df,df$c==1)
         df.2<-subset(df,df$c==2)
-        if (mean(colMeans(df.1[,1:length(all.names[[k]])],na.rm=TRUE)) > mean(colMeans(df.2[,1:length(all.names[[k]])],na.rm=TRUE))) {
+        # very minor edit in that we don't need 1:length
+        if (mean(colMeans(df.1[,all.names[[k]]],na.rm=TRUE)) > mean(colMeans(df.2[,all.names[[k]]],na.rm=TRUE))) {
           df$estclass<-3-df$c
           df$estp1<-df$p2
           df$estp2<-df$p1
@@ -60,9 +65,13 @@ for (k in 1:4){
         Pmat<-matrix(NA,ncol=2,nrow=2)
         Qmat<-matrix(NA,ncol=2,nrow=2)
         
-        
+
         N1.2<-length(subset(df.1$study,df.1$study==2))
         N2.2<-length(subset(df.2$study,df.2$study==2))
+        # could the above be simplified to the below?
+        # since df.1 and df.2 are already subsets?
+        # N1.2 <- nrow(df.1)
+        # N2.2 <- nrow(df.2)
         
         ns<-c(N1.2,N2.2)
         cs<-df$estclass
@@ -73,6 +82,19 @@ for (k in 1:4){
             Pmat[q,p]<-mean(subset(cprobs[,p],(cs==q&studies==2)))
           }
         }
+        # ---------------------------------------------------------------------
+        # I wanted to confirm the pmat matrix by computing each entry by hand
+        # to be sure, I am using the equations from the bottom of page 3 on Asparouhov&Muthen
+        # based on this, *I think* the above computation might have the diagonals switched
+        # pmat[1, 1]
+        sum(df.1$estp1)/nrow(df.1)
+        # pmat[2, 1]
+        sum(df.1$estp2)/nrow(df.1)
+        # pmat[1, 2]
+        sum(df.2$estp1)/nrow(df.2)
+        # pmat[2, 2]
+        sum(df.2$estp2)/nrow(df.2)
+        # ---------------------------------------------------------------------
         
         Qmat<-matrix(NA,ncol=2,nrow=2)
         for (p in 1:2) {
@@ -148,7 +170,8 @@ for (k in 1:4){
         
         #alltogether$N[alltogether$study==1]<-NA
         the.datafile.vermunt<-paste0(all.sets[[k]][j],'r',i,'_V_ud.dat')
-        write.table(alltogether,paste0('M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/vermuntnew/',all.sets[[k]][j],'/',the.datafile.vermunt,na="."),na='.',col.names=FALSE,row.names=FALSE)
+        # MG got rid of this
+        # write.table(alltogether,paste0('M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/vermuntnew/',all.sets[[k]][j],'/',the.datafile.vermunt,na="."),na='.',col.names=FALSE,row.names=FALSE)
         
         #Get logits corresponding to a misclassifications
         l11<-log(Qmat[1,1]/(1-Qmat[1,1]))
@@ -200,7 +223,8 @@ for (k in 1:4){
           
           the.input.name<-paste('M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/vermuntnew/',all.sets[[k]][j],'/',all.sets[[k]][j],'r',i,'_V_ud_',validity.vars[h],'.inp',sep="")
           the.input<-file(the.input.name)
-          writeLines(the.input.text, the.input)
+          # MG got rid of this
+          # writeLines(the.input.text, the.input)
           close(the.input)
         }
       }
