@@ -103,8 +103,25 @@ for (k in 1:4){
           }
         }
         
-        Qprime <- solve(Qmat)
+        # ---------------------------------------------------------------------
+        # so again my my computation, this matrix has the diagonals switched
+        # basically writing a small function to compute each entry 
+        # then checking each entry one at a time
+        solve.qmat <- function(c1, c2) {
+          (Pmat[c1, c2]*ns[c1])/((Pmat[1,c2]*ns[1])+(Pmat[2,c2]*ns[2]))
+        }
+        # q[1, 1]
+        solve.qmat(1,1) == Qmat[1,1]
+        # q[2, 1]
+        solve.qmat(2,1) == Qmat[2,1]
+        # q[1, 2]
+        solve.qmat(1,2) == Qmat[1,2]
+        # q[2, 2]
+        solve.qmat(2,2) == Qmat[2,2]
+        # ---------------------------------------------------------------------
         
+        
+        Qprime <- solve(Qmat)
         ###BCH. YOU CAN PROBABLY SKIP TO VERMUNT.
         ###Create output datafiles for BCH. Recall that BCH involves weighting each observation's likelihood by the probability that that observation is misclassified.
         ###That weight, w_it, will be a function of the Q matrix.
