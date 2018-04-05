@@ -238,8 +238,8 @@ for (k in 1:4){
             "    %C#2%",
             the.l12,sep="\n")  
           
-          the.input.name<-paste('M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/vermuntnew/',all.sets[[k]][j],'/',all.sets[[k]][j],'r',i,'_V_ud_',validity.vars[h],'.inp',sep="")          the.input<-file(the.input.name)
-          the.input <- file(the.input.name)
+          the.input.name<-paste('M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/vermuntnew/',all.sets[[k]][j],'/',all.sets[[k]][j],'r',i,'_V_ud_',validity.vars[h],'.inp',sep="")          
+          the.input<-file(the.input.name)
           # MG got rid of this
           # writeLines(the.input.text, the.input)
           close(the.input)
