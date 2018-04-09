@@ -77,34 +77,51 @@ for (k in 1:4){
         cs<-df$estclass
         cprobs<-df[,c("estp1","estp2")]
         studies<-df$study
-        for (p in 1:2) {
-          for (q in 1:2) {
-            Pmat[q,p]<-mean(subset(cprobs[,p],(cs==q&studies==2)))
-          }
-        }
+        # for (p in 1:2) {
+        #   for (q in 1:2) {
+        #     Pmat[q,p]<-mean(subset(cprobs[,p],(cs==q&studies==2)))
+        #   }
+        # }
         # ---------------------------------------------------------------------
         # I wanted to confirm the pmat matrix by computing each entry by hand
         # to be sure, I am using the equations from the bottom of page 3 on Asparouhov&Muthen
         # based on this, *I think* the above computation might have the diagonals switched
-        # pmat[1, 1]
-        sum(df.1$estp1)/nrow(df.1)
+        pmat[1, 1]
+        Pmat[1,1] <- sum(df.1$estp1)/nrow(df.1)
         # pmat[2, 1]
-        sum(df.1$estp2)/nrow(df.1)
+        Pmat[2,1] <- sum(df.1$estp2)/nrow(df.1)
         # pmat[1, 2]
-        sum(df.2$estp1)/nrow(df.2)
+        Pmat[1,2] <- sum(df.2$estp1)/nrow(df.2)
         # pmat[2, 2]
-        sum(df.2$estp2)/nrow(df.2)
+        Pmat[2,2] <- sum(df.2$estp2)/nrow(df.2)
         # ---------------------------------------------------------------------
         
-        Qmat<-matrix(NA,ncol=2,nrow=2)
-        for (p in 1:2) {
-          for (q in 1:2) {
-            Qmat[p,q]<-(Pmat[q,p]*ns[q])/sum(Pmat[,p]*ns)
-          }
+        # Qmat<-matrix(NA,ncol=2,nrow=2)
+        # for (p in 1:2) {
+        #   for (q in 1:2) {
+        #     Qmat[p,q]<-(Pmat[q,p]*ns[q])/sum(Pmat[,p]*ns)
+        #   }
+        # }
+        
+        # ---------------------------------------------------------------------
+        # so again my my computation, this matrix has the diagonals switched
+        # basically writing a small function to compute each entry 
+        # then checking each entry one at a time
+        solve.qmat <- function(c1, c2) {
+          (Pmat[c1, c2]*ns[c1])/((Pmat[1,c2]*ns[1])+(Pmat[2,c2]*ns[2]))
         }
+        # q[1, 1]
+        Qmat[1, 1] <- solve.qmat(1,1)
+        # q[2, 1]
+        Qmat[2, 1] <- solve.qmat(2,1)
+        # q[1, 2]
+        Qmat[1, 2] <- solve.qmat(1,2)
+        # q[2, 2]
+        Qmat[2, 2] <- solve.qmat(2,2)
+        # ---------------------------------------------------------------------
+        
         
         Qprime <- solve(Qmat)
-        
         ###BCH. YOU CAN PROBABLY SKIP TO VERMUNT.
         ###Create output datafiles for BCH. Recall that BCH involves weighting each observation's likelihood by the probability that that observation is misclassified.
         ###That weight, w_it, will be a function of the Q matrix.
@@ -221,7 +238,7 @@ for (k in 1:4){
             "    %C#2%",
             the.l12,sep="\n")  
           
-          the.input.name<-paste('M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/vermuntnew/',all.sets[[k]][j],'/',all.sets[[k]][j],'r',i,'_V_ud_',validity.vars[h],'.inp',sep="")
+          the.input.name<-paste('M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/vermuntnew/',all.sets[[k]][j],'/',all.sets[[k]][j],'r',i,'_V_ud_',validity.vars[h],'.inp',sep="")          
           the.input<-file(the.input.name)
           # MG got rid of this
           # writeLines(the.input.text, the.input)
