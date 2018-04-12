@@ -1,0 +1,432 @@
+Mplus VERSION 7.4
+MUTHEN & MUTHEN
+04/12/2018   5:34 PM
+
+INPUT INSTRUCTIONS
+
+  Title:
+    Multiple group, step 3 data file;
+  !Not currently working;
+  Data:
+    File is bchweights_04122018.dat;
+  Variable:
+    names  =
+      ACY2
+      ACY3
+      ACY4
+      ACY6
+      ACY12
+      ACY14
+      T1
+      T2
+      T3
+      T4
+      GENDER
+      BCHW1
+      BCHW2
+      BCHW3
+      BCHW4;
+    usevariables = GENDER BCHW1 BCHW2 BCHW3 BCHW4;
+    CLASSES = c(4);
+    TRAINING = bchw1-bchw4(bch);
+  ANALYSIS:	TYPE = MIXTURE; starts=0;
+  MODEL:
+    %OVERALL%
+    gender;
+    %C#1%
+    gender;
+    %C#2%
+    gender;
+    %C#3%
+    gender;
+    %C#4%
+    gender;
+
+
+
+*** WARNING in MODEL command
+  All variables are uncorrelated with all other variables within class.
+  Check that this is what is intended.
+   1 WARNING(S) FOUND IN THE INPUT INSTRUCTIONS
+
+
+
+
+Multiple group, step 3 data file;
+
+SUMMARY OF ANALYSIS
+
+Number of groups                                                 1
+Number of observations                                         250
+
+Number of dependent variables                                    1
+Number of independent variables                                  0
+Number of continuous latent variables                            0
+Number of categorical latent variables                           1
+
+Observed dependent variables
+
+  Continuous
+   GENDER
+
+Categorical latent variables
+   C
+
+Variables with special functions
+
+  Training variables (BCH)
+   BCHW1       BCHW2       BCHW3       BCHW4
+
+
+Estimator                                                      MLR
+Information matrix                                        OBSERVED
+Optimization Specifications for the Quasi-Newton Algorithm for
+Continuous Outcomes
+  Maximum number of iterations                                 100
+  Convergence criterion                                  0.100D-05
+Optimization Specifications for the EM Algorithm
+  Maximum number of iterations                                 500
+  Convergence criteria
+    Loglikelihood change                                 0.100D-06
+    Relative loglikelihood change                        0.100D-06
+    Derivative                                           0.100D-05
+Optimization Specifications for the M step of the EM Algorithm for
+Categorical Latent variables
+  Number of M step iterations                                    1
+  M step convergence criterion                           0.100D-05
+  Basis for M step termination                           ITERATION
+Optimization Specifications for the M step of the EM Algorithm for
+Censored, Binary or Ordered Categorical (Ordinal), Unordered
+Categorical (Nominal) and Count Outcomes
+  Number of M step iterations                                    1
+  M step convergence criterion                           0.100D-05
+  Basis for M step termination                           ITERATION
+  Maximum value for logit thresholds                            15
+  Minimum value for logit thresholds                           -15
+  Minimum expected cell size for chi-square              0.100D-01
+Optimization algorithm                                         EMA
+
+Input data file(s)
+  bchweights_04122018.dat
+Input data format  FREE
+
+
+     THE STANDARD ERRORS OF THE MODEL PARAMETER ESTIMATES MAY NOT BE
+     TRUSTWORTHY FOR SOME PARAMETERS DUE TO A NON-POSITIVE DEFINITE
+     FIRST-ORDER DERIVATIVE PRODUCT MATRIX.  THIS MAY BE DUE TO THE STARTING
+     VALUES BUT MAY ALSO BE AN INDICATION OF MODEL NONIDENTIFICATION.  THE
+     CONDITION NUMBER IS      -0.474D-15.  PROBLEM INVOLVING THE FOLLOWING PARAMETER:
+     Parameter 2, %C#1%: GENDER
+
+     THIS IS MOST LIKELY DUE TO A BINARY OUTCOME GENDER BEING TREATED AS
+     CONTINUOUS.  IF THIS IS THE CASE, THE STANDARD ERRORS MAY STILL BE USED.
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+
+
+MODEL FIT INFORMATION
+
+Number of Free Parameters                       11
+
+Loglikelihood
+
+          H0 Value                        -460.162
+          H0 Scaling Correction Factor      0.8617
+            for MLR
+
+Information Criteria
+
+          Akaike (AIC)                     942.323
+          Bayesian (BIC)                   981.060
+          Sample-Size Adjusted BIC         946.189
+            (n* = (n + 2) / 24)
+
+
+
+FINAL CLASS COUNTS AND PROPORTIONS FOR THE LATENT CLASSES
+BASED ON THE ESTIMATED MODEL
+
+    Latent
+   Classes
+
+       1         11.00000          0.04400
+       2         39.00000          0.15600
+       3         84.67600          0.33870
+       4        115.32400          0.46130
+
+
+FINAL CLASS COUNTS AND PROPORTIONS FOR THE LATENT CLASSES
+BASED ON ESTIMATED POSTERIOR PROBABILITIES
+
+    Latent
+   Classes
+
+       1         11.00000          0.04400
+       2         39.00000          0.15600
+       3         84.67600          0.33870
+       4        115.32400          0.46130
+
+
+FINAL CLASS COUNTS AND PROPORTIONS FOR THE LATENT CLASSES
+BASED ON THEIR MOST LIKELY LATENT CLASS MEMBERSHIP
+
+Class Counts and Proportions
+
+    Latent
+   Classes
+
+       1               11          0.04400
+       2               39          0.15600
+       3               84          0.33600
+       4              116          0.46400
+
+
+Average Latent Class Probabilities for Most Likely Latent Class Membership (Row)
+by Latent Class (Column)
+
+           1        2        3        4
+
+    1   1.000    0.000    0.000    0.000
+    2   0.000    1.000    0.000    0.000
+    3   0.000    0.000    1.229    -.229
+    4   0.000    0.000    -.160    1.160
+
+
+Classification Probabilities for the Most Likely Latent Class Membership (Column)
+by Latent Class (Row)
+
+           1        2        3        4
+
+    1   1.000    0.000    0.000    0.000
+    2   0.000    1.000    0.000    0.000
+    3   0.000    0.000    1.219    -.219
+    4   0.000    0.000    -.167    1.167
+
+
+Logits for the Classification Probabilities for the Most Likely Latent Class Membership (Column)
+by Latent Class (Row)
+
+              1        2        3        4
+
+    1     13.816    0.000    0.000    0.000
+    2      0.000   13.816    0.000    0.000
+    3      0.000    0.000   14.014    0.000
+    4    -13.970  -13.970  -13.970    0.000
+
+
+MODEL RESULTS
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+Latent Class 1
+
+ Means
+    GENDER             0.455      0.150      3.028      0.002
+
+ Variances
+    GENDER             0.248      0.014     18.166      0.000
+
+Latent Class 2
+
+ Means
+    GENDER             0.410      0.079      5.209      0.000
+
+ Variances
+    GENDER             0.242      0.014     17.114      0.000
+
+Latent Class 3
+
+ Means
+    GENDER             0.340      0.064      5.306      0.000
+
+ Variances
+    GENDER             0.224      0.021     10.926      0.000
+
+Latent Class 4
+
+ Means
+    GENDER             0.375      0.053      7.069      0.000
+
+ Variances
+    GENDER             0.234      0.013     17.665      0.000
+
+Categorical Latent Variables
+
+ Means
+    C#1               -2.350      0.321     -7.323      0.000
+    C#2               -1.084      0.194     -5.583      0.000
+    C#3               -0.309      0.199     -1.556      0.120
+
+
+QUALITY OF NUMERICAL RESULTS
+
+     Condition Number for the Information Matrix             -0.474E-15
+       (ratio of smallest to largest eigenvalue)
+
+
+TECHNICAL 1 OUTPUT
+
+
+     PARAMETER SPECIFICATION FOR LATENT CLASS 1
+
+
+           NU
+              GENDER
+              ________
+ 1                  1
+
+
+           THETA
+              GENDER
+              ________
+ GENDER             2
+
+
+     PARAMETER SPECIFICATION FOR LATENT CLASS 2
+
+
+           NU
+              GENDER
+              ________
+ 1                  3
+
+
+           THETA
+              GENDER
+              ________
+ GENDER             4
+
+
+     PARAMETER SPECIFICATION FOR LATENT CLASS 3
+
+
+           NU
+              GENDER
+              ________
+ 1                  5
+
+
+           THETA
+              GENDER
+              ________
+ GENDER             6
+
+
+     PARAMETER SPECIFICATION FOR LATENT CLASS 4
+
+
+           NU
+              GENDER
+              ________
+ 1                  7
+
+
+           THETA
+              GENDER
+              ________
+ GENDER             8
+
+
+     PARAMETER SPECIFICATION FOR LATENT CLASS REGRESSION MODEL PART
+
+
+           ALPHA(C)
+              C#1           C#2           C#3           C#4
+              ________      ________      ________      ________
+ 1                  9            10            11             0
+
+
+     STARTING VALUES FOR LATENT CLASS 1
+
+
+           NU
+              GENDER
+              ________
+ 1             -0.111
+
+
+           THETA
+              GENDER
+              ________
+ GENDER         0.117
+
+
+     STARTING VALUES FOR LATENT CLASS 2
+
+
+           NU
+              GENDER
+              ________
+ 1              0.372
+
+
+           THETA
+              GENDER
+              ________
+ GENDER         0.117
+
+
+     STARTING VALUES FOR LATENT CLASS 3
+
+
+           NU
+              GENDER
+              ________
+ 1              0.372
+
+
+           THETA
+              GENDER
+              ________
+ GENDER         0.117
+
+
+     STARTING VALUES FOR LATENT CLASS 4
+
+
+           NU
+              GENDER
+              ________
+ 1              0.855
+
+
+           THETA
+              GENDER
+              ________
+ GENDER         0.117
+
+
+     STARTING VALUES FOR LATENT CLASS REGRESSION MODEL PART
+
+
+           ALPHA(C)
+              C#1           C#2           C#3           C#4
+              ________      ________      ________      ________
+ 1              0.000         0.000         0.000         0.000
+
+
+DIAGRAM INFORMATION
+
+  Mplus diagrams are currently not available for Mixture analysis.
+  No diagram output was produced.
+
+
+     Beginning Time:  17:34:48
+        Ending Time:  17:34:49
+       Elapsed Time:  00:00:01
+
+
+
+MUTHEN & MUTHEN
+3463 Stoner Ave.
+Los Angeles, CA  90066
+
+Tel: (310) 391-9971
+Fax: (310) 391-8971
+Web: www.StatModel.com
+Support: Support@StatModel.com
+
+Copyright (c) 1998-2015 Muthen & Muthen

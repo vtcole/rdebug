@@ -13,7 +13,7 @@ Variable:
   MISSING = .;
   CLASSES = c(4);
   TRAINING = T1 T2 T3 T4;
-  AUXILIARY = gender (r3step);
+  AUXILIARY = gender (bch);
   ANALYSIS:	TYPE = MIXTURE;
   MODEL:
   %OVERALL%

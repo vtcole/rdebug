@@ -1,0 +1,29 @@
+Title: 
+  Multiple group, step 3 data file;
+!Not currently working;
+Data:
+  File is bchweights_04122018.dat;
+Variable:
+  names  =  
+    ACY2
+    ACY3
+    ACY4
+    ACY6
+    ACY12
+    ACY14
+    T1
+    T2
+    T3
+    T4
+    GENDER
+    BCHW1
+    BCHW2
+    BCHW3
+    BCHW4;
+  usevariables = GENDER BCHW1 BCHW2 BCHW3 BCHW4;
+  CLASSES = c(4);
+  TRAINING = bchw1-bchw4(bch);
+ANALYSIS:	TYPE = MIXTURE; starts=0;
+MODEL:
+  %OVERALL%
+  C ON gender;

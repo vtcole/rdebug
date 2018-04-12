@@ -1,0 +1,402 @@
+Mplus VERSION 7.4
+MUTHEN & MUTHEN
+04/12/2018   4:57 PM
+
+INPUT INSTRUCTIONS
+
+  Title:
+    ACY, short form, uniform DIF with multiple groups.
+  Data:
+    File is
+    acy_d0i0l0_r5_multigroup.csv;
+  Variable:
+    names        = Dx ID ACY1 ACY2 ACY3 ACY4 ACY5 ACY6 ACY7
+                      ACY8 ACY9 ACY10 ACY12 ACY13 ACY14
+                  ACY15 ACY18 NumberHits study R
+                      T1original T2original T1 T2 T3 T4 gender frat ;
+    usevariables = ACY2 ACY3 ACY4 ACY6 ACY12 ACY14 T1original T2original study;
+    categorical  = ACY2 ACY3 ACY4 ACY6 ACY12 ACY14;
+    MISSING = .;
+    CLASSES = c(2);
+    TRAINING = T1original T2original;
+    AUXILIARY = gender (r3step);
+  ANALYSIS:	TYPE = MIXTURE;
+  MODEL:
+    %overall%
+    C ON study;
+
+
+
+*** WARNING in VARIABLE command
+  Note that only the first 8 characters of variable names are used in the output.
+  Shorten variable names to avoid any confusion.
+   1 WARNING(S) FOUND IN THE INPUT INSTRUCTIONS
+
+
+
+
+ACY, short form, uniform DIF with multiple groups.
+
+SUMMARY OF ANALYSIS
+
+Number of groups                                                 1
+Number of observations                                         250
+
+Number of dependent variables                                    6
+Number of independent variables                                  1
+Number of continuous latent variables                            0
+Number of categorical latent variables                           1
+
+Observed dependent variables
+
+  Binary and ordered categorical (ordinal)
+   ACY2        ACY3        ACY4        ACY6        ACY12       ACY14
+
+Observed independent variables
+   STUDY
+
+Observed auxiliary variables
+   GENDER
+
+Categorical latent variables
+   C
+
+Variables with special functions
+
+  Training variables (membership)
+   T1ORIGIN    T2ORIGIN
+
+
+Estimator                                                      MLR
+Information matrix                                        OBSERVED
+Optimization Specifications for the Quasi-Newton Algorithm for
+Continuous Outcomes
+  Maximum number of iterations                                 100
+  Convergence criterion                                  0.100D-05
+Optimization Specifications for the EM Algorithm
+  Maximum number of iterations                                 500
+  Convergence criteria
+    Loglikelihood change                                 0.100D-06
+    Relative loglikelihood change                        0.100D-06
+    Derivative                                           0.100D-05
+Optimization Specifications for the M step of the EM Algorithm for
+Categorical Latent variables
+  Number of M step iterations                                    1
+  M step convergence criterion                           0.100D-05
+  Basis for M step termination                           ITERATION
+Optimization Specifications for the M step of the EM Algorithm for
+Censored, Binary or Ordered Categorical (Ordinal), Unordered
+Categorical (Nominal) and Count Outcomes
+  Number of M step iterations                                    1
+  M step convergence criterion                           0.100D-05
+  Basis for M step termination                           ITERATION
+  Maximum value for logit thresholds                            15
+  Minimum value for logit thresholds                           -15
+  Minimum expected cell size for chi-square              0.100D-01
+Maximum number of iterations for H1                           2000
+Convergence criterion for H1                             0.100D-03
+Optimization algorithm                                         EMA
+Random Starts Specifications
+  Number of initial stage random starts                         20
+  Number of final stage optimizations                            4
+  Number of initial stage iterations                            10
+  Initial stage convergence criterion                    0.100D+01
+  Random starts scale                                    0.500D+01
+  Random seed for generating random starts                       0
+Link                                                         LOGIT
+
+Input data file(s)
+  acy_d0i0l0_r5_multigroup.csv
+Input data format  FREE
+
+
+SUMMARY OF DATA
+
+     Number of missing data patterns             1
+     Number of y missing data patterns           0
+     Number of u missing data patterns           1
+
+
+COVARIANCE COVERAGE OF DATA
+
+Minimum covariance coverage value   0.100
+
+
+UNIVARIATE PROPORTIONS AND COUNTS FOR CATEGORICAL VARIABLES
+
+    ACY2
+      Category 1    0.752          188.000
+      Category 2    0.248           62.000
+    ACY3
+      Category 1    0.740          185.000
+      Category 2    0.260           65.000
+    ACY4
+      Category 1    0.568          142.000
+      Category 2    0.432          108.000
+    ACY6
+      Category 1    0.784          196.000
+      Category 2    0.216           54.000
+    ACY12
+      Category 1    0.776          194.000
+      Category 2    0.224           56.000
+    ACY14
+      Category 1    0.732          183.000
+      Category 2    0.268           67.000
+
+
+RANDOM STARTS RESULTS RANKED FROM THE BEST TO THE WORST LOGLIKELIHOOD VALUES
+
+Final stage loglikelihood values at local maxima, seeds, and initial stage start numbers:
+
+            -836.241  650371           14
+            -836.241  127215           9
+            -836.241  637345           19
+            -836.241  unperturbed      0
+
+
+
+THE BEST LOGLIKELIHOOD VALUE HAS BEEN REPLICATED.  RERUN WITH AT LEAST TWICE THE
+RANDOM STARTS TO CHECK THAT THE BEST LOGLIKELIHOOD IS STILL OBTAINED AND REPLICATED.
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+
+
+MODEL FIT INFORMATION
+
+Number of Free Parameters                       14
+
+Loglikelihood
+
+          H0 Value                        -836.241
+          H0 Scaling Correction Factor      1.0209
+            for MLR
+
+Information Criteria
+
+          Akaike (AIC)                    1700.483
+          Bayesian (BIC)                  1749.783
+          Sample-Size Adjusted BIC        1705.402
+            (n* = (n + 2) / 24)
+
+
+
+FINAL CLASS COUNTS AND PROPORTIONS FOR THE LATENT CLASSES
+BASED ON THE ESTIMATED MODEL
+
+    Latent
+   Classes
+
+       1         95.63758          0.38255
+       2        154.36242          0.61745
+
+
+FINAL CLASS COUNTS AND PROPORTIONS FOR THE LATENT CLASSES
+BASED ON ESTIMATED POSTERIOR PROBABILITIES
+
+    Latent
+   Classes
+
+       1         95.63748          0.38255
+       2        154.36252          0.61745
+
+
+FINAL CLASS COUNTS AND PROPORTIONS FOR THE LATENT CLASSES
+BASED ON THEIR MOST LIKELY LATENT CLASS MEMBERSHIP
+
+Class Counts and Proportions
+
+    Latent
+   Classes
+
+       1               95          0.38000
+       2              155          0.62000
+
+
+CLASSIFICATION QUALITY
+
+     Entropy                         0.628
+
+
+Average Latent Class Probabilities for Most Likely Latent Class Membership (Row)
+by Latent Class (Column)
+
+           1        2
+
+    1   0.860    0.140
+    2   0.090    0.910
+
+
+Classification Probabilities for the Most Likely Latent Class Membership (Column)
+by Latent Class (Row)
+
+           1        2
+
+    1   0.854    0.146
+    2   0.086    0.914
+
+
+Logits for the Classification Probabilities for the Most Likely Latent Class Membership (Column)
+by Latent Class (Row)
+
+              1        2
+
+    1      1.767    0.000
+    2     -2.360    0.000
+
+
+MODEL RESULTS
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+Latent Class 1
+
+ Thresholds
+    ACY2$1            -0.001      0.260     -0.003      0.998
+    ACY3$1             0.213      0.254      0.841      0.400
+    ACY4$1            -0.845      0.302     -2.792      0.005
+    ACY6$1             0.246      0.284      0.868      0.385
+    ACY12$1            0.122      0.270      0.453      0.651
+    ACY14$1            0.224      0.243      0.921      0.357
+
+Latent Class 2
+
+ Thresholds
+    ACY2$1             2.292      0.395      5.797      0.000
+    ACY3$1             1.781      0.276      6.454      0.000
+    ACY4$1             1.013      0.228      4.448      0.000
+    ACY6$1             2.470      0.354      6.978      0.000
+    ACY12$1            2.558      0.423      6.051      0.000
+    ACY14$1            1.667      0.288      5.790      0.000
+
+Categorical Latent Variables
+
+ C#1        ON
+    STUDY              0.956      0.463      2.063      0.039
+
+ Intercepts
+    C#1               -2.222      0.762     -2.915      0.004
+
+
+RESULTS IN PROBABILITY SCALE
+
+Latent Class 1
+
+ ACY2
+    Category 1         0.500      0.065      7.702      0.000
+    Category 2         0.500      0.065      7.708      0.000
+ ACY3
+    Category 1         0.553      0.063      8.820      0.000
+    Category 2         0.447      0.063      7.125      0.000
+ ACY4
+    Category 1         0.301      0.064      4.727      0.000
+    Category 2         0.699      0.064     10.999      0.000
+ ACY6
+    Category 1         0.561      0.070      8.038      0.000
+    Category 2         0.439      0.070      6.285      0.000
+ ACY12
+    Category 1         0.530      0.067      7.898      0.000
+    Category 2         0.470      0.067      6.991      0.000
+ ACY14
+    Category 1         0.556      0.060      9.265      0.000
+    Category 2         0.444      0.060      7.408      0.000
+
+Latent Class 2
+
+ ACY2
+    Category 1         0.908      0.033     27.559      0.000
+    Category 2         0.092      0.033      2.784      0.005
+ ACY3
+    Category 1         0.856      0.034     25.131      0.000
+    Category 2         0.144      0.034      4.236      0.000
+ ACY4
+    Category 1         0.734      0.045     16.479      0.000
+    Category 2         0.266      0.045      5.981      0.000
+ ACY6
+    Category 1         0.922      0.025     36.232      0.000
+    Category 2         0.078      0.025      3.064      0.002
+ ACY12
+    Category 1         0.928      0.028     32.903      0.000
+    Category 2         0.072      0.028      2.549      0.011
+ ACY14
+    Category 1         0.841      0.038     21.870      0.000
+    Category 2         0.159      0.038      4.128      0.000
+
+
+LATENT CLASS ODDS RATIO RESULTS
+
+Latent Class 1 Compared to Latent Class 2
+
+ ACY2
+    Category > 1       9.907      4.731      2.094      0.036
+ ACY3
+    Category > 1       4.793      1.881      2.548      0.011
+ ACY4
+    Category > 1       6.411      2.467      2.599      0.009
+ ACY6
+    Category > 1       9.247      4.451      2.077      0.038
+ ACY12
+    Category > 1      11.426      5.885      1.942      0.052
+ ACY14
+    Category > 1       4.236      1.725      2.456      0.014
+
+
+LOGISTIC REGRESSION ODDS RATIO RESULTS
+
+Categorical Latent Variables
+
+ C#1      ON
+    STUDY              2.601
+
+
+QUALITY OF NUMERICAL RESULTS
+
+     Condition Number for the Information Matrix              0.806E-02
+       (ratio of smallest to largest eigenvalue)
+
+
+TESTS OF CATEGORICAL LATENT VARIABLE MULTINOMIAL LOGISTIC REGRESSIONS USING
+THE 3-STEP PROCEDURE
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+ C#1      ON
+    GENDER            -0.018      0.345     -0.053      0.958
+
+ Intercepts
+    C#1                0.427      0.205      2.086      0.037
+
+Parameterization using Reference Class 1
+
+ C#2      ON
+    GENDER             0.018      0.345      0.053      0.958
+
+ Intercepts
+    C#2               -0.427      0.205     -2.086      0.037
+
+
+DIAGRAM INFORMATION
+
+  Mplus diagrams are currently not available for Mixture analysis.
+  No diagram output was produced.
+
+
+     Beginning Time:  16:57:01
+        Ending Time:  16:57:02
+       Elapsed Time:  00:00:01
+
+
+
+MUTHEN & MUTHEN
+3463 Stoner Ave.
+Los Angeles, CA  90066
+
+Tel: (310) 391-9971
+Fax: (310) 391-8971
+Web: www.StatModel.com
+Support: Support@StatModel.com
+
+Copyright (c) 1998-2015 Muthen & Muthen
