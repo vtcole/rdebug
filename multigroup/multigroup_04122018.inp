@@ -1,0 +1,50 @@
+Title: 
+  ACY, short form, uniform DIF with multiple groups.
+Data:
+  File is 
+  C:/Users/vcole/Dropbox/x2/MGcheck/multigroup/acy_d0i0l0_r5_multigroup.csv;
+Variable:
+  names        = Dx ID ACY1 ACY2 ACY3 ACY4 ACY5 ACY6 ACY7 
+                    ACY8 ACY9 ACY10 ACY12 ACY13 ACY14 
+                ACY15 ACY18 NumberHits study R 
+                    T1original T2original T1 T2 T3 T4 gender frat ;
+  usevariables = ACY2 ACY3 ACY4 ACY6 ACY12 ACY14 t1 t2 t3 t4;
+  categorical  = ACY2 ACY3 ACY4 ACY6 ACY12 ACY14;
+  MISSING = .;
+  CLASSES = c(4);
+  TRAINING = T1 T2 T3 T4;
+  AUXILIARY = gender (r3step);
+  ANALYSIS:	TYPE = MIXTURE;
+  MODEL:
+  %OVERALL%
+    %C#1%
+      [ACY2$1] (a2);
+      [ACY3$1] (a3);
+      [ACY4$1] (a4);
+      [ACY6$1] (a6);
+      [ACY12$1] (a12);
+      [ACY14$1] (a14);
+    %C#2%
+      [ACY2$1] (b2);
+      [ACY3$1] (b3);
+      [ACY4$1] (b4);
+      [ACY6$1] (b6);
+      [ACY12$1] (b12);
+      [ACY14$1] (b14);
+    %C#3%
+      [ACY2$1] (a2);
+      [ACY3$1] (a3);
+      [ACY4$1] (a4);
+      [ACY6$1] (a6);
+      [ACY12$1] (a12);
+      [ACY14$1] (a14);
+    %C#4%
+      [ACY2$1] (b2);
+      [ACY3$1] (b3);
+      [ACY4$1] (b4);
+      [ACY6$1] (b6);
+      [ACY12$1] (b12);
+      [ACY14$1] (b14);
+ Savedata:
+    file=bchweights_04122018.dat;
+    save=bchweights;

@@ -86,7 +86,7 @@ for (k in 1:4){
         # I wanted to confirm the pmat matrix by computing each entry by hand
         # to be sure, I am using the equations from the bottom of page 3 on Asparouhov&Muthen
         # based on this, *I think* the above computation might have the diagonals switched
-        pmat[1, 1]
+        #pmat[1, 1]
         Pmat[1,1] <- sum(df.1$estp1)/nrow(df.1)
         # pmat[2, 1]
         Pmat[2,1] <- sum(df.1$estp2)/nrow(df.1)
@@ -95,6 +95,7 @@ for (k in 1:4){
         # pmat[2, 2]
         Pmat[2,2] <- sum(df.2$estp2)/nrow(df.2)
         # ---------------------------------------------------------------------
+
         
         # Qmat<-matrix(NA,ncol=2,nrow=2)
         # for (p in 1:2) {
@@ -120,6 +121,11 @@ for (k in 1:4){
         Qmat[2, 2] <- solve.qmat(2,2)
         # ---------------------------------------------------------------------
         
+        # For some reason, it appears there are some cases where there aren't any cases in class 1 in Study 2 
+        if (nrow(df.1)==0|nrow(df.2)==0) {
+          Pmat<-diag(2)
+          Qmat<-diag(2)
+        }
         
         Qprime <- solve(Qmat)
         ###BCH. YOU CAN PROBABLY SKIP TO VERMUNT.
@@ -189,6 +195,8 @@ for (k in 1:4){
         the.datafile.vermunt<-paste0(all.sets[[k]][j],'r',i,'_V_ud.dat')
         # MG got rid of this
         # write.table(alltogether,paste0('M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/vermuntnew/',all.sets[[k]][j],'/',the.datafile.vermunt,na="."),na='.',col.names=FALSE,row.names=FALSE)
+        # VTC added in a new test directory
+        write.table(alltogether,paste0('M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/codetest_0409/',all.sets[[k]][j],'/',the.datafile.vermunt,na="."),na='.',col.names=FALSE,row.names=FALSE)
         
         #Get logits corresponding to a misclassifications
         l11<-log(Qmat[1,1]/(1-Qmat[1,1]))
@@ -203,7 +211,9 @@ for (k in 1:4){
         NS2<-length(subset(df$study,df$study==2))
         thenames<-paste0(paste(names(alltogether),collapse="\n"),";")
         the.l11<-paste0("[N#1@",l11,"];")
-        the.l12<-paste0("[N#1@",l21,"];")
+        # VTC change: now that Q matrix is transposed from before, need element [2,1] rather than element [1,2]
+        # should definitely check this, though
+        the.l12<-paste0("[N#1@",l12,"];")
         
         
         #Write an Mplus input file for the Vermunt regression for each of the validity variables
@@ -236,12 +246,13 @@ for (k in 1:4){
             "  %C#1%",
             the.l11,
             "    %C#2%",
-            the.l12,sep="\n")  
+            the.l12,sep="\n")
           
-          the.input.name<-paste('M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/vermuntnew/',all.sets[[k]][j],'/',all.sets[[k]][j],'r',i,'_V_ud_',validity.vars[h],'.inp',sep="")          
+          the.input.name<-paste('M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/codetest_0409/',all.sets[[k]][j],'/',all.sets[[k]][j],'r',i,'_V_ud_',validity.vars[h],'.inp',sep="")          
           the.input<-file(the.input.name)
           # MG got rid of this
-          # writeLines(the.input.text, the.input)
+          # VTC put back for testing purposes
+          writeLines(the.input.text, the.input)
           close(the.input)
         }
       }
