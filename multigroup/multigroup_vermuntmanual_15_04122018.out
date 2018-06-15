@@ -1,0 +1,362 @@
+Mplus VERSION 7.2
+MUTHEN & MUTHEN
+04/23/2018   4:17 PM
+
+INPUT INSTRUCTIONS
+
+  Title:
+    Multiple group, step 3 data file;
+  !Not currently working;
+  Data:
+    File is cprobs_04122018.dat;
+  Variable:
+    names  =  ACY2 ACY3 ACY4 ACY6 ACY12 ACY14
+      T1 T2 T3 T4 GENDER ID CPROB1 CPROB2 CPROB3 CPROB4 N;
+    usevariables = GENDER N;
+    CLASSES = c(4);
+    NOMINAL = N;
+    !training = t1-t4;
+  ANALYSIS:	TYPE = MIXTURE; starts=0;
+  MODEL:
+    %OVERALL%
+    C ON GENDER;
+    %C#1%
+    [N#1@15];
+    [N#2@-15];
+    [N#3@-15];
+    %C#2%
+    [N#1@-15];
+    [N#2@15];
+    [N#3@-15];
+    %C#3%
+    [N#1@-15];
+    [N#2@-15];
+    [N#3@1.622];
+    %C#4%
+    [N#1@-15];
+    [N#2@-15];
+    [N#3@-2.036];
+
+
+
+INPUT READING TERMINATED NORMALLY
+
+
+
+
+Multiple group, step 3 data file;
+
+SUMMARY OF ANALYSIS
+
+Number of groups                                                 1
+Number of observations                                         250
+
+Number of dependent variables                                    1
+Number of independent variables                                  1
+Number of continuous latent variables                            0
+Number of categorical latent variables                           1
+
+Observed dependent variables
+
+  Unordered categorical (nominal)
+   N
+
+Observed independent variables
+   GENDER
+
+Categorical latent variables
+   C
+
+
+Estimator                                                      MLR
+Information matrix                                        OBSERVED
+Optimization Specifications for the Quasi-Newton Algorithm for
+Continuous Outcomes
+  Maximum number of iterations                                 100
+  Convergence criterion                                  0.100D-05
+Optimization Specifications for the EM Algorithm
+  Maximum number of iterations                                 500
+  Convergence criteria
+    Loglikelihood change                                 0.100D-06
+    Relative loglikelihood change                        0.100D-06
+    Derivative                                           0.100D-05
+Optimization Specifications for the M step of the EM Algorithm for
+Categorical Latent variables
+  Number of M step iterations                                    1
+  M step convergence criterion                           0.100D-05
+  Basis for M step termination                           ITERATION
+Optimization Specifications for the M step of the EM Algorithm for
+Censored, Binary or Ordered Categorical (Ordinal), Unordered
+Categorical (Nominal) and Count Outcomes
+  Number of M step iterations                                    1
+  M step convergence criterion                           0.100D-05
+  Basis for M step termination                           ITERATION
+  Maximum value for logit thresholds                            15
+  Minimum value for logit thresholds                           -15
+  Minimum expected cell size for chi-square              0.100D-01
+Optimization algorithm                                         EMA
+
+Input data file(s)
+  cprobs_04122018.dat
+Input data format  FREE
+
+
+UNIVARIATE PROPORTIONS AND COUNTS FOR CATEGORICAL VARIABLES
+
+    N
+      Category 1    0.044       11.000
+      Category 2    0.156       39.000
+      Category 3    0.336       84.000
+      Category 4    0.464      116.000
+
+
+     ONE OR MORE MULTINOMIAL LOGIT PARAMETERS WERE FIXED TO AVOID SINGULARITY
+     OF THE INFORMATION MATRIX.  THE SINGULARITY IS MOST LIKELY BECAUSE THE
+     MODEL IS NOT IDENTIFIED, OR BECAUSE OF EMPTY CELLS IN THE JOINT
+     DISTRIBUTION OF THE CATEGORICAL LATENT VARIABLES AND ANY INDEPENDENT
+     VARIABLES.  THE FOLLOWING PARAMETERS WERE FIXED:
+     Parameter 5, C#2 ON GENDER
+     Parameter 2, [ C#2 ]
+
+
+THE MODEL ESTIMATION TERMINATED NORMALLY
+
+
+
+MODEL FIT INFORMATION
+
+Number of Free Parameters                        6
+
+Loglikelihood
+
+          H0 Value                        -162.051
+          H0 Scaling Correction Factor      0.6736
+            for MLR
+
+Information Criteria
+
+          Akaike (AIC)                     336.102
+          Bayesian (BIC)                   357.231
+          Sample-Size Adjusted BIC         338.210
+            (n* = (n + 2) / 24)
+
+
+
+FINAL CLASS COUNTS AND PROPORTIONS FOR THE LATENT CLASSES
+BASED ON THE ESTIMATED MODEL
+
+    Latent
+   Classes
+
+       1         11.00000          0.04400
+       2         39.00000          0.15600
+       3         84.68390          0.33874
+       4        115.31610          0.46126
+
+
+FINAL CLASS COUNTS AND PROPORTIONS FOR THE LATENT CLASS PATTERNS
+BASED ON ESTIMATED POSTERIOR PROBABILITIES
+
+    Latent
+   Classes
+
+       1         11.00000          0.04400
+       2         39.00000          0.15600
+       3         84.68390          0.33874
+       4        115.31610          0.46126
+
+
+CLASSIFICATION QUALITY
+
+     Entropy                         0.772
+
+
+CLASSIFICATION OF INDIVIDUALS BASED ON THEIR MOST LIKELY LATENT CLASS MEMBERSHIP
+
+Class Counts and Proportions
+
+    Latent
+   Classes
+
+       1               11          0.04400
+       2               39          0.15600
+       3               84          0.33600
+       4              116          0.46400
+
+
+Average Latent Class Probabilities for Most Likely Latent Class Membership (Row)
+by Latent Class (Column)
+
+           1        2        3        4
+
+    1   1.000    0.000    0.000    0.000
+    2   0.000    1.000    0.000    0.000
+    3   0.000    0.000    0.842    0.158
+    4   0.000    0.000    0.121    0.879
+
+
+Classification Probabilities for the Most Likely Latent Class Membership (Column)
+by Latent Class (Row)
+
+           1        2        3        4
+
+    1   1.000    0.000    0.000    0.000
+    2   0.000    1.000    0.000    0.000
+    3   0.000    0.000    0.835    0.165
+    4   0.000    0.000    0.115    0.885
+
+
+Logits for the Classification Probabilities for the Most Likely Latent Class Membership (Column)
+by Latent Class (Row)
+
+              1        2        3        4
+
+    1     13.816    0.000    0.000    0.000
+    2      0.000   13.816    0.000    0.000
+    3    -12.014  -12.014    1.621    0.000
+    4    -13.693  -13.693   -2.038    0.000
+
+
+MODEL RESULTS
+
+                                                    Two-Tailed
+                    Estimate       S.E.  Est./S.E.    P-Value
+
+Latent Class 1
+
+ Means
+    N#1               15.000      0.000    999.000    999.000
+    N#2              -15.000      0.000    999.000    999.000
+    N#3              -15.000      0.000    999.000    999.000
+
+Latent Class 2
+
+ Means
+    N#1              -15.000      0.000    999.000    999.000
+    N#2               15.000      0.000    999.000    999.000
+    N#3              -15.000      0.000    999.000    999.000
+
+Latent Class 3
+
+ Means
+    N#1              -15.000      0.000    999.000    999.000
+    N#2              -15.000      0.000    999.000    999.000
+    N#3                1.622      0.000    999.000    999.000
+
+Latent Class 4
+
+ Means
+    N#1              -15.000      0.000    999.000    999.000
+    N#2              -15.000      0.000    999.000    999.000
+    N#3               -2.036      0.000    999.000    999.000
+
+Categorical Latent Variables
+
+ C#1        ON
+    GENDER           -35.203      0.025  -1429.794      0.000
+
+ C#2        ON
+    GENDER           -35.206      0.000    999.000    999.000
+
+ C#3        ON
+    GENDER            -0.003      0.003     -0.843      0.400
+
+ Intercepts
+    C#1             1776.990      0.723   2457.423      0.000
+    C#2             1778.335      0.000    999.000    999.000
+    C#3                0.118      0.548      0.216      0.829
+
+
+LOGISTIC REGRESSION ODDS RATIO RESULTS
+
+Categorical Latent Variables
+
+ C#1      ON
+    GENDER             0.000
+
+ C#2      ON
+    GENDER             0.000
+
+ C#3      ON
+    GENDER             0.997
+
+
+ALTERNATIVE PARAMETERIZATIONS FOR THE CATEGORICAL LATENT VARIABLE REGRESSION
+
+Parameterization using Reference Class 1
+
+ C#2      ON
+    GENDER            -0.003      0.025     -0.125      0.900
+
+ C#3      ON
+    GENDER            35.200      0.025   1416.357      0.000
+
+ C#4      ON
+    GENDER            35.203      0.025   1429.794      0.000
+
+ Intercepts
+    C#2                1.345      0.723      1.860      0.063
+    C#3            -1776.872      0.907  -1958.546      0.000
+    C#4            -1776.990      0.723  -2457.423      0.000
+
+Parameterization using Reference Class 2
+
+ C#1      ON
+    GENDER             0.003      0.025      0.125      0.900
+
+ C#3      ON
+    GENDER            35.203      0.003  10400.760      0.000
+
+ C#4      ON
+    GENDER            35.206      0.000      0.000      1.000
+
+ Intercepts
+    C#1               -1.345      0.723     -1.860      0.063
+    C#3            -1778.216      0.548  -3245.509      0.000
+    C#4            -1778.335      0.000      0.000      1.000
+
+Parameterization using Reference Class 3
+
+ C#1      ON
+    GENDER           -35.200      0.025  -1416.357      0.000
+
+ C#2      ON
+    GENDER           -35.203      0.003  *********      0.000
+
+ C#4      ON
+    GENDER             0.003      0.003      0.843      0.400
+
+ Intercepts
+    C#1             1776.872      0.907   1958.546      0.000
+    C#2             1778.216      0.548   3245.509      0.000
+    C#4               -0.118      0.548     -0.216      0.829
+
+
+QUALITY OF NUMERICAL RESULTS
+
+     Condition Number for the Information Matrix              0.155E-05
+       (ratio of smallest to largest eigenvalue)
+
+
+DIAGRAM INFORMATION
+
+  Mplus diagrams are currently not available for Mixture analysis.
+  No diagram output was produced.
+
+
+     Beginning Time:  16:17:06
+        Ending Time:  16:17:06
+       Elapsed Time:  00:00:00
+
+
+
+MUTHEN & MUTHEN
+3463 Stoner Ave.
+Los Angeles, CA  90066
+
+Tel: (310) 391-9971
+Fax: (310) 391-8971
+Web: www.StatModel.com
+Support: Support@StatModel.com
+
+Copyright (c) 1998-2014 Muthen & Muthen

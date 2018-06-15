@@ -23,15 +23,16 @@ Variable:
   usevariables = GENDER BCHW1 BCHW2 BCHW3 BCHW4;
   CLASSES = c(4);
   TRAINING = bchw1-bchw4(bch);
+  categorical = gender;
 ANALYSIS:	TYPE = MIXTURE; starts=0;
 MODEL:
   %OVERALL%
-  gender;
+  [gender$1];
   %C#1%
-  gender;
+  [gender$1];
   %C#2%
-  gender;
+  [gender$1];
   %C#3%
-  gender;
+  [gender$1];
   %C#4%
-  gender;
+  [gender$1];

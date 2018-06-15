@@ -1,0 +1,292 @@
+---
+title: "Next steps for Aim 2"
+author: "Veronica Cole"
+date: "Thursday, May 17, 2018"
+output: pdf_document
+header-includes:
+   - \usepackage{outlines}
+classoption: landscape
+---
+\subsection{Issue 1: Logistic regression}
+Last week, we made the determination that Vermunt, rather than BCH, would be our three-step adjustment in the validity analyses. This was done because BCH and Vermunt yielded extremely similar results, except that BCH had a number of issues with convergence. Thus, our next task was to compare estimates of unadjusted logistic regression coefficients to those obtained using Vermunt's adjustment. 
+
+Though we will not consider all impact conditions and sample sizes, the following pages have graphs for cases both with and without impact, as well as different training data sample sizes. In general, neither impact nor DIF appears to affect the recovery of parameters, with the exception of the unadjusted logistic regression. However, the Vermunt adjustment does appear to yield significant gains in accuracy.
+
+\subsection{Issue 2: Detecting a spurious interaction}
+Because we are running this as a multiple groups latent class analysis, rather than a standard LCA with an interaction term, we need to calculate the interaction term manually. Assuming that frat membership is our predictor, the probability of membership to each class under the current formulation is:
+$$
+\begin{aligned}
+&P\left(AUD, Study 1|Frat\right) = \frac{\exp\left(-\left(\gamma_{01}+\gamma_{11}Frat\right)\right)}{1+\sum_{k=1}^{3}{\exp\left(-\left(\gamma_{0k}+\gamma_{1k}Frat\right)\right)}} \\ \\
+&P\left(No AUD, Study 1|Frat\right) = \frac{\exp\left(-\left(\gamma_{02}+\gamma_{12}Frat\right)\right)}{1+\sum_{k=1}^{3}{\exp\left(-\left(\gamma_{0k}+\gamma_{1k}Frat\right)\right)}} \\ \\
+&P\left(AUD, Study 2|Frat\right) = \frac{\exp\left(-\left(\gamma_{03}+\gamma_{13}Frat\right)\right)}{1+\sum_{k=1}^{3}{\exp\left(-\left(\gamma_{0k}+\gamma_{1k}Frat\right)\right)}} \\ \\
+&P\left(No AUD, Study 2|Frat\right) = \frac{1}{1+\sum_{k=1}^{3}{\exp\left(-\left(\gamma_{0k}+\gamma_{1k}Frat\right)\right)}}
+\end{aligned}
+$$
+
+When we last discussed this topic, Dan pointed out that the interaction term (which we will call $\gamma^{\star}$) is given by:
+$$
+\gamma^{\star} = \left(\gamma_{11}-\gamma_{12}\right) - \gamma_{13}
+$$
+
+We can easily calculate this coefficient by simply reading in the output from Mplus. However, we also need to calculate its standard error. Am I correct that its variance would be:
+$$
+Var\left(\gamma^{\star}\right) = Var\left(\gamma_{11}\right) + Var\left(\gamma_{12}\right) + Var\left(\gamma_{13}\right) - 2Cov\left(\gamma_{11},\gamma_{12}\right) - 2Cov\left(\gamma_{11},\gamma_{13}\right) - 2Cov\left(\gamma_{12},\gamma_{13}\right)
+$$
+
+If so, the standard error can be easily calculated from the TECH3 output, which we already have.
+
+\subsection{Next Steps}
+\begin{outline}[enumerate]
+\1 Smaller tasks
+\2 Calculate the null hypothesis rejection rate for the interaction term.
+\3 Compare to a $z$ distribution?
+\2 Confirm which sample size and impact conditions we would like to show in the bar graphs below.
+\2 Now that Vermunt is working, do we want to try using it to adjust validity analyses for random forest?
+\1 Bigger tasks
+\2 Rerun multiple group validity analyses with real (i.e., not fully synthetic) data.
+\2 Rerun reliability, both with real and synthetic data, in the multiple groups condition.
+\2 Write the paper.
+\end{outline}
+
+```{r,echo=FALSE,message=FALSE,warning=FALSE,fig.width=11,fig.height=8}
+io.gender.lr<-read.table("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/LR_io_gender.dat",header=TRUE,na=".")
+io.frat.lr<-read.table("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/LR_io_frat.dat",header=TRUE,na=".")
+ud.gender.lr<-read.table("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/LR_ud_gender.dat",header=TRUE,na=".")
+ud.frat.lr<-read.table("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/LR_ud_frat.dat",header=TRUE,na=".")
+
+
+io.gender.v<-read.table("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/v_io_gender.dat",header=TRUE,na=".")
+io.frat.v<-read.table("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/v_io_frat.dat",header=TRUE,na=".")
+ud.gender.v<-read.table("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/v_ud_gender.dat",header=TRUE,na=".")
+ud.frat.v<-read.table("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/v_ud_frat.dat",header=TRUE,na=".")
+```
+
+\newpage
+\subsection{No impact, $N_1 = 25$.} 
+```{r,echo=FALSE,message=FALSE,warning=FALSE,fig.width=11,fig.height=8}
+title.list<-c("Consequences, Long","Consequences, Short"," Motives, Long","Motives, Short")
+
+c1l0<-c("i0d0c1l0n25","i0d1c1l0n25","i1d0c1l0n25","i1d1c1l0n25","i0d0c1l0n50","i0d1c1l0n50","i1d0c1l0n50","i1d1c1l0n50","i0d0c1l0n100","i0d1c1l0n100","i1d0c1l0n100","i1d1c1l0n100")
+
+nodif.noimpact.lr<-list(subset(io.frat.lr[,2],io.frat.lr[,1]==1),subset(io.frat.lr[,2],io.frat.lr[,1]==2),subset(io.frat.lr[,2],io.frat.lr[,1]==3),subset(io.frat.lr[,2],io.frat.lr[,1]==4))
+unmodeleddif.noimpact.lr<-list(subset(io.frat.lr[,3],io.frat.lr[,1]==1),subset(io.frat.lr[,3],io.frat.lr[,1]==2),subset(io.frat.lr[,3],io.frat.lr[,1]==3),subset(io.frat.lr[,3],io.frat.lr[,1]==4))
+modeleddif.noimpact.lr<-list(subset(ud.frat.lr[,3],ud.frat.lr[,1]==1),subset(ud.frat.lr[,3],ud.frat.lr[,1]==2),subset(ud.frat.lr[,3],ud.frat.lr[,1]==3),subset(ud.frat.lr[,3],ud.frat.lr[,1]==4))
+
+
+nodif.noimpact.v<-list(subset(io.frat.v[,2],io.frat.v[,1]==1),subset(io.frat.v[,2],io.frat.v[,1]==2),subset(io.frat.v[,2],io.frat.v[,1]==3),subset(io.frat.v[,2],io.frat.v[,1]==4))
+unmodeleddif.noimpact.v<-list(subset(io.frat.v[,3],io.frat.v[,1]==1),subset(io.frat.v[,3],io.frat.v[,1]==2),subset(io.frat.v[,3],io.frat.v[,1]==3),subset(io.frat.v[,3],io.frat.v[,1]==4))
+modeleddif.noimpact.v<-list(subset(ud.frat.v[,3],ud.frat.v[,1]==1),subset(ud.frat.v[,3],ud.frat.v[,1]==2),subset(ud.frat.v[,3],ud.frat.v[,1]==3),subset(ud.frat.v[,3],ud.frat.v[,1]==4))
+
+
+par(mfrow=c(2,2))
+par(mar=c(1,4.5,3.5,3.5))
+for (e in 1:4) {
+  plot(-100,xlim=c(0,4),ylim=c(-3.5,3.5),xlab="",ylab="Bias",xaxt="n",main=title.list[[e]])
+  abline(h=0,lwd=1)
+  abline(h=.066,lty=2)
+  abline(h=-.066,lty=2)
+  abline(h=.6642,lty=3)
+  abline(h=-.6642,lty=3)
+  boxplot(nodif.noimpact.lr[[e]]-.6642,at=.5,add=TRUE,col="white")
+  boxplot(unmodeleddif.noimpact.lr[[e]]-.6642,at=1,add=TRUE,col="gray88")
+  boxplot(modeleddif.noimpact.lr[[e]]-.6642,at=1.5,add=TRUE,col="gray44")
+  boxplot(nodif.noimpact.v[[e]]-.6642,at=2.5,add=TRUE,col="white")
+  boxplot(unmodeleddif.noimpact.v[[e]]-.6642,at=3,add=TRUE,col="gray88")
+  boxplot(modeleddif.noimpact.v[[e]]-.6642,at=3.5,add=TRUE,col="gray44")
+  legend("bottom",legend=c("No DIF","DIF excluded","DIF included"),fill=c("white","gray88","gray44"),bty="n",horiz=TRUE)
+  text(1,3,"Logistic")
+  text(3,3,"Vermunt")
+}
+```
+
+\newpage
+\subsection{Impact, $N_1 = 25$.} 
+```{r,echo=FALSE,message=FALSE,warning=FALSE,fig.width=11,fig.height=8}
+title.list<-c("Consequences, Long","Consequences, Short"," Motives, Long","Motives, Short")
+
+c1l0<-c("i0d0c1l0n25","i0d1c1l0n25","i1d0c1l0n25","i1d1c1l0n25","i0d0c1l0n50","i0d1c1l0n50","i1d0c1l0n50","i1d1c1l0n50","i0d0c1l0n100","i0d1c1l0n100","i1d0c1l0n100","i1d1c1l0n100")
+
+
+nodif.impact.lr<-list(subset(io.frat.lr[,4],io.frat.lr[,1]==1),subset(io.frat.lr[,4],io.frat.lr[,1]==2),subset(io.frat.lr[,4],io.frat.lr[,1]==3),subset(io.frat.lr[,4],io.frat.lr[,1]==4))
+unmodeleddif.impact.lr<-list(subset(io.frat.lr[,5],io.frat.lr[,1]==1),subset(io.frat.lr[,5],io.frat.lr[,1]==2),subset(io.frat.lr[,5],io.frat.lr[,1]==3),subset(io.frat.lr[,5],io.frat.lr[,1]==4))
+modeleddif.impact.lr<-list(subset(ud.frat.lr[,5],ud.frat.lr[,1]==1),subset(ud.frat.lr[,5],ud.frat.lr[,1]==2),subset(ud.frat.lr[,5],ud.frat.lr[,1]==3),subset(ud.frat.lr[,5],ud.frat.lr[,1]==4))
+
+nodif.impact.v<-list(subset(io.frat.v[,4],io.frat.v[,1]==1),subset(io.frat.v[,4],io.frat.v[,1]==2),subset(io.frat.v[,4],io.frat.v[,1]==3),subset(io.frat.v[,4],io.frat.v[,1]==4))
+unmodeleddif.impact.v<-list(subset(io.frat.v[,5],io.frat.v[,1]==1),subset(io.frat.v[,5],io.frat.v[,1]==2),subset(io.frat.v[,5],io.frat.v[,1]==3),subset(io.frat.v[,5],io.frat.v[,1]==4))
+modeleddif.impact.v<-list(subset(ud.frat.v[,5],ud.frat.v[,1]==1),subset(ud.frat.v[,5],ud.frat.v[,1]==2),subset(ud.frat.v[,5],ud.frat.v[,1]==3),subset(ud.frat.v[,5],ud.frat.v[,1]==4))
+
+par(mfrow=c(2,2))
+par(mar=c(1,4.5,3.5,3.5))
+for (e in 1:4) {
+  plot(-100,xlim=c(0,4),ylim=c(-3.5,3.5),xlab="",ylab="Bias",xaxt="n",main=title.list[[e]])
+  abline(h=0,lwd=1)
+  abline(h=.066,lty=2)
+  abline(h=-.066,lty=2)
+  abline(h=.6642,lty=3)
+  abline(h=-.6642,lty=3)
+  boxplot(nodif.impact.lr[[e]]-.6642,at=.5,add=TRUE,col="white")
+  boxplot(unmodeleddif.impact.lr[[e]]-.6642,at=1,add=TRUE,col="gray88")
+  boxplot(modeleddif.impact.lr[[e]]-.6642,at=1.5,add=TRUE,col="gray44")
+  boxplot(nodif.impact.v[[e]]-.6642,at=2.5,add=TRUE,col="white")
+  boxplot(unmodeleddif.impact.v[[e]]-.6642,at=3,add=TRUE,col="gray88")
+  boxplot(modeleddif.impact.v[[e]]-.6642,at=3.5,add=TRUE,col="gray44")
+  legend("bottom",legend=c("No DIF","DIF excluded","DIF included"),fill=c("white","gray88","gray44"),bty="n",horiz=TRUE)
+  text(1,3,"Logistic")
+  text(3,3,"Vermunt")
+}
+```
+
+
+\newpage
+\subsection{No impact, $N_1 = 50$.} 
+```{r,echo=FALSE,message=FALSE,warning=FALSE,fig.width=11,fig.height=8}
+title.list<-c("Consequences, Long","Consequences, Short"," Motives, Long","Motives, Short")
+
+c1l0<-c("i0d0c1l0n25","i0d1c1l0n25","i1d0c1l0n25","i1d1c1l0n25","i0d0c1l0n50","i0d1c1l0n50","i1d0c1l0n50","i1d1c1l0n50","i0d0c1l0n100","i0d1c1l0n100","i1d0c1l0n100","i1d1c1l0n100")
+
+nodif.noimpact.lr<-list(subset(io.frat.lr[,6],io.frat.lr[,1]==1),subset(io.frat.lr[,6],io.frat.lr[,1]==2),subset(io.frat.lr[,6],io.frat.lr[,1]==3),subset(io.frat.lr[,6],io.frat.lr[,1]==4))
+unmodeleddif.noimpact.lr<-list(subset(io.frat.lr[,7],io.frat.lr[,1]==1),subset(io.frat.lr[,7],io.frat.lr[,1]==2),subset(io.frat.lr[,7],io.frat.lr[,1]==3),subset(io.frat.lr[,7],io.frat.lr[,1]==4))
+modeleddif.noimpact.lr<-list(subset(ud.frat.lr[,7],ud.frat.lr[,1]==1),subset(ud.frat.lr[,7],ud.frat.lr[,1]==2),subset(ud.frat.lr[,7],ud.frat.lr[,1]==3),subset(ud.frat.lr[,7],ud.frat.lr[,1]==4))
+
+
+nodif.noimpact.v<-list(subset(io.frat.v[,6],io.frat.v[,1]==1),subset(io.frat.v[,6],io.frat.v[,1]==2),subset(io.frat.v[,6],io.frat.v[,1]==3),subset(io.frat.v[,6],io.frat.v[,1]==4))
+unmodeleddif.noimpact.v<-list(subset(io.frat.v[,7],io.frat.v[,1]==1),subset(io.frat.v[,7],io.frat.v[,1]==2),subset(io.frat.v[,7],io.frat.v[,1]==3),subset(io.frat.v[,7],io.frat.v[,1]==4))
+modeleddif.noimpact.v<-list(subset(ud.frat.v[,7],ud.frat.v[,1]==1),subset(ud.frat.v[,7],ud.frat.v[,1]==2),subset(ud.frat.v[,7],ud.frat.v[,1]==3),subset(ud.frat.v[,7],ud.frat.v[,1]==4))
+
+
+par(mfrow=c(2,2))
+par(mar=c(1,4.5,3.5,3.5))
+for (e in 1:4) {
+  plot(-100,xlim=c(0,4),ylim=c(-3.5,3.5),xlab="",ylab="Bias",xaxt="n",main=title.list[[e]])
+  abline(h=0,lwd=1)
+  abline(h=.066,lty=2)
+  abline(h=-.066,lty=2)
+  abline(h=.6642,lty=3)
+  abline(h=-.6642,lty=3)
+  boxplot(nodif.noimpact.lr[[e]]-.6642,at=.5,add=TRUE,col="white")
+  boxplot(unmodeleddif.noimpact.lr[[e]]-.6642,at=1,add=TRUE,col="gray88")
+  boxplot(modeleddif.noimpact.lr[[e]]-.6642,at=1.5,add=TRUE,col="gray44")
+  boxplot(nodif.noimpact.v[[e]]-.6642,at=2.5,add=TRUE,col="white")
+  boxplot(unmodeleddif.noimpact.v[[e]]-.6642,at=3,add=TRUE,col="gray88")
+  boxplot(modeleddif.noimpact.v[[e]]-.6642,at=3.5,add=TRUE,col="gray44")
+  legend("bottom",legend=c("No DIF","DIF excluded","DIF included"),fill=c("white","gray88","gray44"),bty="n",horiz=TRUE)
+  text(1,3,"Logistic")
+  text(3,3,"Vermunt")
+}
+```
+
+\newpage
+\subsection{Impact, $N_1 = 50$.} 
+```{r,echo=FALSE,message=FALSE,warning=FALSE,fig.width=11,fig.height=8}
+title.list<-c("Consequences, Long","Consequences, Short"," Motives, Long","Motives, Short")
+
+c1l0<-c("i0d0c1l0n25","i0d1c1l0n25","i1d0c1l0n25","i1d1c1l0n25","i0d0c1l0n50","i0d1c1l0n50","i1d0c1l0n50","i1d1c1l0n50","i0d0c1l0n100","i0d1c1l0n100","i1d0c1l0n100","i1d1c1l0n100")
+
+
+nodif.impact.lr<-list(subset(io.frat.lr[,8],io.frat.lr[,1]==1),subset(io.frat.lr[,8],io.frat.lr[,1]==2),subset(io.frat.lr[,8],io.frat.lr[,1]==3),subset(io.frat.lr[,8],io.frat.lr[,1]==4))
+unmodeleddif.impact.lr<-list(subset(io.frat.lr[,9],io.frat.lr[,1]==1),subset(io.frat.lr[,9],io.frat.lr[,1]==2),subset(io.frat.lr[,9],io.frat.lr[,1]==3),subset(io.frat.lr[,9],io.frat.lr[,1]==4))
+modeleddif.impact.lr<-list(subset(ud.frat.lr[,9],ud.frat.lr[,1]==1),subset(ud.frat.lr[,9],ud.frat.lr[,1]==2),subset(ud.frat.lr[,9],ud.frat.lr[,1]==3),subset(ud.frat.lr[,9],ud.frat.lr[,1]==4))
+
+nodif.impact.v<-list(subset(io.frat.v[,8],io.frat.v[,1]==1),subset(io.frat.v[,8],io.frat.v[,1]==2),subset(io.frat.v[,8],io.frat.v[,1]==3),subset(io.frat.v[,8],io.frat.v[,1]==4))
+unmodeleddif.impact.v<-list(subset(io.frat.v[,9],io.frat.v[,1]==1),subset(io.frat.v[,9],io.frat.v[,1]==2),subset(io.frat.v[,9],io.frat.v[,1]==3),subset(io.frat.v[,9],io.frat.v[,1]==4))
+modeleddif.impact.v<-list(subset(ud.frat.v[,9],ud.frat.v[,1]==1),subset(ud.frat.v[,9],ud.frat.v[,1]==2),subset(ud.frat.v[,9],ud.frat.v[,1]==3),subset(ud.frat.v[,9],ud.frat.v[,1]==4))
+
+
+par(mfrow=c(2,2))
+par(mar=c(1,4.5,3.5,3.5))
+for (e in 1:4) {
+  plot(-100,xlim=c(0,4),ylim=c(-3.5,3.5),xlab="",ylab="Bias",xaxt="n",main=title.list[[e]])
+  abline(h=0,lwd=1)
+  abline(h=.066,lty=2)
+  abline(h=-.066,lty=2)
+  abline(h=.6642,lty=3)
+  abline(h=-.6642,lty=3)
+  boxplot(nodif.impact.lr[[e]]-.6642,at=.5,add=TRUE,col="white")
+  boxplot(unmodeleddif.impact.lr[[e]]-.6642,at=1,add=TRUE,col="gray88")
+  boxplot(modeleddif.impact.lr[[e]]-.6642,at=1.5,add=TRUE,col="gray44")
+  boxplot(nodif.impact.v[[e]]-.6642,at=2.5,add=TRUE,col="white")
+  boxplot(unmodeleddif.impact.v[[e]]-.6642,at=3,add=TRUE,col="gray88")
+  boxplot(modeleddif.impact.v[[e]]-.6642,at=3.5,add=TRUE,col="gray44")
+  legend("bottom",legend=c("No DIF","DIF excluded","DIF included"),fill=c("white","gray88","gray44"),bty="n",horiz=TRUE)
+  text(1,3,"Logistic")
+  text(3,3,"Vermunt")
+}
+```
+
+
+
+\newpage
+\subsection{No impact, $N_1 = 100$.} 
+```{r,echo=FALSE,message=FALSE,warning=FALSE,fig.width=11,fig.height=8}
+title.list<-c("Consequences, Long","Consequences, Short"," Motives, Long","Motives, Short")
+
+c1l0<-c("i0d0c1l0n25","i0d1c1l0n25","i1d0c1l0n25","i1d1c1l0n25","i0d0c1l0n50","i0d1c1l0n50","i1d0c1l0n50","i1d1c1l0n50","i0d0c1l0n100","i0d1c1l0n100","i1d0c1l0n100","i1d1c1l0n100")
+
+nodif.noimpact.lr<-list(subset(io.frat.lr[,10],io.frat.lr[,1]==1),subset(io.frat.lr[,10],io.frat.lr[,1]==2),subset(io.frat.lr[,10],io.frat.lr[,1]==3),subset(io.frat.lr[,10],io.frat.lr[,1]==4))
+unmodeleddif.noimpact.lr<-list(subset(io.frat.lr[,11],io.frat.lr[,1]==1),subset(io.frat.lr[,11],io.frat.lr[,1]==2),subset(io.frat.lr[,11],io.frat.lr[,1]==3),subset(io.frat.lr[,11],io.frat.lr[,1]==4))
+modeleddif.noimpact.lr<-list(subset(ud.frat.lr[,11],ud.frat.lr[,1]==1),subset(ud.frat.lr[,11],ud.frat.lr[,1]==2),subset(ud.frat.lr[,11],ud.frat.lr[,1]==3),subset(ud.frat.lr[,11],ud.frat.lr[,1]==4))
+
+
+nodif.noimpact.v<-list(subset(io.frat.v[,10],io.frat.v[,1]==1),subset(io.frat.v[,10],io.frat.v[,1]==2),subset(io.frat.v[,10],io.frat.v[,1]==3),subset(io.frat.v[,10],io.frat.v[,1]==4))
+unmodeleddif.noimpact.v<-list(subset(io.frat.v[,11],io.frat.v[,1]==1),subset(io.frat.v[,11],io.frat.v[,1]==2),subset(io.frat.v[,11],io.frat.v[,1]==3),subset(io.frat.v[,11],io.frat.v[,1]==4))
+modeleddif.noimpact.v<-list(subset(ud.frat.v[,11],ud.frat.v[,1]==1),subset(ud.frat.v[,11],ud.frat.v[,1]==2),subset(ud.frat.v[,11],ud.frat.v[,1]==3),subset(ud.frat.v[,11],ud.frat.v[,1]==4))
+
+
+par(mfrow=c(2,2))
+par(mar=c(1,4.5,3.5,3.5))
+for (e in 1:4) {
+  plot(-100,xlim=c(0,4),ylim=c(-3.5,3.5),xlab="",ylab="Bias",xaxt="n",main=title.list[[e]])
+  abline(h=0,lwd=1)
+  abline(h=.066,lty=2)
+  abline(h=-.066,lty=2)
+  abline(h=.6642,lty=3)
+  abline(h=-.6642,lty=3)
+  boxplot(nodif.noimpact.lr[[e]]-.6642,at=.5,add=TRUE,col="white")
+  boxplot(unmodeleddif.noimpact.lr[[e]]-.6642,at=1,add=TRUE,col="gray88")
+  boxplot(modeleddif.noimpact.lr[[e]]-.6642,at=1.5,add=TRUE,col="gray44")
+  boxplot(nodif.noimpact.v[[e]]-.6642,at=2.5,add=TRUE,col="white")
+  boxplot(unmodeleddif.noimpact.v[[e]]-.6642,at=3,add=TRUE,col="gray88")
+  boxplot(modeleddif.noimpact.v[[e]]-.6642,at=3.5,add=TRUE,col="gray44")
+  legend("bottom",legend=c("No DIF","DIF excluded","DIF included"),fill=c("white","gray88","gray44"),bty="n",horiz=TRUE)
+  text(1,3,"Logistic")
+  text(3,3,"Vermunt")
+}
+```
+
+\newpage
+\subsection{Impact, $N_1 = 100$.} 
+```{r,echo=FALSE,message=FALSE,warning=FALSE,fig.width=11,fig.height=8}
+title.list<-c("Consequences, Long","Consequences, Short"," Motives, Long","Motives, Short")
+
+c1l0<-c("i0d0c1l0n25","i0d1c1l0n25","i1d0c1l0n25","i1d1c1l0n25","i0d0c1l0n50","i0d1c1l0n50","i1d0c1l0n50","i1d1c1l0n50","i0d0c1l0n100","i0d1c1l0n100","i1d0c1l0n100","i1d1c1l0n100")
+
+
+nodif.impact.lr<-list(subset(io.frat.lr[,12],io.frat.lr[,1]==1),subset(io.frat.lr[,12],io.frat.lr[,1]==2),subset(io.frat.lr[,12],io.frat.lr[,1]==3),subset(io.frat.lr[,12],io.frat.lr[,1]==4))
+unmodeleddif.impact.lr<-list(subset(io.frat.lr[,13],io.frat.lr[,1]==1),subset(io.frat.lr[,13],io.frat.lr[,1]==2),subset(io.frat.lr[,13],io.frat.lr[,1]==3),subset(io.frat.lr[,13],io.frat.lr[,1]==4))
+modeleddif.impact.lr<-list(subset(ud.frat.lr[,13],ud.frat.lr[,1]==1),subset(ud.frat.lr[,13],ud.frat.lr[,1]==2),subset(ud.frat.lr[,13],ud.frat.lr[,1]==3),subset(ud.frat.lr[,13],ud.frat.lr[,1]==4))
+
+nodif.impact.v<-list(subset(io.frat.v[,12],io.frat.v[,1]==1),subset(io.frat.v[,12],io.frat.v[,1]==2),subset(io.frat.v[,12],io.frat.v[,1]==3),subset(io.frat.v[,12],io.frat.v[,1]==4))
+unmodeleddif.impact.v<-list(subset(io.frat.v[,13],io.frat.v[,1]==1),subset(io.frat.v[,13],io.frat.v[,1]==2),subset(io.frat.v[,13],io.frat.v[,1]==3),subset(io.frat.v[,13],io.frat.v[,1]==4))
+modeleddif.impact.v<-list(subset(ud.frat.v[,13],ud.frat.v[,1]==1),subset(ud.frat.v[,13],ud.frat.v[,1]==2),subset(ud.frat.v[,13],ud.frat.v[,1]==3),subset(ud.frat.v[,13],ud.frat.v[,1]==4))
+
+
+par(mfrow=c(2,2))
+par(mar=c(1,4.5,3.5,3.5))
+for (e in 1:4) {
+  plot(-100,xlim=c(0,4),ylim=c(-3.5,3.5),xlab="",ylab="Bias",xaxt="n",main=title.list[[e]])
+  abline(h=0,lwd=1)
+  abline(h=.066,lty=2)
+  abline(h=-.066,lty=2)
+  abline(h=.6642,lty=3)
+  abline(h=-.6642,lty=3)
+  boxplot(nodif.impact.lr[[e]]-.6642,at=.5,add=TRUE,col="white")
+  boxplot(unmodeleddif.impact.lr[[e]]-.6642,at=1,add=TRUE,col="gray88")
+  boxplot(modeleddif.impact.lr[[e]]-.6642,at=1.5,add=TRUE,col="gray44")
+  boxplot(nodif.impact.v[[e]]-.6642,at=2.5,add=TRUE,col="white")
+  boxplot(unmodeleddif.impact.v[[e]]-.6642,at=3,add=TRUE,col="gray88")
+  boxplot(modeleddif.impact.v[[e]]-.6642,at=3.5,add=TRUE,col="gray44")
+  legend("bottom",legend=c("No DIF","DIF excluded","DIF included"),fill=c("white","gray88","gray44"),bty="n",horiz=TRUE)
+  text(1,3,"Logistic")
+  text(3,3,"Vermunt")
+}
+```
