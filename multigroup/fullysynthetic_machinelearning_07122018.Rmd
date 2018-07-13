@@ -1,0 +1,218 @@
+---
+title: "Simulation results from fully synthetic data, Aim 2"
+author: "Veronica Cole"
+date: "Thursday, December 14, 2017"
+output: pdf_document
+header-includes:
+- \usepackage{outlines}
+- \usepackage{setspace}
+- \newcommand{\ItemSpacing}{0pt}
+---
+
+```{r,include=FALSE,echo=FALSE,message=FALSE,warning=FALSE,cache=TRUE}
+require(adabag)
+require(randomForest)
+library(knitr)
+library(mclust)
+library(psych)
+
+
+
+c1l0<-c("i0d0c1l0n25","i0d1c1l0n25","i1d0c1l0n25","i1d1c1l0n25","i0d0c1l0n50","i0d1c1l0n50","i1d0c1l0n50","i1d1c1l0n50","i0d0c1l0n100","i0d1c1l0n100","i1d0c1l0n100","i1d1c1l0n100")
+c1l1<-c("i0d0c1l1n25","i0d1c1l1n25","i1d0c1l1n25","i1d1c1l1n25","i0d0c1l1n50","i0d1c1l1n50","i1d0c1l1n50","i1d1c1l1n50","i0d0c1l1n100","i0d1c1l1n100","i1d0c1l1n100","i1d1c1l1n100")
+c2l0<-c("i0d0c2l0n25","i0d1c2l0n25","i1d0c2l0n25","i1d1c2l0n25","i0d0c2l0n50","i0d1c2l0n50","i1d0c2l0n50","i1d1c2l0n50","i0d0c2l0n100","i0d1c2l0n100","i1d0c2l0n100","i1d1c2l0n100")
+c2l1<-c("i0d0c2l1n25","i0d1c2l1n25","i1d0c2l1n25","i1d1c2l1n25","i0d0c2l1n50","i0d1c2l1n50","i1d0c2l1n50","i1d1c2l1n50","i0d0c2l1n100","i0d1c2l1n100","i1d0c2l1n100","i1d1c2l1n100")
+all.sets<-list(c1l0,c1l1,c2l0,c2l1)
+
+names.c1l0<-c('ACY2','ACY3','ACY4','ACY6','ACY12','ACY14')
+names.c1l1<-c('ACY1','ACY2','ACY3','ACY4','ACY5','ACY6','ACY7','ACY8','ACY9','ACY10','ACY12','ACY13','ACY14','ACY15','ACY18')
+names.c2l0<-c('AMT10','AMT11','AMT12','AMT14','AMT16','AMT18')
+names.c2l1<-c('AMT8','AMT9','AMT10','AMT11','AMT12','AMT13','AMT14','AMT15','AMT16','AMT17','AMT18')
+
+all.names<-list(names.c1l0,names.c1l1,names.c2l0,names.c2l1)
+full.names<-list(names.c1l1,names.c1l1,names.c2l1,names.c2l1)
+
+for (i in 1:4) {
+  for (j in 1:12) {
+    for (r in 1:100) {
+      the.filename<-paste0("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_r",r,"_io_v.dat")
+      if (file.info(the.filename)$size>0) {
+        indata<-read.table(the.filename,header=FALSE,na="*") #Read in one of the data files, as currently formatted for Mplus
+        names(indata)<-c(all.names[[i]],"T1","T2","T3","T4","R","gender","frat","Dx","P1","P2","P3","P4","N")
+        
+        train<-subset(indata,indata$T1==1|indata$T2==1)
+        test<-subset(indata,indata$T3==1&indata$T4==1)
+        train$Dx<-as.factor(train$Dx)
+    
+        fit<-randomForest(y=train$Dx, x=train[,c(all.names[[i]])],
+                        data=train, 
+                        importance=TRUE, 
+                        ntree=2000)
+        pps<-predict(fit,test,type="prob")
+    
+        indata$P4[(nrow(train)+1):(nrow(train)+nrow(test))]<-pps[,1] #First column of pps = undiagnosed. Class 4 = undiagnosed.
+        indata$P3[(nrow(train)+1):(nrow(train)+nrow(test))]<-pps[,2] #Second column of pps = diagnosed. Class 3 = diagnosed. 
+    
+        Pmat<-diag(4)
+        Qmat<-diag(4)
+        
+        Ns<-table(indata$N)
+        
+        df.1<-subset(indata,indata$N==1)
+        df.2<-subset(indata,indata$N==2)
+        df.3<-subset(indata,indata$N==3)
+        df.4<-subset(indata,indata$N==4)
+        
+        justclasses<-indata[c("N")]
+        justprobs<-indata[,c("P1","P2","P3","P4")]
+        
+        #We know that Class 1 is AUD, so Class 3 is AUD
+        #We know that Class 2 is non-AUD, so Class 4 is non-AUD
+        
+        for (p in 1:4) {
+          for (q in 1:4) {
+            Pmat[q,p]<-mean(subset(justprobs[,p],justclasses==q))
+          }
+        }
+        
+        Qmat<-matrix(NA,ncol=4,nrow=4)
+        for (p in 1:4) {
+           for (q in 1:4) {
+             Qmat[p,q]<-(Pmat[q,p]*Ns[q])/sum(Pmat[,p]*Ns)
+           }
+         }
+        
+        logitmat<-matrix(-15,4,3)
+        logitmat[1,1]<-15
+        logitmat[2,2]<-15
+        logitmat[3,3]<-log(Qmat[3,3]/(1-Qmat[3,3]))
+        logitmat[4,3]<-log(Qmat[4,3]/(1-Qmat[4,3]))
+    
+        the.l33_ml<-paste0("   [N#3@",logitmat[3,3],"];")
+        the.l43_ml<-paste0("   [N#3@",logitmat[4,3],"];")
+    
+        the.datafile.ml<-paste(all.sets[[i]][j],"_r",r,"_io_v.dat",sep="")
+    
+        the.ml.text.v.gender<-paste(
+              "TITLE:  Test run to get D matrix;",
+              "DATA:  FILE IS",paste0(the.datafile.ml,";"),
+              "FORMAT=FREE;",
+              "VARIABLE:",
+              "NAMES ARE",
+              paste(all.names[[i]],collapse="\n    "),
+              "    T1 T2 T3 T4 ID GENDER FRAT DX",
+              #Get rid of BCH
+              #"    BCHW1 BCHW2 BCHW3 BCHW4",
+              "    CPROB1 CPROB2 CPROB3 CPROB4 N;",
+              "    USEVARIABLES ARE N GENDER;",
+              "    NOMINAL = N;",
+              "    CLASSES = C(4);",
+              "    MISSING are all .;",
+              "    IDVARIABLE = ID;",
+              "ANALYSIS:",
+              "    TYPE = MIXTURE;",
+              "    STARTS = 0;",
+              "MODEL:",
+              "    %OVERALL%",
+              "    c ON gender;",
+              "    %C#1%",
+              "    [N#1@15];",
+              "    [N#2@-15];",
+              "    [N#3@-15];",
+              "    %C#2%",
+              "    [N#1@-15];",
+              "    [N#2@15];",
+              "    [N#3@-15];",
+              "    %C#3%",
+              "    [N#1@-15];",
+              "    [N#2@-15];",
+              the.l33_ml,
+              "    %C#4%",
+              "    [N#1@-15];",
+              "    [N#2@-15];",
+              the.l43_ml,
+              "OUTPUT:",
+              "   TECH3",
+              "SAVEDATA:",
+              "TECH3 = t3vg_MLgender", the.datafile.ml,
+              sep="\n")  
+    
+            the.ml.name.v.gender<-paste("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_ml_r",r,"_v_gender.inp",sep="")
+            the.ml.input.v.gender<-file(the.ml.name.v.gender)
+            writeLines(the.ml.text.v.gender, the.ml.input.v.gender)
+            close(the.ml.input.v.gender)
+            runModels(the.ml.name.v.gender,replaceOutfile="modifiedDate")
+        
+        the.ml.text.v.frat<-paste(
+              "TITLE:  Test run to get D matrix;",
+              "DATA:  FILE IS",paste0(the.datafile.ml,";"),
+              "FORMAT=FREE;",
+              "VARIABLE:",
+              "NAMES ARE",
+              paste(all.names[[i]],collapse="\n    "),
+              "    T1 T2 T3 T4 ID GENDER FRAT DX",
+              #Get rid of BCH
+              #"    BCHW1 BCHW2 BCHW3 BCHW4",
+              "    CPROB1 CPROB2 CPROB3 CPROB4 N;",
+              "    USEVARIABLES ARE N FRAT;",
+              "    NOMINAL = N;",
+              "    CLASSES = C(4);",
+              "    MISSING are all .;",
+              "    IDVARIABLE = ID;",
+              "ANALYSIS:",
+              "    TYPE = MIXTURE;",
+              "    STARTS = 0;",
+              "MODEL:",
+              "    %OVERALL%",
+              "    c ON frat;",
+              "    %C#1%",
+              "    [N#1@15];",
+              "    [N#2@-15];",
+              "    [N#3@-15];",
+              "    %C#2%",
+              "    [N#1@-15];",
+              "    [N#2@15];",
+              "    [N#3@-15];",
+              "    %C#3%",
+              "    [N#1@-15];",
+              "    [N#2@-15];",
+              the.l33_ml,
+              "    %C#4%",
+              "    [N#1@-15];",
+              "    [N#2@-15];",
+              the.l43_ml,
+              "OUTPUT:",
+              "   TECH3",
+              "SAVEDATA:",
+              "TECH3 = t3vg_MLfrat", the.datafile.ml,
+              sep="\n")  
+            
+            the.ml.name.v.frat<-paste("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_ml_r",r,"_v_frat.inp",sep="")
+            the.ml.input.v.frat<-file(the.ml.name.v.frat)
+            writeLines(the.ml.text.v.frat, the.ml.input.v.frat)
+            close(the.ml.input.v.frat)
+            runModels(the.ml.name.v.frat,replaceOutfile="modifiedDate")
+        }
+      }
+    }
+  }
+
+```
+
+
+```{r, echo=FALSE,message=FALSE,warning=FALSE}
+require(pander)
+ck.io<-as.data.frame(rbind(colMeans(ck.c1l0,na.rm=TRUE),colMeans(ck.c1l1,na.rm=TRUE),colMeans(ck.c2l0,na.rm=TRUE),colMeans(ck.c2l1,na.rm=TRUE)))
+rownames(ck.io)<-c("Consequences, short form","Consequences, long form", "Motives, short form", "Motives, long form")
+colnames(ck.io)<-c("No DIF, no impact", "No DIF, impact", "DIF, no impact", "DIF, impact")
+
+ck.io.io<-as.data.frame(rbind(colMeans(ck.io.c1l0,na.rm=TRUE),colMeans(ck.io.c1l1,na.rm=TRUE),colMeans(ck.io.c2l0,na.rm=TRUE),colMeans(ck.io.c2l1,na.rm=TRUE)))
+rownames(ck.io.io)<-c("Consequences, short form","Consequences, long form", "Motives, short form", "Motives, long form")
+colnames(ck.io.io)<-c("No DIF, no impact", "No DIF, impact", "DIF, no impact", "DIF, impact")
+pander(t(ck.io), style = 'rmarkdown',split.table=Inf,justify='right')
+pander(t(ck.io.io), style = 'rmarkdown',split.table=Inf,justify='right')
+colMeans(ck.c1l0,na.rm=TRUE)
+colMeans(ck.c1l1,na.rm=TRUE)
+colMeans(ck.c2l0,na.rm=TRUE)
+colMeans(ck.c2l1,na.rm=TRUE)
+```

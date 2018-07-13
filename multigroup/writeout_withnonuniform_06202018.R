@@ -96,10 +96,6 @@ model.ud.acy.l0<-paste('Model:',
                        '[ACY6$1] (b6);',
                        '[ACY12$1] (d12);',
                        '[ACY14$1] (b14);',
-                       'MODEL CONSTRAINT:',
-                       '0 = (d3-c3) - (b3-a3);',
-                       '0 = (d4-c4) - (b4-a4);',
-                       '0 = (d12-c12) - (b12-a12);',
                        sep="\n")
 
 #Alcohol consequences, uniform DIF, long form
@@ -184,10 +180,6 @@ model.ud.acy.l1<-paste('Model:',
                        '[ACY14$1] (b14);',
                        '[ACY15$1] (b15);',
                        '[ACY18$1] (b18);',
-                       'MODEL CONSTRAINT:',
-                       '0 = (d3-c3) - (b3-a3);',
-                       '0 = (d4-c4) - (b4-a4);',
-                       '0 = (d12-c12) - (b12-a12);',
                        sep="\n")
 
 #Alcohol consequences, intercept only, long form
@@ -378,11 +370,6 @@ model.ud.amt.l0<-paste("Model:",
                        '[AMT18$2] (b182);',
                        '[AMT18$3] (b183);',
                        '[AMT18$4] (b184);',
-                       'MODEL CONSTRAINT:',
-                       '0 = (d121-c121) - (b121-a121);',
-                       '0 = (d122-c122) - (b122-a122);',
-                       '0 = (d123-c123) - (b123-a123);',
-                       '0 = (d124-c124) - (b124-a124);',
                        sep="\n")
 
 #Alcohol motives, short form, intercept only
@@ -673,11 +660,6 @@ model.ud.amt.l1<-paste("Model:",
                        '[AMT18$2] (b182);',
                        '[AMT18$3] (b183);',
                        '[AMT18$4] (b184);',
-                       'MODEL CONSTRAINT:',
-                       '0 = (d121-c121) - (b121-a121);',
-                       '0 = (d122-c122) - (b122-a122);',
-                       '0 = (d123-c123) - (b123-a123);',
-                       '0 = (d124-c124) - (b124-a124);',
                        sep="\n")
 
 

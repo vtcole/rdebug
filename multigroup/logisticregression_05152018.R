@@ -33,8 +33,11 @@ for (i in 1:4) {
         indata.io<-try(read.table(the.filename.io,header=FALSE),silent=TRUE) #Read in one of the data files, as currently formatted for Mplus,silent=TRUE
         indata.ud<-try(read.table(the.filename.ud,header=FALSE),silent=TRUE) #Read in one of the data files, as currently formatted for Mplus
         if (class(indata.io)!="try-error"& class(indata.ud)!="try-error") {
-          names(indata.io)<-c(all.names[[i]],"t1","t2","t3","t4","id","gender","frat","dx","bchw1","bchw2","bchw3","bchw4","p1","p2","p3","p4","c")
-          names(indata.ud )<-c(all.names[[i]],"t1","t2","t3","t4","id","gender","frat","dx","bchw1","bchw2","bchw3","bchw4","p1","p2","p3","p4","c")
+          #get rid of BCH
+          names(indata.io)<-c(all.names[[i]],"t1","t2","t3","t4","id","gender","frat","dx","p1","p2","p3","p4","c")
+          names(indata.ud )<-c(all.names[[i]],"t1","t2","t3","t4","id","gender","frat","dx","p1","p2","p3","p4","c")
+          #names(indata.io)<-c(all.names[[i]],"t1","t2","t3","t4","id","gender","frat","dx","bchw1","bchw2","bchw3","bchw4","p1","p2","p3","p4","c")
+          #names(indata.ud )<-c(all.names[[i]],"t1","t2","t3","t4","id","gender","frat","dx","bchw1","bchw2","bchw3","bchw4","p1","p2","p3","p4","c")
           indata.io$estclass<-NA
           #Just doing study 2 here
           #indata.io$estclass[indata.io$c==1]<-1

@@ -33,9 +33,9 @@ for (i in 1:4){
   for (j in 1:12) {
     for (r in 1:100) {
       the.output.v.io.frat<-readModels(paste0("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_io_r",r,"_v_frat.out"))$parameters
-      the.output.bch.io.frat<-readModels(paste0("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_io_r",r,"_bch_frat.out"))$parameters
+      #the.output.bch.io.frat<-readModels(paste0("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_io_r",r,"_bch_frat.out"))$parameters
       the.output.v.io.gender<-readModels(paste0("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_io_r",r,"_v_gender.out"))$parameters
-      the.output.bch.io.gender<-readModels(paste0("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_io_r",r,"_bch_gender.out"))$parameters
+      #the.output.bch.io.gender<-readModels(paste0("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_io_r",r,"_bch_gender.out"))$parameters
       if (length(the.output.v.io.frat)>0) {
         c1.4.v.io.frat<-subset(the.output.v.io.frat$unstandardized$est,the.output.v.io.frat$unstandardized$paramHeader=="C#1.ON")
         c2.4.v.io.frat<-subset(the.output.v.io.frat$unstandardized$est,the.output.v.io.frat$unstandardized$paramHeader=="C#2.ON")
@@ -43,13 +43,13 @@ for (i in 1:4){
         c1.test.v.io.frat[r,j,i]<-c1.4.v.io.frat-c2.4.v.io.frat
         c3.test.v.io.frat[r,j,i]<-c3.4.v.io.frat
       }
-      if (length(the.output.bch.io.frat)>0) {
-        c1.4.bch.io.frat<-subset(the.output.bch.io.frat$unstandardized$est,the.output.bch.io.frat$unstandardized$paramHeader=="C#1.ON")
-        c2.4.bch.io.frat<-subset(the.output.bch.io.frat$unstandardized$est,the.output.bch.io.frat$unstandardized$paramHeader=="C#2.ON")
-        c3.4.bch.io.frat<-subset(the.output.bch.io.frat$unstandardized$est,the.output.bch.io.frat$unstandardized$paramHeader=="C#3.ON")
-        c1.test.bch.io.frat[r,j,i]<-c1.4.bch.io.frat-c2.4.bch.io.frat
-        c3.test.bch.io.frat[r,j,i]<-c3.4.bch.io.frat
-      }
+      #if (length(the.output.bch.io.frat)>0) {
+      #  c1.4.bch.io.frat<-subset(the.output.bch.io.frat$unstandardized$est,the.output.bch.io.frat$unstandardized$paramHeader=="C#1.ON")
+      #  c2.4.bch.io.frat<-subset(the.output.bch.io.frat$unstandardized$est,the.output.bch.io.frat$unstandardized$paramHeader=="C#2.ON")
+      #  c3.4.bch.io.frat<-subset(the.output.bch.io.frat$unstandardized$est,the.output.bch.io.frat$unstandardized$paramHeader=="C#3.ON")
+      #  c1.test.bch.io.frat[r,j,i]<-c1.4.bch.io.frat-c2.4.bch.io.frat
+      #  c3.test.bch.io.frat[r,j,i]<-c3.4.bch.io.frat
+      #}
       if (length(the.output.v.io.gender)>0) {
         c1.4.v.io.gender<-subset(the.output.v.io.gender$unstandardized$est,the.output.v.io.gender$unstandardized$paramHeader=="C#1.ON")
         c2.4.v.io.gender<-subset(the.output.v.io.gender$unstandardized$est,the.output.v.io.gender$unstandardized$paramHeader=="C#2.ON")
@@ -57,13 +57,13 @@ for (i in 1:4){
         c1.test.v.io.gender[r,j,i]<-c1.4.v.io.gender-c2.4.v.io.gender
         c3.test.v.io.gender[r,j,i]<-c3.4.v.io.gender
       }
-      if (length(the.output.bch.io.gender)>0) {
-        c1.4.bch.io.gender<-subset(the.output.bch.io.gender$unstandardized$est,the.output.bch.io.gender$unstandardized$paramHeader=="C#1.ON")
-        c2.4.bch.io.gender<-subset(the.output.bch.io.gender$unstandardized$est,the.output.bch.io.gender$unstandardized$paramHeader=="C#2.ON")
-        c3.4.bch.io.gender<-subset(the.output.bch.io.gender$unstandardized$est,the.output.bch.io.gender$unstandardized$paramHeader=="C#3.ON")
-        c1.test.bch.io.gender[r,j,i]<-c1.4.bch.io.gender-c2.4.bch.io.gender
-        c3.test.bch.io.gender[r,j,i]<-c3.4.bch.io.gender
-      }
+      #if (length(the.output.bch.io.gender)>0) {
+      #  c1.4.bch.io.gender<-subset(the.output.bch.io.gender$unstandardized$est,the.output.bch.io.gender$unstandardized$paramHeader=="C#1.ON")
+      #  c2.4.bch.io.gender<-subset(the.output.bch.io.gender$unstandardized$est,the.output.bch.io.gender$unstandardized$paramHeader=="C#2.ON")
+      #  c3.4.bch.io.gender<-subset(the.output.bch.io.gender$unstandardized$est,the.output.bch.io.gender$unstandardized$paramHeader=="C#3.ON")
+      #  c1.test.bch.io.gender[r,j,i]<-c1.4.bch.io.gender-c2.4.bch.io.gender
+      #  c3.test.bch.io.gender[r,j,i]<-c3.4.bch.io.gender
+      #}
     }
   }
 }
@@ -77,18 +77,18 @@ all.sets<-list(c1l0,c1l1,c2l0,c2l1)
 
 title.list<-c("Consequences, Long","Consequences, Short"," Motives, Long","Motives, Short")
 
-trimmed.bch.io.frat<-c3.test.bch.io.frat
-trimmed.bch.io.gender<-c3.test.bch.io.gender
+#trimmed.bch.io.frat<-c3.test.bch.io.frat
+#trimmed.bch.io.gender<-c3.test.bch.io.gender
 trimmed.v.io.frat<-c3.test.v.io.frat
 trimmed.v.io.gender<-c3.test.v.io.gender
 
 for (a in 1:100) {
   for (b in 1:12) {
     for (d in 1:4) {
-      if ((is.na(c3.test.bch.io.frat[a,b,d])==FALSE)&(abs(c3.test.bch.io.frat[a,b,d])>10))
-      {trimmed.bch.io.frat[a,b,d]<-NA}
-      if ((is.na(c3.test.bch.io.gender[a,b,d])==FALSE)&(abs(c3.test.bch.io.gender[a,b,d])>10))
-      {trimmed.bch.io.gender[a,b,d]<-NA}
+      #if ((is.na(c3.test.bch.io.frat[a,b,d])==FALSE)&(abs(c3.test.bch.io.frat[a,b,d])>10))
+      #{trimmed.bch.io.frat[a,b,d]<-NA}
+      #if ((is.na(c3.test.bch.io.gender[a,b,d])==FALSE)&(abs(c3.test.bch.io.gender[a,b,d])>10))
+      #{trimmed.bch.io.gender[a,b,d]<-NA}
       if ((is.na(c3.test.v.io.frat[a,b,d])==FALSE)&(abs(c3.test.v.io.frat[a,b,d])>10))
       {trimmed.v.io.frat[a,b,d]<-NA}
       if ((is.na(c3.test.v.io.gender[a,b,d])==FALSE)&(abs(c3.test.v.io.gender[a,b,d])>10))
@@ -112,9 +112,9 @@ for (i in 1:4){
   for (j in 1:12) {
     for (r in 1:100) {
       the.output.v.ud.frat<-readModels(paste0("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_ud_r",r,"_v_frat.out"))$parameters
-      the.output.bch.ud.frat<-readModels(paste0("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_ud_r",r,"_bch_frat.out"))$parameters
+      #the.output.bch.ud.frat<-readModels(paste0("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_ud_r",r,"_bch_frat.out"))$parameters
       the.output.v.ud.gender<-readModels(paste0("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_ud_r",r,"_v_gender.out"))$parameters
-      the.output.bch.ud.gender<-readModels(paste0("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_ud_r",r,"_bch_gender.out"))$parameters
+      #the.output.bch.ud.gender<-readModels(paste0("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_ud_r",r,"_bch_gender.out"))$parameters
       if (length(the.output.v.ud.frat)>0) {
         c1.4.v.ud.frat<-subset(the.output.v.ud.frat$unstandardized$est,the.output.v.ud.frat$unstandardized$paramHeader=="C#1.ON")
         c2.4.v.ud.frat<-subset(the.output.v.ud.frat$unstandardized$est,the.output.v.ud.frat$unstandardized$paramHeader=="C#2.ON")
@@ -122,13 +122,13 @@ for (i in 1:4){
         c1.test.v.ud.frat[r,j,i]<-c1.4.v.ud.frat-c2.4.v.ud.frat
         c3.test.v.ud.frat[r,j,i]<-c3.4.v.ud.frat
       }
-      if (length(the.output.bch.ud.frat)>0) {
-        c1.4.bch.ud.frat<-subset(the.output.bch.ud.frat$unstandardized$est,the.output.bch.ud.frat$unstandardized$paramHeader=="C#1.ON")
-        c2.4.bch.ud.frat<-subset(the.output.bch.ud.frat$unstandardized$est,the.output.bch.ud.frat$unstandardized$paramHeader=="C#2.ON")
-        c3.4.bch.ud.frat<-subset(the.output.bch.ud.frat$unstandardized$est,the.output.bch.ud.frat$unstandardized$paramHeader=="C#3.ON")
-        c1.test.bch.ud.frat[r,j,i]<-c1.4.bch.ud.frat-c2.4.bch.ud.frat
-        c3.test.bch.ud.frat[r,j,i]<-c3.4.bch.ud.frat
-      }
+      #if (length(the.output.bch.ud.frat)>0) {
+      #  c1.4.bch.ud.frat<-subset(the.output.bch.ud.frat$unstandardized$est,the.output.bch.ud.frat$unstandardized$paramHeader=="C#1.ON")
+      #  c2.4.bch.ud.frat<-subset(the.output.bch.ud.frat$unstandardized$est,the.output.bch.ud.frat$unstandardized$paramHeader=="C#2.ON")
+      #  c3.4.bch.ud.frat<-subset(the.output.bch.ud.frat$unstandardized$est,the.output.bch.ud.frat$unstandardized$paramHeader=="C#3.ON")
+      #  c1.test.bch.ud.frat[r,j,i]<-c1.4.bch.ud.frat-c2.4.bch.ud.frat
+      #  c3.test.bch.ud.frat[r,j,i]<-c3.4.bch.ud.frat
+      #}
       if (length(the.output.v.ud.gender)>0) {
         c1.4.v.ud.gender<-subset(the.output.v.ud.gender$unstandardized$est,the.output.v.ud.gender$unstandardized$paramHeader=="C#1.ON")
         c2.4.v.ud.gender<-subset(the.output.v.ud.gender$unstandardized$est,the.output.v.ud.gender$unstandardized$paramHeader=="C#2.ON")
@@ -136,13 +136,13 @@ for (i in 1:4){
         c1.test.v.ud.gender[r,j,i]<-c1.4.v.ud.gender-c2.4.v.ud.gender
         c3.test.v.ud.gender[r,j,i]<-c3.4.v.ud.gender
       }
-      if (length(the.output.bch.ud.gender)>0) {
-        c1.4.bch.ud.gender<-subset(the.output.bch.ud.gender$unstandardized$est,the.output.bch.ud.gender$unstandardized$paramHeader=="C#1.ON")
-        c2.4.bch.ud.gender<-subset(the.output.bch.ud.gender$unstandardized$est,the.output.bch.ud.gender$unstandardized$paramHeader=="C#2.ON")
-        c3.4.bch.ud.gender<-subset(the.output.bch.ud.gender$unstandardized$est,the.output.bch.ud.gender$unstandardized$paramHeader=="C#3.ON")
-        c1.test.bch.ud.gender[r,j,i]<-c1.4.bch.ud.gender-c2.4.bch.ud.gender
-        c3.test.bch.ud.gender[r,j,i]<-c3.4.bch.ud.gender
-      }
+      #if (length(the.output.bch.ud.gender)>0) {
+        #c1.4.bch.ud.gender<-subset(the.output.bch.ud.gender$unstandardized$est,the.output.bch.ud.gender$unstandardized$paramHeader=="C#1.ON")
+        #c2.4.bch.ud.gender<-subset(the.output.bch.ud.gender$unstandardized$est,the.output.bch.ud.gender$unstandardized$paramHeader=="C#2.ON")
+        #c3.4.bch.ud.gender<-subset(the.output.bch.ud.gender$unstandardized$est,the.output.bch.ud.gender$unstandardized$paramHeader=="C#3.ON")
+        #c1.test.bch.ud.gender[r,j,i]<-c1.4.bch.ud.gender-c2.4.bch.ud.gender
+        #c3.test.bch.ud.gender[r,j,i]<-c3.4.bch.ud.gender
+      #}
     }
   }
 }
@@ -156,18 +156,18 @@ all.sets<-list(c1l0,c1l1,c2l0,c2l1)
 
 title.list<-c("Consequences, Long","Consequences, Short"," Motives, Long","Motives, Short")
 
-trimmed.bch.ud.frat<-c3.test.bch.ud.frat
-trimmed.bch.ud.gender<-c3.test.bch.ud.gender
+#trimmed.bch.ud.frat<-c3.test.bch.ud.frat
+#trimmed.bch.ud.gender<-c3.test.bch.ud.gender
 trimmed.v.ud.frat<-c3.test.v.ud.frat
 trimmed.v.ud.gender<-c3.test.v.ud.gender
 
 for (a in 1:100) {
   for (b in 1:12) {
     for (d in 1:4) {
-      if ((is.na(c3.test.bch.ud.frat[a,b,d])==FALSE)&(abs(c3.test.bch.ud.frat[a,b,d])>10))
-      {trimmed.bch.ud.frat[a,b,d]<-NA}
-      if ((is.na(c3.test.bch.ud.gender[a,b,d])==FALSE)&(abs(c3.test.bch.ud.gender[a,b,d])>10))
-      {trimmed.bch.ud.gender[a,b,d]<-NA}
+      #if ((is.na(c3.test.bch.ud.frat[a,b,d])==FALSE)&(abs(c3.test.bch.ud.frat[a,b,d])>10))
+      #{trimmed.bch.ud.frat[a,b,d]<-NA}
+      #if ((is.na(c3.test.bch.ud.gender[a,b,d])==FALSE)&(abs(c3.test.bch.ud.gender[a,b,d])>10))
+      #{trimmed.bch.ud.gender[a,b,d]<-NA}
       if ((is.na(c3.test.v.ud.frat[a,b,d])==FALSE)&(abs(c3.test.v.ud.frat[a,b,d])>10))
       {trimmed.v.ud.frat[a,b,d]<-NA}
       if ((is.na(c3.test.v.ud.gender[a,b,d])==FALSE)&(abs(c3.test.v.ud.gender[a,b,d])>10))
