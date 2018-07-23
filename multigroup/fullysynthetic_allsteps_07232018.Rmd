@@ -1,0 +1,2450 @@
+---
+title: "Full data generation and analysis for Study 1"
+author: "Veronica Cole"
+date: "Monday, July 23, 2018"
+output: html_document
+---
+
+This is the full set of code that was run to generate data, fit models, and obtain reliability and validity information in the fully synthetic dataset. 
+
+##Generate data
+
+```{r,cache=TRUE, eval=FALSE}
+library(sas7bdat)
+library(MplusAutomation)
+
+#test<-read.sas7bdat("M:/xstudy2/Simulation/aim02/July2017/full.sas7bdat")
+#write.table(test,"M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/full_mplus_12112017.dat",na=".",row.names=FALSE,col.names=FALSE)
+
+#varlist<-c("AMT1A108","AMT1A109","AMT1A110","AMT1A111","AMT1A112","AMT1A113","AMT1A115","AMT1A116","AMT1A117","AMT1A118")
+#in.model<-readModels("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/amt_3.out")
+
+#AMT, 1
+amt.1<-scan("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/amt_1.dat")
+amt.c1.list<-seq(1,41,by=4)
+amt.c2.list<-seq(45,85,by=4)
+
+problist.amt1.1<-matrix(NA,length(amt.c1.list),5)
+problist.amt1.2<-matrix(NA,length(amt.c2.list),5)
+
+for (i in 1:length(amt.c1.list)) {
+  list.1<-amt.c1.list[i]:(amt.c1.list[i]+3)
+  list.2<-amt.c2.list[i]:(amt.c2.list[i]+3)
+  
+  a.11<-1/(1+exp(amt.1[list.1[1]]))
+  a.12<-1/(1+exp(amt.1[list.1[2]]))
+  a.13<-1/(1+exp(amt.1[list.1[3]]))
+  a.14<-1/(1+exp(amt.1[list.1[4]]))
+  
+  p.11<-1-a.11
+  p.12<-(1-a.12)-(1-a.11)
+  p.13<-(1-a.13)-(1-a.12)
+  p.14<-(1-a.14)-(1-a.13)
+  p.15<-1-(p.14+p.13+p.12+p.11)
+  
+  
+  a.21<-1/(1+exp(amt.1[list.2[1]]))
+  a.22<-1/(1+exp(amt.1[list.2[2]]))
+  a.23<-1/(1+exp(amt.1[list.2[3]]))
+  a.24<-1/(1+exp(amt.1[list.2[4]]))
+  
+  p.21<-1-a.21
+  p.22<-(1-a.22)-(1-a.21)
+  p.23<-(1-a.23)-(1-a.22)
+  p.24<-(1-a.24)-(1-a.23)
+  p.25<-1-(p.24+p.23+p.22+p.21)
+  
+  problist.amt1.1[i,]<-c(p.11,p.12,p.13,p.14,p.15)
+  problist.amt1.2[i,]<-c(p.21,p.22,p.23,p.24,p.25)
+  
+}
+
+#AMT, 3
+amt.3<-scan("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/amt_3.dat")
+amt.c1.list<-seq(1,41,by=4)
+amt.c2.list<-seq(45,85,by=4)
+
+problist.amt3.1<-matrix(NA,length(amt.c1.list),5)
+problist.amt3.2<-matrix(NA,length(amt.c2.list),5)
+
+for (i in 1:length(amt.c1.list)) {
+  list.1<-amt.c1.list[i]:(amt.c1.list[i]+3)
+  list.2<-amt.c2.list[i]:(amt.c2.list[i]+3)
+  
+  a.11<-1/(1+exp(amt.3[list.1[1]]))
+  a.12<-1/(1+exp(amt.3[list.1[2]]))
+  a.13<-1/(1+exp(amt.3[list.1[3]]))
+  a.14<-1/(1+exp(amt.3[list.1[4]]))
+  
+  p.11<-1-a.11
+  p.12<-(1-a.12)-(1-a.11)
+  p.13<-(1-a.13)-(1-a.12)
+  p.14<-(1-a.14)-(1-a.13)
+  p.15<-1-(p.14+p.13+p.12+p.11)
+  
+  
+  a.21<-1/(1+exp(amt.3[list.2[1]]))
+  a.22<-1/(1+exp(amt.3[list.2[2]]))
+  a.23<-1/(1+exp(amt.3[list.2[3]]))
+  a.24<-1/(1+exp(amt.3[list.2[4]]))
+  
+  p.21<-1-a.21
+  p.22<-(1-a.22)-(1-a.21)
+  p.23<-(1-a.23)-(1-a.22)
+  p.24<-(1-a.24)-(1-a.23)
+  p.25<-1-(p.24+p.23+p.22+p.21)
+  
+  problist.amt3.1[i,]<-c(p.11,p.12,p.13,p.14,p.15)
+  problist.amt3.2[i,]<-c(p.21,p.22,p.23,p.24,p.25)
+  
+}
+
+
+#ACY, 1
+acy.1<-scan("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/acy_1.dat")
+problist.acy1.1<-1/(1+exp(acy.1[1:15]))
+problist.acy1.2<-1/(1+exp(acy.1[16:30]))
+
+#ACY, 3
+acy.3<-scan("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/acy_3.dat")
+problist.acy3.1<-1/(1+exp(acy.3[1:15]))
+problist.acy3.2<-1/(1+exp(acy.3[16:30]))
+
+
+amt.function<-function(impact,n1,DIF,longform) {
+  the.dir<-(paste0("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/i",impact,"d",DIF,"c2l",longform,"n",n1))
+  if(dir.exists(the.dir)==0) {dir.create(the.dir)}
+  for (reps in 1:500) {
+    the.name<-(paste0("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/i",impact,"d",DIF,"c2l",longform,"n",n1,"/i",impact,"d",DIF,"c2l",longform,"n",n1,"_r",reps,".csv"))
+    the.mat<-matrix(NA,200+n1,11)
+    study<-c(rep(1,n1),rep(2,200))
+    if (impact==1) {
+      dx<-c(rbinom(n1,1,.25),rbinom(200,1,.45))
+    } else {dx<-c(rbinom(n1,1,.25),rbinom(200,1,.45))
+    }
+    t1<-c(dx[1:n1],rep(1,200))
+    t2<-c(1-dx[1:n1],rep(1,200))
+    if (DIF==0) {
+      for (q in 1:(200+n1)) {
+        if (dx[q]==0) {the.prob<-problist.amt1.1} else {the.prob<-problist.amt1.2}
+        for (r in 1:11) {
+          the.mat[q,r]<-c(1,2,3,4,5)%*%rmultinom(1,1,the.prob[r,])
+        }
+      }
+    } else {
+      for (p in 1:n1) {
+        if (dx[p]==0) {the.prob<-problist.amt1.1} else {the.prob<-problist.amt1.2}        
+        for (r in 1:11) {
+          the.mat[p,r]<-c(1,2,3,4,5)%*%rmultinom(1,1,the.prob[r,])
+        }
+      }
+      for (q in (n1+1):(200+n1)) {
+        if (dx[q]==0) {the.prob<-problist.amt3.1} else {the.prob<-problist.amt3.2}
+        for (s in 1:11) {
+          the.mat[q,s]<-c(1,2,3,4,5)%*%rmultinom(1,1,the.prob[s,])
+        }
+      }
+    }
+    id<-1:(200+n1)
+    numberhits<-rep(0,200+n1) #Null, doesn't matter, just putting it in to concord with original version
+    the.reps<-rep(reps,200+n1)
+    the.out<-cbind(dx,id,the.mat,numberhits,study,the.reps,t1,t2)
+    write.table(the.out,the.name,sep=",",row.names=FALSE,col.names=FALSE)
+  }
+}
+
+
+amt.function(0,25,0,0)
+amt.function(0,25,0,1)
+amt.function(0,25,1,0)
+amt.function(0,25,1,1)
+amt.function(1,25,0,0)
+amt.function(1,25,0,1)
+amt.function(1,25,1,0)
+amt.function(1,25,1,1)
+amt.function(0,50,0,0)
+amt.function(0,50,0,1)
+amt.function(0,50,1,0)
+amt.function(0,50,1,1)
+amt.function(1,50,0,0)
+amt.function(1,50,0,1)
+amt.function(1,50,1,0)
+amt.function(1,50,1,1)
+amt.function(0,100,0,0)
+amt.function(0,100,0,1)
+amt.function(0,100,1,0)
+amt.function(0,100,1,1)
+amt.function(1,100,0,0)
+amt.function(1,100,0,1)
+amt.function(1,100,1,0)
+amt.function(1,100,1,1)
+
+acy.function<-function(impact,n1,DIF,longform) {
+  the.dir<-(paste0("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/i",impact,"d",DIF,"c1l",longform,"n",n1))
+  if(dir.exists(the.dir)==0) {dir.create(the.dir)}
+  for (reps in 1:500) {
+    the.name<-(paste0("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/i",impact,"d",DIF,"c1l",longform,"n",n1,"/i",impact,"d",DIF,"c1l",longform,"n",n1,"_r",reps,".csv"))
+    the.mat<-matrix(NA,200+n1,15)
+    study<-c(rep(1,n1),rep(2,200))
+    if (impact==1) {
+      dx<-c(rbinom(n1,1,.25),rbinom(200,1,.45))
+    } else {dx<-c(rbinom(n1,1,.25),rbinom(200,1,.45))
+    }
+    t1<-c(dx[1:n1],rep(1,200))
+    t2<-c(1-dx[1:n1],rep(1,200))
+    if (DIF==0) {
+      for (q in 1:(200+n1)) {
+        if (dx[q]==0) {the.prob<-problist.acy1.1} else {the.prob<-problist.acy1.2}
+        for (r in 1:15) {
+          the.mat[q,r]<-rbinom(1,1,the.prob[r])
+        }
+      }
+    } else {
+      for (p in 1:n1) {
+        if (dx[p]==0) {the.prob<-problist.acy3.1} else {the.prob<-problist.acy3.2}        
+        for (r in 1:15) {
+          the.mat[p,r]<-rbinom(1,1,the.prob[r])
+        }
+      }
+      for (q in (n1+1):(200+n1)) {
+        if (dx[q]==0) {the.prob<-problist.acy3.1} else {the.prob<-problist.acy3.2}
+        for (s in 1:15) {
+          the.mat[q,s]<-rbinom(1,1,the.prob[s])
+        }
+      }
+    }
+    id<-1:(200+n1)
+    numberhits<-rep(0,200+n1) #Null, doesn't matter, just putting it in to concord with original version
+    the.reps<-rep(reps,200+n1)
+    the.out<-cbind(dx,id,the.mat,numberhits,study,the.reps,t1,t2)
+    write.table(the.out,the.name,sep=",",row.names=FALSE,col.names=FALSE)
+  }
+}
+
+acy.function(0,25,0,0)
+acy.function(0,25,0,1)
+acy.function(0,25,1,0)
+acy.function(0,25,1,1)
+acy.function(1,25,0,0)
+acy.function(1,25,0,1)
+acy.function(1,25,1,0)
+acy.function(1,25,1,1)
+acy.function(0,50,0,0)
+acy.function(0,50,0,1)
+acy.function(0,50,1,0)
+acy.function(0,50,1,1)
+acy.function(1,50,0,0)
+acy.function(1,50,0,1)
+acy.function(1,50,1,0)
+acy.function(1,50,1,1)
+acy.function(0,100,0,0)
+acy.function(0,100,0,1)
+acy.function(0,100,1,0)
+acy.function(0,100,1,1)
+acy.function(1,100,0,0)
+acy.function(1,100,0,1)
+acy.function(1,100,1,0)
+acy.function(1,100,1,1)
+```
+
+
+##Fit Step 1 models for LCA data
+```{r}
+library(MplusAutomation)
+c1l0<-c("i0d0c1l0n25","i0d1c1l0n25","i1d0c1l0n25","i1d1c1l0n25","i0d0c1l0n50","i0d1c1l0n50","i1d0c1l0n50","i1d1c1l0n50","i0d0c1l0n100","i0d1c1l0n100","i1d0c1l0n100","i1d1c1l0n100")
+c1l1<-c("i0d0c1l1n25","i0d1c1l1n25","i1d0c1l1n25","i1d1c1l1n25","i0d0c1l1n50","i0d1c1l1n50","i1d0c1l1n50","i1d1c1l1n50","i0d0c1l1n100","i0d1c1l1n100","i1d0c1l1n100","i1d1c1l1n100")
+c2l0<-c("i0d0c2l0n25","i0d1c2l0n25","i1d0c2l0n25","i1d1c2l0n25","i0d0c2l0n50","i0d1c2l0n50","i1d0c2l0n50","i1d1c2l0n50","i0d0c2l0n100","i0d1c2l0n100","i1d0c2l0n100","i1d1c2l0n100")
+c2l1<-c("i0d0c2l1n25","i0d1c2l1n25","i1d0c2l1n25","i1d1c2l1n25","i0d0c2l1n50","i0d1c2l1n50","i1d0c2l1n50","i1d1c2l1n50","i0d0c2l1n100","i0d1c2l1n100","i1d0c2l1n100","i1d1c2l1n100")
+all.sets<-list(c1l0,c1l1,c2l0,c2l1)
+
+names.c1l0<-c('ACY2','ACY3','ACY4','ACY6','ACY12','ACY14')
+names.c1l1<-c('ACY1','ACY2','ACY3','ACY4','ACY5','ACY6','ACY7','ACY8','ACY9','ACY10','ACY12','ACY13','ACY14','ACY15','ACY18')
+names.c2l0<-c('AMT10','AMT11','AMT12','AMT14','AMT16','AMT18')
+names.c2l1<-c('AMT8','AMT9','AMT10','AMT11','AMT12','AMT13','AMT14','AMT15','AMT16','AMT17','AMT18')
+
+all.names<-list(names.c1l0,names.c1l1,names.c2l0,names.c2l1)
+full.names<-list(names.c1l1,names.c1l1,names.c2l1,names.c2l1)
+
+
+# Intercept-only models ---------------------------------------------------
+
+
+#Alcohol consequences, intercept only, short form
+model.io.acy.l0<-paste('Model:',
+                       '%OVERALL%',
+                       '[ACY2$1];',
+                       '[ACY3$1];',
+                       '[ACY4$1];',
+                       '[ACY6$1];',
+                       '[ACY12$1];',
+                       '[ACY14$1];',
+                       '%C#1%',
+                       '[ACY2$1] (a2);',
+                       '[ACY3$1] (a3);',
+                       '[ACY4$1] (a4);',
+                       '[ACY6$1] (a6);',
+                       '[ACY12$1] (a12);',
+                       '[ACY14$1] (a14);',
+                       '%C#2%',
+                       '[ACY2$1] (b2);',
+                       '[ACY3$1] (b3);',
+                       '[ACY4$1] (b4);',
+                       '[ACY6$1] (b6);',
+                       '[ACY12$1] (b12);',
+                       '[ACY14$1] (b14);',
+                       '%C#3%',
+                       '[ACY2$1] (a2);',
+                       '[ACY3$1] (a3);',
+                       '[ACY4$1] (a4);',
+                       '[ACY6$1] (a6);',
+                       '[ACY12$1] (a12);',
+                       '[ACY14$1] (a14);',
+                       '%C#4%',
+                       '[ACY2$1] (b2);',
+                       '[ACY3$1] (b3);',
+                       '[ACY4$1] (b4);',
+                       '[ACY6$1] (b6);',
+                       '[ACY12$1] (b12);',
+                       '[ACY14$1] (b14);',
+                       sep="\n")
+
+#Alcohol consequences, intercept only, long form
+model.io.acy.l1<-paste('Model:',
+                       '%OVERALL%',
+                       '[ACY1$1];',
+                       '[ACY2$1];',
+                       '[ACY3$1];',
+                       '[ACY4$1];',
+                       '[ACY5$1];',
+                       '[ACY6$1];',
+                       '[ACY7$1];',
+                       '[ACY8$1];',
+                       '[ACY9$1];',
+                       '[ACY10$1];',
+                       '[ACY12$1];',
+                       '[ACY13$1];',
+                       '[ACY14$1];',
+                       '[ACY15$1];',
+                       '[ACY18$1];',
+                       '%C#1%',
+                       '[ACY1$1] (a1);',
+                       '[ACY2$1] (a2);',
+                       '[ACY3$1] (a3);',
+                       '[ACY4$1] (a4);',
+                       '[ACY5$1] (a5);',
+                       '[ACY6$1] (a6);',
+                       '[ACY7$1] (a7);',
+                       '[ACY8$1] (a8);',
+                       '[ACY9$1] (a9);',
+                       '[ACY10$1] (a10);',
+                       '[ACY12$1] (a12);',
+                       '[ACY13$1] (a13);',
+                       '[ACY14$1] (a14);',
+                       '[ACY15$1] (a15);',
+                       '[ACY18$1] (a18);',
+                       '%C#2%',
+                       '[ACY1$1] (b1);',
+                       '[ACY2$1] (b2);',
+                       '[ACY3$1] (b3);',
+                       '[ACY4$1] (b4);',
+                       '[ACY5$1] (b5);',
+                       '[ACY6$1] (b6);',
+                       '[ACY7$1] (b7);',
+                       '[ACY8$1] (b8);',
+                       '[ACY9$1] (b9);',
+                       '[ACY10$1] (b10);',
+                       '[ACY12$1] (b12);',
+                       '[ACY13$1] (b13);',
+                       '[ACY14$1] (b14);',
+                       '[ACY15$1] (b15);',
+                       '[ACY18$1] (b18);',
+                       '%C#3%',
+                       '[ACY1$1] (a1);',
+                       '[ACY2$1] (a2);',
+                       '[ACY3$1] (a3);',
+                       '[ACY4$1] (a4);',
+                       '[ACY5$1] (a5);',
+                       '[ACY6$1] (a6);',
+                       '[ACY7$1] (a7);',
+                       '[ACY8$1] (a8);',
+                       '[ACY9$1] (a9);',
+                       '[ACY10$1] (a10);',
+                       '[ACY12$1] (a12);',
+                       '[ACY13$1] (a13);',
+                       '[ACY14$1] (a14);',
+                       '[ACY15$1] (a15);',
+                       '[ACY18$1] (a18);',
+                       '%C#4%',
+                       '[ACY1$1] (b1);',
+                       '[ACY2$1] (b2);',
+                       '[ACY3$1]; (b3)',
+                       '[ACY4$1]; (b4)',
+                       '[ACY5$1] (b5);',
+                       '[ACY6$1] (b6);',
+                       '[ACY7$1] (b7);',
+                       '[ACY8$1] (b8);',
+                       '[ACY9$1] (b9);',
+                       '[ACY10$1] (b10);',
+                       '[ACY12$1] (b12); ',
+                       '[ACY13$1] (b13);',
+                       '[ACY14$1] (b14);',
+                       '[ACY15$1] (b15);',
+                       '[ACY18$1] (b18);',
+                       sep="\n")
+
+#Alcohol motives, short form, intercept only
+model.io.amt.l0<-paste('Model:',
+                       '%OVERALL%',
+                       '%C#1%',
+                       '[AMT10$1] (a101);',
+                       '[AMT10$2] (a102);',
+                       '[AMT10$3] (a103);',
+                       '[AMT10$4] (a104);',
+                       '[AMT11$1] (a111);',
+                       '[AMT11$2] (a112);',
+                       '[AMT11$3] (a113);',
+                       '[AMT11$4] (a114);',
+                       '[AMT12$1] (a121);',
+                       '[AMT12$2] (a122);',
+                       '[AMT12$3] (a123);',
+                       '[AMT12$4] (a124);',
+                       '[AMT14$1] (a141);',
+                       '[AMT14$2] (a142);',
+                       '[AMT14$3] (a143);',
+                       '[AMT14$4] (a144);',
+                       '[AMT16$1] (a161);',
+                       '[AMT16$2] (a162);',
+                       '[AMT16$3] (a163);',
+                       '[AMT16$4] (a164);',
+                       '[AMT18$1] (a181);',
+                       '[AMT18$2] (a182);',
+                       '[AMT18$3] (a183);',
+                       '[AMT18$4] (a184);',
+                       '%C#2%',
+                       '[AMT10$1] (b101);',
+                       '[AMT10$2] (b102);',
+                       '[AMT10$3] (b103);',
+                       '[AMT10$4] (b104);',
+                       '[AMT11$1] (b111);',
+                       '[AMT11$2] (b112);',
+                       '[AMT11$3] (b113);',
+                       '[AMT11$4] (b114);',
+                       '[AMT12$1] (b121);',
+                       '[AMT12$2] (b122);',
+                       '[AMT12$3] (b123);',
+                       '[AMT12$4] (b124);',
+                       '[AMT14$1] (b141);',
+                       '[AMT14$2] (b142);',
+                       '[AMT14$3] (b143);',
+                       '[AMT14$4] (b144);',
+                       '[AMT16$1] (b161);',
+                       '[AMT16$2] (b162);',
+                       '[AMT16$3] (b163);',
+                       '[AMT16$4] (b164);',
+                       '[AMT18$1] (b181);',
+                       '[AMT18$2] (b182);',
+                       '[AMT18$3] (b183);',
+                       '[AMT18$4] (b184);',
+                       '%C#3%',
+                       '[AMT10$1] (a101);',
+                       '[AMT10$2] (a102);',
+                       '[AMT10$3] (a103);',
+                       '[AMT10$4] (a104);',
+                       '[AMT11$1] (a111);',
+                       '[AMT11$2] (a112);',
+                       '[AMT11$3] (a113);',
+                       '[AMT11$4] (a114);',
+                       '[AMT12$1] (a121);',
+                       '[AMT12$2] (a122);',
+                       '[AMT12$3] (a123);',
+                       '[AMT12$4] (a124);',
+                       '[AMT14$1] (a141);',
+                       '[AMT14$2] (a142);',
+                       '[AMT14$3] (a143);',
+                       '[AMT14$4] (a144);',
+                       '[AMT16$1] (a161);',
+                       '[AMT16$2] (a162);',
+                       '[AMT16$3] (a163);',
+                       '[AMT16$4] (a164);',
+                       '[AMT18$1] (a181);',
+                       '[AMT18$2] (a182);',
+                       '[AMT18$3] (a183);',
+                       '[AMT18$4] (a184);',
+                       '%C#4%',
+                       '[AMT10$1] (b101);',
+                       '[AMT10$2] (b102);',
+                       '[AMT10$3] (b103);',
+                       '[AMT10$4] (b104);',
+                       '[AMT11$1] (b111);',
+                       '[AMT11$2] (b112);',
+                       '[AMT11$3] (b113);',
+                       '[AMT11$4] (b114);',
+                       '[AMT12$1] (b121);',
+                       '[AMT12$2] (b122);',
+                       '[AMT12$3] (b123);',
+                       '[AMT12$4] (b124);',
+                       '[AMT14$1] (b141);',
+                       '[AMT14$2] (b142);',
+                       '[AMT14$3] (b143);',
+                       '[AMT14$4] (b144);',
+                       '[AMT16$1] (b161);',
+                       '[AMT16$2] (b162);',
+                       '[AMT16$3] (b163);',
+                       '[AMT16$4] (b164);',
+                       '[AMT18$1] (b181);',
+                       '[AMT18$2] (b182);',
+                       '[AMT18$3] (b183);',
+                       '[AMT18$4] (b184);'
+                       ,sep="\n")
+
+
+#Alcohol motives, long form, intercept only
+model.io.amt.l1<-paste("Model:",
+                       "%OVERALL%",
+                       "%C#1%",
+                       '[AMT8$1] (a81);',
+                       '[AMT8$2] (a82);',
+                       '[AMT8$3] (a83);',
+                       '[AMT8$4] (a84);',
+                       '[AMT9$1] (a91);',
+                       '[AMT9$2] (a92);',
+                       '[AMT9$3] (a93);',
+                       '[AMT9$4] (a94);',
+                       '[AMT10$1] (a101);',
+                       '[AMT10$2] (a102);',
+                       '[AMT10$3] (a103);',
+                       '[AMT10$4] (a104);',
+                       '[AMT11$1] (a111);',
+                       '[AMT11$2] (a112);',
+                       '[AMT11$3] (a113);',
+                       '[AMT11$4] (a114);',
+                       '[AMT12$1] (a121);',
+                       '[AMT12$2] (a122);',
+                       '[AMT12$3] (a123);',
+                       '[AMT12$4] (a124);',
+                       '[AMT13$1] (a131);',
+                       '[AMT13$2] (a132);',
+                       '[AMT13$3] (a133);',
+                       '[AMT13$4] (a134);',
+                       '[AMT14$1] (a141);',
+                       '[AMT14$2] (a142);',
+                       '[AMT14$3] (a143);',
+                       '[AMT14$4] (a144);',
+                       '[AMT15$1] (a151);',
+                       '[AMT15$2] (a152);',
+                       '[AMT15$3] (a153);',
+                       '[AMT15$4] (a154);',
+                       '[AMT16$1] (a161);',
+                       '[AMT16$2] (a162);',
+                       '[AMT16$3] (a163);',
+                       '[AMT16$4] (a164);',
+                       '[AMT17$1] (a171);',
+                       '[AMT17$2] (a172);',
+                       '[AMT17$3] (a173);',
+                       '[AMT17$4] (a174);',
+                       '[AMT18$1] (a181);',
+                       '[AMT18$2] (a182);',
+                       '[AMT18$3] (a183);',
+                       '[AMT18$4] (a184);',
+                       '%C#2%',
+                       '[AMT8$1] (b81);',
+                       '[AMT8$2] (b82);',
+                       '[AMT8$3] (b83);',
+                       '[AMT8$4] (b84);',
+                       '[AMT9$1] (b91);',
+                       '[AMT9$2] (b92);',
+                       '[AMT9$3] (b93);',
+                       '[AMT9$4] (b94);',
+                       '[AMT10$1] (b101);',
+                       '[AMT10$2] (b102);',
+                       '[AMT10$3] (b103);',
+                       '[AMT10$4] (b104);',
+                       '[AMT11$1] (b111);',
+                       '[AMT11$2] (b112);',
+                       '[AMT11$3] (b113);',
+                       '[AMT11$4] (b114);',
+                       '[AMT12$1] (b121);',
+                       '[AMT12$2] (b122);',
+                       '[AMT12$3] (b123);',
+                       '[AMT12$4] (b124);',
+                       '[AMT13$1] (b131);',
+                       '[AMT13$2] (b132);',
+                       '[AMT13$3] (b133);',
+                       '[AMT13$4] (b134);',
+                       '[AMT14$1] (b141);',
+                       '[AMT14$2] (b142);',
+                       '[AMT14$3] (b143);',
+                       '[AMT14$4] (b144);',
+                       '[AMT15$1] (b151);',
+                       '[AMT15$2] (b152);',
+                       '[AMT15$3] (b153);',
+                       '[AMT15$4] (b154);',
+                       '[AMT16$1] (b161);',
+                       '[AMT16$2] (b162);',
+                       '[AMT16$3] (b163);',
+                       '[AMT16$4] (b164);',
+                       '[AMT17$1] (b171);',
+                       '[AMT17$2] (b172);',
+                       '[AMT17$3] (b173);',
+                       '[AMT17$4] (b174);',
+                       '[AMT18$1] (b181);',
+                       '[AMT18$2] (b182);',
+                       '[AMT18$3] (b183);',
+                       '[AMT18$4] (b184);',
+                       '%C#3%',
+                       '[AMT8$1] (a81);',
+                       '[AMT8$2] (a82);',
+                       '[AMT8$3] (a83);',
+                       '[AMT8$4] (a84);',
+                       '[AMT9$1] (a91);',
+                       '[AMT9$2] (a92);',
+                       '[AMT9$3] (a93);',
+                       '[AMT9$4] (a94);',
+                       '[AMT10$1] (a101);',
+                       '[AMT10$2] (a102);',
+                       '[AMT10$3] (a103);',
+                       '[AMT10$4] (a104);',
+                       '[AMT11$1] (a111);',
+                       '[AMT11$2] (a112);',
+                       '[AMT11$3] (a113);',
+                       '[AMT11$4] (a114);',
+                       '[AMT12$1] (a121);',
+                       '[AMT12$2] (a122);',
+                       '[AMT12$3] (a123);',
+                       '[AMT12$4] (a124);',
+                       '[AMT13$1] (a131);',
+                       '[AMT13$2] (a132);',
+                       '[AMT13$3] (a133);',
+                       '[AMT13$4] (a134);',
+                       '[AMT14$1] (a141);',
+                       '[AMT14$2] (a142);',
+                       '[AMT14$3] (a143);',
+                       '[AMT14$4] (a144);',
+                       '[AMT15$1] (a151);',
+                       '[AMT15$2] (a152);',
+                       '[AMT15$3] (a153);',
+                       '[AMT15$4] (a154);',
+                       '[AMT16$1] (a161);',
+                       '[AMT16$2] (a162);',
+                       '[AMT16$3] (a163);',
+                       '[AMT16$4] (a164);',
+                       '[AMT17$1] (a171);',
+                       '[AMT17$2] (a172);',
+                       '[AMT17$3] (a173);',
+                       '[AMT17$4] (a174);',
+                       '[AMT18$1] (a181);',
+                       '[AMT18$2] (a182);',
+                       '[AMT18$3] (a183);',
+                       '[AMT18$4] (a184);',
+                       '%C#4%',
+                       '[AMT8$1] (b81);',
+                       '[AMT8$2] (b82);',
+                       '[AMT8$3] (b83);',
+                       '[AMT8$4] (b84);',
+                       '[AMT9$1] (b91);',
+                       '[AMT9$2] (b92);',
+                       '[AMT9$3] (b93);',
+                       '[AMT9$4] (b94);',
+                       '[AMT10$1] (b101);',
+                       '[AMT10$2] (b102);',
+                       '[AMT10$3] (b103);',
+                       '[AMT10$4] (b104);',
+                       '[AMT11$1] (b111);',
+                       '[AMT11$2] (b112);',
+                       '[AMT11$3] (b113);',
+                       '[AMT11$4] (b114);',
+                       '[AMT12$1] (b121);',
+                       '[AMT12$2] (b122);',
+                       '[AMT12$3] (b123);',
+                       '[AMT12$4] (b124);',
+                       '[AMT13$1] (b131);',
+                       '[AMT13$2] (b132);',
+                       '[AMT13$3] (b133);',
+                       '[AMT13$4] (b134);',
+                       '[AMT14$1] (b141);',
+                       '[AMT14$2] (b142);',
+                       '[AMT14$3] (b143);',
+                       '[AMT14$4] (b144);',
+                       '[AMT15$1] (b151);',
+                       '[AMT15$2] (b152);',
+                       '[AMT15$3] (b153);',
+                       '[AMT15$4] (b154);',
+                       '[AMT16$1] (b161);',
+                       '[AMT16$2] (b162);',
+                       '[AMT16$3] (b163);',
+                       '[AMT16$4] (b164);',
+                       '[AMT17$1] (b171);',
+                       '[AMT17$2] (b172);',
+                       '[AMT17$3] (b173);',
+                       '[AMT17$4] (b174);',
+                       '[AMT18$1] (b181);',
+                       '[AMT18$2] (b182);',
+                       '[AMT18$3] (b183);',
+                       '[AMT18$4] (b184);',
+                       sep="\n")
+```
+
+##Read in BCH and Vermunt
+
+```{r, cache=TRUE, eval=FALSE}
+library(MplusAutomation)
+
+c1l0<-c("i0d0c1l0n25","i0d1c1l0n25","i1d0c1l0n25","i1d1c1l0n25","i0d0c1l0n50","i0d1c1l0n50","i1d0c1l0n50","i1d1c1l0n50","i0d0c1l0n100","i0d1c1l0n100","i1d0c1l0n100","i1d1c1l0n100")
+c1l1<-c("i0d0c1l1n25","i0d1c1l1n25","i1d0c1l1n25","i1d1c1l1n25","i0d0c1l1n50","i0d1c1l1n50","i1d0c1l1n50","i1d1c1l1n50","i0d0c1l1n100","i0d1c1l1n100","i1d0c1l1n100","i1d1c1l1n100")
+c2l0<-c("i0d0c2l0n25","i0d1c2l0n25","i1d0c2l0n25","i1d1c2l0n25","i0d0c2l0n50","i0d1c2l0n50","i1d0c2l0n50","i1d1c2l0n50","i0d0c2l0n100","i0d1c2l0n100","i1d0c2l0n100","i1d1c2l0n100")
+c2l1<-c("i0d0c2l1n25","i0d1c2l1n25","i1d0c2l1n25","i1d1c2l1n25","i0d0c2l1n50","i0d1c2l1n50","i1d0c2l1n50","i1d1c2l1n50","i0d0c2l1n100","i0d1c2l1n100","i1d0c2l1n100","i1d1c2l1n100")
+all.sets<-list(c1l0,c1l1,c2l0,c2l1)
+
+names.c1l0<-c('ACY2','ACY3','ACY4','ACY6','ACY12','ACY14')
+names.c1l1<-c('ACY1','ACY2','ACY3','ACY4','ACY5','ACY6','ACY7','ACY8','ACY9','ACY10','ACY12','ACY13','ACY14','ACY15','ACY18')
+names.c2l0<-c('AMT10','AMT11','AMT12','AMT14','AMT16','AMT18')
+names.c2l1<-c('AMT8','AMT9','AMT10','AMT11','AMT12','AMT13','AMT14','AMT15','AMT16','AMT17','AMT18')
+
+all.names<-list(names.c1l0,names.c1l1,names.c2l0,names.c2l1)
+full.names<-list(names.c1l1,names.c1l1,names.c2l1,names.c2l1)
+
+# Uniform DIF models ---------------------------------------------------
+
+#Alcohol consequences, uniform DIF, short form
+model.ud.acy.l0<-paste('Model:',
+                       '%OVERALL%',
+                       '[ACY2$1];',
+                       '[ACY3$1];',
+                       '[ACY4$1];',
+                       '[ACY6$1];',
+                       '[ACY12$1];',
+                       '[ACY14$1];',
+                       '%C#1%',
+                       '[ACY2$1] (a2);',
+                       '[ACY3$1] (a3);',
+                       '[ACY4$1] (a4);',
+                       '[ACY6$1] (a6);',
+                       '[ACY12$1] (a12);',
+                       '[ACY14$1] (a14);',
+                       '%C#2%',
+                       '[ACY2$1] (b2);',
+                       '[ACY3$1] (b3);',
+                       '[ACY4$1] (b4);',
+                       '[ACY6$1] (b6);',
+                       '[ACY12$1] (b12);',
+                       '[ACY14$1] (b14);',
+                       '%C#3%',
+                       '[ACY2$1] (a2);',
+                       '[ACY3$1] (c3);',
+                       '[ACY4$1] (c4);',
+                       '[ACY6$1] (a6);',
+                       '[ACY12$1] (c12);',
+                       '[ACY14$1] (a14);',
+                       '%C#4%',
+                       '[ACY2$1] (b2);',
+                       '[ACY3$1] (d3);',
+                       '[ACY4$1] (d4);',
+                       '[ACY6$1] (b6);',
+                       '[ACY12$1] (d12);',
+                       '[ACY14$1] (b14);',
+                       'MODEL CONSTRAINT:',
+                       '0 = (d3-c3) - (b3-a3);',
+                       '0 = (d4-c4) - (b4-a4);',
+                       '0 = (d12-c12) - (b12-a12);',
+                       sep="\n")
+
+
+
+#Alcohol consequences, uniform DIF, long form
+model.ud.acy.l1<-paste('Model:',
+                       '%OVERALL%',
+                       '[ACY1$1];',
+                       '[ACY2$1];',
+                       '[ACY3$1];',
+                       '[ACY4$1];',
+                       '[ACY5$1];',
+                       '[ACY6$1];',
+                       '[ACY7$1];',
+                       '[ACY8$1];',
+                       '[ACY9$1];',
+                       '[ACY10$1];',
+                       '[ACY12$1];',
+                       '[ACY13$1];',
+                       '[ACY14$1];',
+                       '[ACY15$1];',
+                       '[ACY18$1];',
+                       '%C#1%',
+                       '[ACY1$1] (a1);',
+                       '[ACY2$1] (a2);',
+                       '[ACY3$1] (a3);',
+                       '[ACY4$1] (a4);',
+                       '[ACY5$1] (a5);',
+                       '[ACY6$1] (a6);',
+                       '[ACY7$1] (a7);',
+                       '[ACY8$1] (a8);',
+                       '[ACY9$1] (a9);',
+                       '[ACY10$1] (a10);',
+                       '[ACY12$1] (a12);',
+                       '[ACY13$1] (a13);',
+                       '[ACY14$1] (a14);',
+                       '[ACY15$1] (a15);',
+                       '[ACY18$1] (a18);',
+                       '%C#2%',
+                       '[ACY1$1] (b1);',
+                       '[ACY2$1] (b2);',
+                       '[ACY3$1] (b3);',
+                       '[ACY4$1] (b4);',
+                       '[ACY5$1] (b5);',
+                       '[ACY6$1] (b6);',
+                       '[ACY7$1] (b7);',
+                       '[ACY8$1] (b8);',
+                       '[ACY9$1] (b9);',
+                       '[ACY10$1] (b10);',
+                       '[ACY12$1] (b12);',
+                       '[ACY13$1] (b13);',
+                       '[ACY14$1] (b14);',
+                       '[ACY15$1] (b15);',
+                       '[ACY18$1] (b18);',
+                       '%C#3%',
+                       '[ACY1$1] (a1);',
+                       '[ACY2$1] (a2);',
+                       '[ACY3$1] (c3);',
+                       '[ACY4$1] (c4);',
+                       '[ACY5$1] (a5);',
+                       '[ACY6$1] (a6);',
+                       '[ACY7$1] (a7);',
+                       '[ACY8$1] (a8);',
+                       '[ACY9$1] (a9);',
+                       '[ACY10$1] (a10);',
+                       '[ACY12$1] (c12);',
+                       '[ACY13$1] (a13);',
+                       '[ACY14$1] (a14);',
+                       '[ACY15$1] (a15);',
+                       '[ACY18$1] (a18);',
+                       '%C#4%',
+                       '[ACY1$1] (b1);',
+                       '[ACY2$1] (b2);',
+                       '[ACY3$1] (d3); ',
+                       '[ACY4$1] (d4); ',
+                       '[ACY5$1] (b5);',
+                       '[ACY6$1] (b6);',
+                       '[ACY7$1] (b7);',
+                       '[ACY8$1] (b8);',
+                       '[ACY9$1] (b9);',
+                       '[ACY10$1] (b10);',
+                       '[ACY12$1] (d12); ',
+                       '[ACY13$1] (b13);',
+                       '[ACY14$1] (b14);',
+                       '[ACY15$1] (b15);',
+                       '[ACY18$1] (b18);',
+                       'MODEL CONSTRAINT:',
+                       '0 = (d3-c3) - (b3-a3);',
+                       '0 = (d4-c4) - (b4-a4);',
+                       '0 = (d12-c12) - (b12-a12);',
+                       sep="\n")
+
+#Alcohol motives, short form, uniform DIF
+model.ud.amt.l0<-paste("Model:",
+                       "%OVERALL%",
+                       "%C#1%",
+                       '[AMT10$1] (a101);',
+                       '[AMT10$2] (a102);',
+                       '[AMT10$3] (a103);',
+                       '[AMT10$4] (a104);',
+                       '[AMT11$1] (a111);',
+                       '[AMT11$2] (a112);',
+                       '[AMT11$3] (a113);',
+                       '[AMT11$4] (a114);',
+                       '[AMT12$1] (a121);',
+                       '[AMT12$2] (a122);',
+                       '[AMT12$3] (a123);',
+                       '[AMT12$4] (a124);',
+                       '[AMT14$1] (a141);',
+                       '[AMT14$2] (a142);',
+                       '[AMT14$3] (a143);',
+                       '[AMT14$4] (a144);',
+                       '[AMT16$1] (a161);',
+                       '[AMT16$2] (a162);',
+                       '[AMT16$3] (a163);',
+                       '[AMT16$4] (a164);',
+                       '[AMT18$1] (a181);',
+                       '[AMT18$2] (a182);',
+                       '[AMT18$3] (a183);',
+                       '[AMT18$4] (a184);',
+                       '%C#2%',
+                       '[AMT10$1] (b101);',
+                       '[AMT10$2] (b102);',
+                       '[AMT10$3] (b103);',
+                       '[AMT10$4] (b104);',
+                       '[AMT11$1] (b111);',
+                       '[AMT11$2] (b112);',
+                       '[AMT11$3] (b113);',
+                       '[AMT11$4] (b114);',
+                       '[AMT12$1] (b121);',
+                       '[AMT12$2] (b122);',
+                       '[AMT12$3] (b123);',
+                       '[AMT12$4] (b124);',
+                       '[AMT14$1] (b141);',
+                       '[AMT14$2] (b142);',
+                       '[AMT14$3] (b143);',
+                       '[AMT14$4] (b144);',
+                       '[AMT16$1] (b161);',
+                       '[AMT16$2] (b162);',
+                       '[AMT16$3] (b163);',
+                       '[AMT16$4] (b164);',
+                       '[AMT18$1] (b181);',
+                       '[AMT18$2] (b182);',
+                       '[AMT18$3] (b183);',
+                       '[AMT18$4] (b184);',
+                       '%C#3%',
+                       '[AMT10$1] (a101);',
+                       '[AMT10$2] (a102);',
+                       '[AMT10$3] (a103);',
+                       '[AMT10$4] (a104);',
+                       '[AMT11$1] (a111);',
+                       '[AMT11$2] (a112);',
+                       '[AMT11$3] (a113);',
+                       '[AMT11$4] (a114);',
+                       '[AMT12$1] (c121);',
+                       '[AMT12$2] (c122);',
+                       '[AMT12$3] (c123);',
+                       '[AMT12$4] (c124);',
+                       '[AMT14$1] (a141);',
+                       '[AMT14$2] (a142);',
+                       '[AMT14$3] (a143);',
+                       '[AMT14$4] (a144);',
+                       '[AMT16$1] (a161);',
+                       '[AMT16$2] (a162);',
+                       '[AMT16$3] (a163);',
+                       '[AMT16$4] (a164);',
+                       '[AMT18$1] (a181);',
+                       '[AMT18$2] (a182);',
+                       '[AMT18$3] (a183);',
+                       '[AMT18$4] (a184);',
+                       '%C#4%',
+                       '[AMT10$1] (b101);',
+                       '[AMT10$2] (b102);',
+                       '[AMT10$3] (b103);',
+                       '[AMT10$4] (b104);',
+                       '[AMT11$1] (b111);',
+                       '[AMT11$2] (b112);',
+                       '[AMT11$3] (b113);',
+                       '[AMT11$4] (b114);',
+                       '[AMT12$1] (d121);',
+                       '[AMT12$2] (d122);',
+                       '[AMT12$3] (d123);',
+                       '[AMT12$4] (d124);',
+                       '[AMT14$1] (b141);',
+                       '[AMT14$2] (b142);',
+                       '[AMT14$3] (b143);',
+                       '[AMT14$4] (b144);',
+                       '[AMT16$1] (b161);',
+                       '[AMT16$2] (b162);',
+                       '[AMT16$3] (b163);',
+                       '[AMT16$4] (b164);',
+                       '[AMT18$1] (b181);',
+                       '[AMT18$2] (b182);',
+                       '[AMT18$3] (b183);',
+                       '[AMT18$4] (b184);',
+                       'MODEL CONSTRAINT:',
+                       '0 = (d121-c121) - (b121-a121);',
+                       '0 = (d122-c122) - (b122-a122);',
+                       '0 = (d123-c123) - (b123-a123);',
+                       '0 = (d124-c124) - (b124-a124);',
+                       sep="\n")
+
+
+#Alcohol motives, long form, uniform DIF
+model.ud.amt.l1<-paste("Model:",
+                       "%OVERALL%",
+                       "%C#1%",
+                       '[AMT8$1] (a81);',
+                       '[AMT8$2] (a82);',
+                       '[AMT8$3] (a83);',
+                       '[AMT8$4] (a84);',
+                       '[AMT9$1] (a91);',
+                       '[AMT9$2] (a92);',
+                       '[AMT9$3] (a93);',
+                       '[AMT9$4] (a94);',
+                       '[AMT10$1] (a101);',
+                       '[AMT10$2] (a102);',
+                       '[AMT10$3] (a103);',
+                       '[AMT10$4] (a104);',
+                       '[AMT11$1] (a111);',
+                       '[AMT11$2] (a112);',
+                       '[AMT11$3] (a113);',
+                       '[AMT11$4] (a114);',
+                       '[AMT12$1] (a121);',
+                       '[AMT12$2] (a122);',
+                       '[AMT12$3] (a123);',
+                       '[AMT12$4] (a124);',
+                       '[AMT13$1] (a131);',
+                       '[AMT13$2] (a132);',
+                       '[AMT13$3] (a133);',
+                       '[AMT13$4] (a134);',
+                       '[AMT14$1] (a141);',
+                       '[AMT14$2] (a142);',
+                       '[AMT14$3] (a143);',
+                       '[AMT14$4] (a144);',
+                       '[AMT15$1] (a151);',
+                       '[AMT15$2] (a152);',
+                       '[AMT15$3] (a153);',
+                       '[AMT15$4] (a154);',
+                       '[AMT16$1] (a161);',
+                       '[AMT16$2] (a162);',
+                       '[AMT16$3] (a163);',
+                       '[AMT16$4] (a164);',
+                       '[AMT17$1] (a171);',
+                       '[AMT17$2] (a172);',
+                       '[AMT17$3] (a173);',
+                       '[AMT17$4] (a174);',
+                       '[AMT18$1] (a181);',
+                       '[AMT18$2] (a182);',
+                       '[AMT18$3] (a183);',
+                       '[AMT18$4] (a184);',
+                       '%C#2%',
+                       '[AMT8$1] (b81);',
+                       '[AMT8$2] (b82);',
+                       '[AMT8$3] (b83);',
+                       '[AMT8$4] (b84);',
+                       '[AMT9$1] (b91);',
+                       '[AMT9$2] (b92);',
+                       '[AMT9$3] (b93);',
+                       '[AMT9$4] (b94);',
+                       '[AMT10$1] (b101);',
+                       '[AMT10$2] (b102);',
+                       '[AMT10$3] (b103);',
+                       '[AMT10$4] (b104);',
+                       '[AMT11$1] (b111);',
+                       '[AMT11$2] (b112);',
+                       '[AMT11$3] (b113);',
+                       '[AMT11$4] (b114);',
+                       '[AMT12$1] (b121);',
+                       '[AMT12$2] (b122);',
+                       '[AMT12$3] (b123);',
+                       '[AMT12$4] (b124);',
+                       '[AMT13$1] (b131);',
+                       '[AMT13$2] (b132);',
+                       '[AMT13$3] (b133);',
+                       '[AMT13$4] (b134);',
+                       '[AMT14$1] (b141);',
+                       '[AMT14$2] (b142);',
+                       '[AMT14$3] (b143);',
+                       '[AMT14$4] (b144);',
+                       '[AMT15$1] (b151);',
+                       '[AMT15$2] (b152);',
+                       '[AMT15$3] (b153);',
+                       '[AMT15$4] (b154);',
+                       '[AMT16$1] (b161);',
+                       '[AMT16$2] (b162);',
+                       '[AMT16$3] (b163);',
+                       '[AMT16$4] (b164);',
+                       '[AMT17$1] (b171);',
+                       '[AMT17$2] (b172);',
+                       '[AMT17$3] (b173);',
+                       '[AMT17$4] (b174);',
+                       '[AMT18$1] (b181);',
+                       '[AMT18$2] (b182);',
+                       '[AMT18$3] (b183);',
+                       '[AMT18$4] (b184);',
+                       '%C#3%',
+                       '[AMT8$1] (a81);',
+                       '[AMT8$2] (a82);',
+                       '[AMT8$3] (a83);',
+                       '[AMT8$4] (a84);',
+                       '[AMT9$1] (a91);',
+                       '[AMT9$2] (a92);',
+                       '[AMT9$3] (a93);',
+                       '[AMT9$4] (a94);',
+                       '[AMT10$1] (a101);',
+                       '[AMT10$2] (a102);',
+                       '[AMT10$3] (a103);',
+                       '[AMT10$4] (a104);',
+                       '[AMT11$1] (a111);',
+                       '[AMT11$2] (a112);',
+                       '[AMT11$3] (a113);',
+                       '[AMT11$4] (a114);',
+                       '[AMT12$1] (c121);',
+                       '[AMT12$2] (c122);',
+                       '[AMT12$3] (c123);',
+                       '[AMT12$4] (c124);',
+                       '[AMT13$1] (a131);',
+                       '[AMT13$2] (a132);',
+                       '[AMT13$3] (a133);',
+                       '[AMT13$4] (a134);',
+                       '[AMT14$1] (a141);',
+                       '[AMT14$2] (a142);',
+                       '[AMT14$3] (a143);',
+                       '[AMT14$4] (a144);',
+                       '[AMT15$1] (a151);',
+                       '[AMT15$2] (a152);',
+                       '[AMT15$3] (a153);',
+                       '[AMT15$4] (a154);',
+                       '[AMT16$1] (a161);',
+                       '[AMT16$2] (a162);',
+                       '[AMT16$3] (a163);',
+                       '[AMT16$4] (a164);',
+                       '[AMT17$1] (a171);',
+                       '[AMT17$2] (a172);',
+                       '[AMT17$3] (a173);',
+                       '[AMT17$4] (a174);',
+                       '[AMT18$1] (a181);',
+                       '[AMT18$2] (a182);',
+                       '[AMT18$3] (a183);',
+                       '[AMT18$4] (a184);',
+                       '%C#4%',
+                       '[AMT8$1] (b81);',
+                       '[AMT8$2] (b82);',
+                       '[AMT8$3] (b83);',
+                       '[AMT8$4] (b84);',
+                       '[AMT9$1] (b91);',
+                       '[AMT9$2] (b92);',
+                       '[AMT9$3] (b93);',
+                       '[AMT9$4] (b94);',
+                       '[AMT10$1] (b101);',
+                       '[AMT10$2] (b102);',
+                       '[AMT10$3] (b103);',
+                       '[AMT10$4] (b104);',
+                       '[AMT11$1] (b111);',
+                       '[AMT11$2] (b112);',
+                       '[AMT11$3] (b113);',
+                       '[AMT11$4] (b114);',
+                       '[AMT12$1] (d121);',
+                       '[AMT12$2] (d122);',
+                       '[AMT12$3] (d123);',
+                       '[AMT12$4] (d124);',
+                       '[AMT13$1] (b131);',
+                       '[AMT13$2] (b132);',
+                       '[AMT13$3] (b133);',
+                       '[AMT13$4] (b134);',
+                       '[AMT14$1] (b141);',
+                       '[AMT14$2] (b142);',
+                       '[AMT14$3] (b143);',
+                       '[AMT14$4] (b144);',
+                       '[AMT15$1] (b151);',
+                       '[AMT15$2] (b152);',
+                       '[AMT15$3] (b153);',
+                       '[AMT15$4] (b154);',
+                       '[AMT16$1] (b161);',
+                       '[AMT16$2] (b162);',
+                       '[AMT16$3] (b163);',
+                       '[AMT16$4] (b164);',
+                       '[AMT17$1] (b171);',
+                       '[AMT17$2] (b172);',
+                       '[AMT17$3] (b173);',
+                       '[AMT17$4] (b174);',
+                       '[AMT18$1] (b181);',
+                       '[AMT18$2] (b182);',
+                       '[AMT18$3] (b183);',
+                       '[AMT18$4] (b184);',
+                       'MODEL CONSTRAINT:',
+                       '0 = (d121-c121) - (b121-a121);',
+                       '0 = (d122-c122) - (b122-a122);',
+                       '0 = (d123-c123) - (b123-a123);',
+                       '0 = (d124-c124) - (b124-a124);',
+                       sep="\n")
+
+# Non-uniform DIF models ---------------------------------------------------
+
+#Alcohol consequences, nonunifom DIF, short form
+model.nud.acy.l0<-paste('Model:',
+                       '%OVERALL%',
+                       '[ACY2$1];',
+                       '[ACY3$1];',
+                       '[ACY4$1];',
+                       '[ACY6$1];',
+                       '[ACY12$1];',
+                       '[ACY14$1];',
+                       '%C#1%',
+                       '[ACY2$1] (a2);',
+                       '[ACY3$1] (a3);',
+                       '[ACY4$1] (a4);',
+                       '[ACY6$1] (a6);',
+                       '[ACY12$1] (a12);',
+                       '[ACY14$1] (a14);',
+                       '%C#2%',
+                       '[ACY2$1] (b2);',
+                       '[ACY3$1] (b3);',
+                       '[ACY4$1] (b4);',
+                       '[ACY6$1] (b6);',
+                       '[ACY12$1] (b12);',
+                       '[ACY14$1] (b14);',
+                       '%C#3%',
+                       '[ACY2$1] (a2);',
+                       '[ACY3$1] (c3);',
+                       '[ACY4$1] (c4);',
+                       '[ACY6$1] (a6);',
+                       '[ACY12$1] (c12);',
+                       '[ACY14$1] (a14);',
+                       '%C#4%',
+                       '[ACY2$1] (b2);',
+                       '[ACY3$1] (d3);',
+                       '[ACY4$1] (d4);',
+                       '[ACY6$1] (b6);',
+                       '[ACY12$1] (d12);',
+                       '[ACY14$1] (b14);',
+                       sep="\n")
+
+#Alcohol consequences, nonunifom DIF, long form
+model.nud.acy.l1<-paste('Model:',
+                       '%OVERALL%',
+                       '[ACY1$1];',
+                       '[ACY2$1];',
+                       '[ACY3$1];',
+                       '[ACY4$1];',
+                       '[ACY5$1];',
+                       '[ACY6$1];',
+                       '[ACY7$1];',
+                       '[ACY8$1];',
+                       '[ACY9$1];',
+                       '[ACY10$1];',
+                       '[ACY12$1];',
+                       '[ACY13$1];',
+                       '[ACY14$1];',
+                       '[ACY15$1];',
+                       '[ACY18$1];',
+                       '%C#1%',
+                       '[ACY1$1] (a1);',
+                       '[ACY2$1] (a2);',
+                       '[ACY3$1] (a3);',
+                       '[ACY4$1] (a4);',
+                       '[ACY5$1] (a5);',
+                       '[ACY6$1] (a6);',
+                       '[ACY7$1] (a7);',
+                       '[ACY8$1] (a8);',
+                       '[ACY9$1] (a9);',
+                       '[ACY10$1] (a10);',
+                       '[ACY12$1] (a12);',
+                       '[ACY13$1] (a13);',
+                       '[ACY14$1] (a14);',
+                       '[ACY15$1] (a15);',
+                       '[ACY18$1] (a18);',
+                       '%C#2%',
+                       '[ACY1$1] (b1);',
+                       '[ACY2$1] (b2);',
+                       '[ACY3$1] (b3);',
+                       '[ACY4$1] (b4);',
+                       '[ACY5$1] (b5);',
+                       '[ACY6$1] (b6);',
+                       '[ACY7$1] (b7);',
+                       '[ACY8$1] (b8);',
+                       '[ACY9$1] (b9);',
+                       '[ACY10$1] (b10);',
+                       '[ACY12$1] (b12);',
+                       '[ACY13$1] (b13);',
+                       '[ACY14$1] (b14);',
+                       '[ACY15$1] (b15);',
+                       '[ACY18$1] (b18);',
+                       '%C#3%',
+                       '[ACY1$1] (a1);',
+                       '[ACY2$1] (a2);',
+                       '[ACY3$1] (c3);',
+                       '[ACY4$1] (c4);',
+                       '[ACY5$1] (a5);',
+                       '[ACY6$1] (a6);',
+                       '[ACY7$1] (a7);',
+                       '[ACY8$1] (a8);',
+                       '[ACY9$1] (a9);',
+                       '[ACY10$1] (a10);',
+                       '[ACY12$1] (c12);',
+                       '[ACY13$1] (a13);',
+                       '[ACY14$1] (a14);',
+                       '[ACY15$1] (a15);',
+                       '[ACY18$1] (a18);',
+                       '%C#4%',
+                       '[ACY1$1] (b1);',
+                       '[ACY2$1] (b2);',
+                       '[ACY3$1] (d3); ',
+                       '[ACY4$1] (d4); ',
+                       '[ACY5$1] (b5);',
+                       '[ACY6$1] (b6);',
+                       '[ACY7$1] (b7);',
+                       '[ACY8$1] (b8);',
+                       '[ACY9$1] (b9);',
+                       '[ACY10$1] (b10);',
+                       '[ACY12$1] (d12); ',
+                       '[ACY13$1] (b13);',
+                       '[ACY14$1] (b14);',
+                       '[ACY15$1] (b15);',
+                       '[ACY18$1] (b18);',
+                       sep="\n")
+
+#Alcohol consequences, nonuniform DIF, long form
+model.nud.acy.l1<-paste('Model:',
+                       '%OVERALL%',
+                       '[ACY1$1];',
+                       '[ACY2$1];',
+                       '[ACY3$1];',
+                       '[ACY4$1];',
+                       '[ACY5$1];',
+                       '[ACY6$1];',
+                       '[ACY7$1];',
+                       '[ACY8$1];',
+                       '[ACY9$1];',
+                       '[ACY10$1];',
+                       '[ACY12$1];',
+                       '[ACY13$1];',
+                       '[ACY14$1];',
+                       '[ACY15$1];',
+                       '[ACY18$1];',
+                       '%C#1%',
+                       '[ACY1$1] (a1);',
+                       '[ACY2$1] (a2);',
+                       '[ACY3$1] (a3);',
+                       '[ACY4$1] (a4);',
+                       '[ACY5$1] (a5);',
+                       '[ACY6$1] (a6);',
+                       '[ACY7$1] (a7);',
+                       '[ACY8$1] (a8);',
+                       '[ACY9$1] (a9);',
+                       '[ACY10$1] (a10);',
+                       '[ACY12$1] (a12);',
+                       '[ACY13$1] (a13);',
+                       '[ACY14$1] (a14);',
+                       '[ACY15$1] (a15);',
+                       '[ACY18$1] (a18);',
+                       '%C#2%',
+                       '[ACY1$1] (b1);',
+                       '[ACY2$1] (b2);',
+                       '[ACY3$1] (b3);',
+                       '[ACY4$1] (b4);',
+                       '[ACY5$1] (b5);',
+                       '[ACY6$1] (b6);',
+                       '[ACY7$1] (b7);',
+                       '[ACY8$1] (b8);',
+                       '[ACY9$1] (b9);',
+                       '[ACY10$1] (b10);',
+                       '[ACY12$1] (b12);',
+                       '[ACY13$1] (b13);',
+                       '[ACY14$1] (b14);',
+                       '[ACY15$1] (b15);',
+                       '[ACY18$1] (b18);',
+                       '%C#3%',
+                       '[ACY1$1] (a1);',
+                       '[ACY2$1] (a2);',
+                       '[ACY3$1] (c3);',
+                       '[ACY4$1] (c4);',
+                       '[ACY5$1] (a5);',
+                       '[ACY6$1] (a6);',
+                       '[ACY7$1] (a7);',
+                       '[ACY8$1] (a8);',
+                       '[ACY9$1] (a9);',
+                       '[ACY10$1] (a10);',
+                       '[ACY12$1] (c12);',
+                       '[ACY13$1] (a13);',
+                       '[ACY14$1] (a14);',
+                       '[ACY15$1] (a15);',
+                       '[ACY18$1] (a18);',
+                       '%C#4%',
+                       '[ACY1$1] (b1);',
+                       '[ACY2$1] (b2);',
+                       '[ACY3$1] (d3); ',
+                       '[ACY4$1] (d4); ',
+                       '[ACY5$1] (b5);',
+                       '[ACY6$1] (b6);',
+                       '[ACY7$1] (b7);',
+                       '[ACY8$1] (b8);',
+                       '[ACY9$1] (b9);',
+                       '[ACY10$1] (b10);',
+                       '[ACY12$1] (d12); ',
+                       '[ACY13$1] (b13);',
+                       '[ACY14$1] (b14);',
+                       '[ACY15$1] (b15);',
+                       '[ACY18$1] (b18);',
+                       sep="\n")
+
+####MOTIVES
+#Alcohol motives, short form, nonuniform DIF
+model.nud.amt.l0<-paste("Model:",
+                       "%OVERALL%",
+                       "%C#1%",
+                       '[AMT10$1] (a101);',
+                       '[AMT10$2] (a102);',
+                       '[AMT10$3] (a103);',
+                       '[AMT10$4] (a104);',
+                       '[AMT11$1] (a111);',
+                       '[AMT11$2] (a112);',
+                       '[AMT11$3] (a113);',
+                       '[AMT11$4] (a114);',
+                       '[AMT12$1] (a121);',
+                       '[AMT12$2] (a122);',
+                       '[AMT12$3] (a123);',
+                       '[AMT12$4] (a124);',
+                       '[AMT14$1] (a141);',
+                       '[AMT14$2] (a142);',
+                       '[AMT14$3] (a143);',
+                       '[AMT14$4] (a144);',
+                       '[AMT16$1] (a161);',
+                       '[AMT16$2] (a162);',
+                       '[AMT16$3] (a163);',
+                       '[AMT16$4] (a164);',
+                       '[AMT18$1] (a181);',
+                       '[AMT18$2] (a182);',
+                       '[AMT18$3] (a183);',
+                       '[AMT18$4] (a184);',
+                       '%C#2%',
+                       '[AMT10$1] (b101);',
+                       '[AMT10$2] (b102);',
+                       '[AMT10$3] (b103);',
+                       '[AMT10$4] (b104);',
+                       '[AMT11$1] (b111);',
+                       '[AMT11$2] (b112);',
+                       '[AMT11$3] (b113);',
+                       '[AMT11$4] (b114);',
+                       '[AMT12$1] (b121);',
+                       '[AMT12$2] (b122);',
+                       '[AMT12$3] (b123);',
+                       '[AMT12$4] (b124);',
+                       '[AMT14$1] (b141);',
+                       '[AMT14$2] (b142);',
+                       '[AMT14$3] (b143);',
+                       '[AMT14$4] (b144);',
+                       '[AMT16$1] (b161);',
+                       '[AMT16$2] (b162);',
+                       '[AMT16$3] (b163);',
+                       '[AMT16$4] (b164);',
+                       '[AMT18$1] (b181);',
+                       '[AMT18$2] (b182);',
+                       '[AMT18$3] (b183);',
+                       '[AMT18$4] (b184);',
+                       '%C#3%',
+                       '[AMT10$1] (a101);',
+                       '[AMT10$2] (a102);',
+                       '[AMT10$3] (a103);',
+                       '[AMT10$4] (a104);',
+                       '[AMT11$1] (a111);',
+                       '[AMT11$2] (a112);',
+                       '[AMT11$3] (a113);',
+                       '[AMT11$4] (a114);',
+                       '[AMT12$1] (c121);',
+                       '[AMT12$2] (c122);',
+                       '[AMT12$3] (c123);',
+                       '[AMT12$4] (c124);',
+                       '[AMT14$1] (a141);',
+                       '[AMT14$2] (a142);',
+                       '[AMT14$3] (a143);',
+                       '[AMT14$4] (a144);',
+                       '[AMT16$1] (a161);',
+                       '[AMT16$2] (a162);',
+                       '[AMT16$3] (a163);',
+                       '[AMT16$4] (a164);',
+                       '[AMT18$1] (a181);',
+                       '[AMT18$2] (a182);',
+                       '[AMT18$3] (a183);',
+                       '[AMT18$4] (a184);',
+                       '%C#4%',
+                       '[AMT10$1] (b101);',
+                       '[AMT10$2] (b102);',
+                       '[AMT10$3] (b103);',
+                       '[AMT10$4] (b104);',
+                       '[AMT11$1] (b111);',
+                       '[AMT11$2] (b112);',
+                       '[AMT11$3] (b113);',
+                       '[AMT11$4] (b114);',
+                       '[AMT12$1] (d121);',
+                       '[AMT12$2] (d122);',
+                       '[AMT12$3] (d123);',
+                       '[AMT12$4] (d124);',
+                       '[AMT14$1] (b141);',
+                       '[AMT14$2] (b142);',
+                       '[AMT14$3] (b143);',
+                       '[AMT14$4] (b144);',
+                       '[AMT16$1] (b161);',
+                       '[AMT16$2] (b162);',
+                       '[AMT16$3] (b163);',
+                       '[AMT16$4] (b164);',
+                       '[AMT18$1] (b181);',
+                       '[AMT18$2] (b182);',
+                       '[AMT18$3] (b183);',
+                       '[AMT18$4] (b184);',
+                       sep="\n")
+
+#Alcohol motives, long form, nonuniform DIF
+model.nud.amt.l1<-paste("Model:",
+                       "%OVERALL%",
+                       "%C#1%",
+                       '[AMT8$1] (a81);',
+                       '[AMT8$2] (a82);',
+                       '[AMT8$3] (a83);',
+                       '[AMT8$4] (a84);',
+                       '[AMT9$1] (a91);',
+                       '[AMT9$2] (a92);',
+                       '[AMT9$3] (a93);',
+                       '[AMT9$4] (a94);',
+                       '[AMT10$1] (a101);',
+                       '[AMT10$2] (a102);',
+                       '[AMT10$3] (a103);',
+                       '[AMT10$4] (a104);',
+                       '[AMT11$1] (a111);',
+                       '[AMT11$2] (a112);',
+                       '[AMT11$3] (a113);',
+                       '[AMT11$4] (a114);',
+                       '[AMT12$1] (a121);',
+                       '[AMT12$2] (a122);',
+                       '[AMT12$3] (a123);',
+                       '[AMT12$4] (a124);',
+                       '[AMT13$1] (a131);',
+                       '[AMT13$2] (a132);',
+                       '[AMT13$3] (a133);',
+                       '[AMT13$4] (a134);',
+                       '[AMT14$1] (a141);',
+                       '[AMT14$2] (a142);',
+                       '[AMT14$3] (a143);',
+                       '[AMT14$4] (a144);',
+                       '[AMT15$1] (a151);',
+                       '[AMT15$2] (a152);',
+                       '[AMT15$3] (a153);',
+                       '[AMT15$4] (a154);',
+                       '[AMT16$1] (a161);',
+                       '[AMT16$2] (a162);',
+                       '[AMT16$3] (a163);',
+                       '[AMT16$4] (a164);',
+                       '[AMT17$1] (a171);',
+                       '[AMT17$2] (a172);',
+                       '[AMT17$3] (a173);',
+                       '[AMT17$4] (a174);',
+                       '[AMT18$1] (a181);',
+                       '[AMT18$2] (a182);',
+                       '[AMT18$3] (a183);',
+                       '[AMT18$4] (a184);',
+                       '%C#2%',
+                       '[AMT8$1] (b81);',
+                       '[AMT8$2] (b82);',
+                       '[AMT8$3] (b83);',
+                       '[AMT8$4] (b84);',
+                       '[AMT9$1] (b91);',
+                       '[AMT9$2] (b92);',
+                       '[AMT9$3] (b93);',
+                       '[AMT9$4] (b94);',
+                       '[AMT10$1] (b101);',
+                       '[AMT10$2] (b102);',
+                       '[AMT10$3] (b103);',
+                       '[AMT10$4] (b104);',
+                       '[AMT11$1] (b111);',
+                       '[AMT11$2] (b112);',
+                       '[AMT11$3] (b113);',
+                       '[AMT11$4] (b114);',
+                       '[AMT12$1] (b121);',
+                       '[AMT12$2] (b122);',
+                       '[AMT12$3] (b123);',
+                       '[AMT12$4] (b124);',
+                       '[AMT13$1] (b131);',
+                       '[AMT13$2] (b132);',
+                       '[AMT13$3] (b133);',
+                       '[AMT13$4] (b134);',
+                       '[AMT14$1] (b141);',
+                       '[AMT14$2] (b142);',
+                       '[AMT14$3] (b143);',
+                       '[AMT14$4] (b144);',
+                       '[AMT15$1] (b151);',
+                       '[AMT15$2] (b152);',
+                       '[AMT15$3] (b153);',
+                       '[AMT15$4] (b154);',
+                       '[AMT16$1] (b161);',
+                       '[AMT16$2] (b162);',
+                       '[AMT16$3] (b163);',
+                       '[AMT16$4] (b164);',
+                       '[AMT17$1] (b171);',
+                       '[AMT17$2] (b172);',
+                       '[AMT17$3] (b173);',
+                       '[AMT17$4] (b174);',
+                       '[AMT18$1] (b181);',
+                       '[AMT18$2] (b182);',
+                       '[AMT18$3] (b183);',
+                       '[AMT18$4] (b184);',
+                       '%C#3%',
+                       '[AMT8$1] (a81);',
+                       '[AMT8$2] (a82);',
+                       '[AMT8$3] (a83);',
+                       '[AMT8$4] (a84);',
+                       '[AMT9$1] (a91);',
+                       '[AMT9$2] (a92);',
+                       '[AMT9$3] (a93);',
+                       '[AMT9$4] (a94);',
+                       '[AMT10$1] (a101);',
+                       '[AMT10$2] (a102);',
+                       '[AMT10$3] (a103);',
+                       '[AMT10$4] (a104);',
+                       '[AMT11$1] (a111);',
+                       '[AMT11$2] (a112);',
+                       '[AMT11$3] (a113);',
+                       '[AMT11$4] (a114);',
+                       '[AMT12$1] (c121);',
+                       '[AMT12$2] (c122);',
+                       '[AMT12$3] (c123);',
+                       '[AMT12$4] (c124);',
+                       '[AMT13$1] (a131);',
+                       '[AMT13$2] (a132);',
+                       '[AMT13$3] (a133);',
+                       '[AMT13$4] (a134);',
+                       '[AMT14$1] (a141);',
+                       '[AMT14$2] (a142);',
+                       '[AMT14$3] (a143);',
+                       '[AMT14$4] (a144);',
+                       '[AMT15$1] (a151);',
+                       '[AMT15$2] (a152);',
+                       '[AMT15$3] (a153);',
+                       '[AMT15$4] (a154);',
+                       '[AMT16$1] (a161);',
+                       '[AMT16$2] (a162);',
+                       '[AMT16$3] (a163);',
+                       '[AMT16$4] (a164);',
+                       '[AMT17$1] (a171);',
+                       '[AMT17$2] (a172);',
+                       '[AMT17$3] (a173);',
+                       '[AMT17$4] (a174);',
+                       '[AMT18$1] (a181);',
+                       '[AMT18$2] (a182);',
+                       '[AMT18$3] (a183);',
+                       '[AMT18$4] (a184);',
+                       '%C#4%',
+                       '[AMT8$1] (b81);',
+                       '[AMT8$2] (b82);',
+                       '[AMT8$3] (b83);',
+                       '[AMT8$4] (b84);',
+                       '[AMT9$1] (b91);',
+                       '[AMT9$2] (b92);',
+                       '[AMT9$3] (b93);',
+                       '[AMT9$4] (b94);',
+                       '[AMT10$1] (b101);',
+                       '[AMT10$2] (b102);',
+                       '[AMT10$3] (b103);',
+                       '[AMT10$4] (b104);',
+                       '[AMT11$1] (b111);',
+                       '[AMT11$2] (b112);',
+                       '[AMT11$3] (b113);',
+                       '[AMT11$4] (b114);',
+                       '[AMT12$1] (d121);',
+                       '[AMT12$2] (d122);',
+                       '[AMT12$3] (d123);',
+                       '[AMT12$4] (d124);',
+                       '[AMT13$1] (b131);',
+                       '[AMT13$2] (b132);',
+                       '[AMT13$3] (b133);',
+                       '[AMT13$4] (b134);',
+                       '[AMT14$1] (b141);',
+                       '[AMT14$2] (b142);',
+                       '[AMT14$3] (b143);',
+                       '[AMT14$4] (b144);',
+                       '[AMT15$1] (b151);',
+                       '[AMT15$2] (b152);',
+                       '[AMT15$3] (b153);',
+                       '[AMT15$4] (b154);',
+                       '[AMT16$1] (b161);',
+                       '[AMT16$2] (b162);',
+                       '[AMT16$3] (b163);',
+                       '[AMT16$4] (b164);',
+                       '[AMT17$1] (b171);',
+                       '[AMT17$2] (b172);',
+                       '[AMT17$3] (b173);',
+                       '[AMT17$4] (b174);',
+                       '[AMT18$1] (b181);',
+                       '[AMT18$2] (b182);',
+                       '[AMT18$3] (b183);',
+                       '[AMT18$4] (b184);',
+                       sep="\n")
+
+models.io<-list(model.io.acy.l0,model.io.acy.l1,model.io.amt.l0,model.io.amt.l1)
+models.ud<-list(model.ud.acy.l0,model.ud.acy.l1,model.ud.amt.l0,model.ud.amt.l1)
+models.nud<-list(model.nud.acy.l0,model.nud.acy.l1,model.nud.amt.l0,model.nud.amt.l1)
+
+# Main iterative model fitting function -----------------------------------
+for (i in 1:4) {
+  for (j in 1:12) {
+    for (r in 1:100) {
+      the.filename<-paste0("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_r",r,".csv")
+      if (file.exists(the.filename)==1) {
+      indata<-read.csv(the.filename,header=FALSE) #Read in one of the data files, as currently formatted for Mplus
+      names(indata)<-c("Dx","ID",full.names[[i]],"NumberHits","study","R","T1original","T2original")
+      
+      ###Training data
+      ###Note that T1original and T2original are the corresponding training values in the MIMIC solution
+      indata$T1<-0
+      indata$T2<-0
+      indata$T3<-0
+      indata$T4<-0
+      
+      #Study 1, diagnosed. If you are in Study 1 and have AUD, you can only be a member of class 1, so T1=1, T2=0, T3=0, T4=0.
+      indata$T1[indata$study==1&indata$Dx==1]<-1
+      #Study 1, undiagnosed. If you are in Study 1 and do not have AUD, you can only be a member of class 2, so T1=0, T2=1, T3=0, T4=0.
+      indata$T2[indata$study==1&indata$Dx==0]<-1
+      #Study 2, diagnosed or undiagnosed. You can be in class 3, is diagnosed for Study 2, or class 4, which is undiagnosed for Study 2. So T1=0, T2=0, T3=1, and T4=1. 
+      indata$T3[indata$study==2]<-1
+      indata$T4[indata$study==2]<-1
+      
+      
+      gender.p<-c(0.4285714, 0.4871795)
+      frat.p<-c(0.1889401, 0.3128205)
+      
+      indata$gender<-NA
+      indata$frat<-NA
+      for (a in 1:nrow(indata)) {
+        if (indata$Dx[a]==0) {
+          indata$gender[a]<-rbinom(1,1,gender.p[1])
+          indata$frat[a]<-rbinom(1,1,frat.p[1])
+        }
+        if (indata$Dx[a]==1) {
+          indata$gender[a]<-rbinom(1,1,gender.p[2])
+          indata$frat[a]<-rbinom(1,1,frat.p[2])
+        }
+      }
+      
+      write.table(indata,paste0("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_r",r,"_mg.csv"),sep=",",row.names=FALSE,col.names=FALSE,na=".")
+      
+      the.datafile.original<-paste0(all.sets[[i]][j],"_r",r,"_mg.csv")
+      the.datafile.io.3step<-paste0(all.sets[[i]][j],"_r",r,"_io_v.dat")
+      the.datafile.ud.3step<-paste0(all.sets[[i]][j],"_r",r,"_ud_v.dat")
+      the.datafile.nud.3step<-paste0(all.sets[[i]][j],"_r",r,"_nud_v.dat")
+      
+      the.io.text<-paste(
+        "TITLE:  Test run to get D matrix;",
+        "DATA:  FILE IS",paste0(the.datafile.original,";"),
+        "FORMAT=FREE;",
+        "VARIABLE: NAMES ARE",
+        paste(names(indata),collapse="\n    "),
+        ";",
+        "    USEVARIABLES =",
+        paste(all.names[[i]],collapse="\n    "),
+        "T1 T2 T3 T4;",
+        "    CATEGORICAL =",
+        paste(all.names[[i]],collapse="\n    "),
+        ";",
+        "    AUXILIARY ARE GENDER FRAT DX;",
+        "    CLASSES = C(4);",
+        "    TRAINING = T1 T2 T3 T4;",
+        "    MISSING are all .;",
+        "    IDVARIABLE = ID;",
+        "ANALYSIS:",
+        "    TYPE = MIXTURE;",
+        models.io[[i]],
+        "SAVEDATA:",
+        #Get rid of BCH
+        #"SAVE = BCHWEIGHTS;",
+        "SAVE = CPROB;",
+        "FILE =", the.datafile.io,
+        sep="\n")  
+      
+      the.io.name<-paste("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_io_r",r,".inp",sep="")
+      the.io<-file(the.io.name)
+      writeLines(the.io.text, the.io)
+      close(the.io)
+      #runModels(the.io.name,replaceOutfile="modifiedDate")
+      
+      the.ud.text<-paste(
+        "TITLE:  Test run to get D matrix;",
+        "DATA:  FILE IS",paste0(the.datafile.original,";"),
+        "FORMAT=FREE;",
+        "VARIABLE: NAMES ARE",
+        paste(names(indata),collapse="\n    "),
+        ";",
+        "    USEVARIABLES =",
+        paste(all.names[[i]],collapse="\n    "),
+        "T1 T2 T3 T4;",
+        "    CATEGORICAL =",
+        paste(all.names[[i]],collapse="\n    "),
+        ";",
+        "    AUXILIARY ARE GENDER FRAT DX;",
+        "    CLASSES = C(4);",
+        "    TRAINING = T1 T2 T3 T4;",
+        "    MISSING are all .;",
+        "    IDVARIABLE = ID;",
+        "ANALYSIS:",
+        "    TYPE = MIXTURE;",
+        models.ud[[i]],
+        "SAVEDATA:",
+        #Get rid of BCH
+        #"SAVE = BCHWEIGHTS;",
+        "SAVE = CPROB;",
+        "FILE =", the.datafile.ud,
+        sep="\n")  
+      
+      the.ud.name<-paste("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_ud_r",r,".inp",sep="")
+      the.ud<-file(the.ud.name)
+      writeLines(the.ud.text, the.ud)
+      close(the.ud)
+      #runModels(the.ud.name,replaceOutfile="modifiedDate")
+      
+           the.nud.text<-paste(
+        "TITLE:  Test run to get D matrix;",
+        "DATA:  FILE IS",paste0(the.datafile.original,";"),
+        "FORMAT=FREE;",
+        "VARIABLE: NAMES ARE",
+        paste(names(indata),collapse="\n    "),
+        ";",
+        "    USEVARIABLES =",
+        paste(all.names[[i]],collapse="\n    "),
+        "T1 T2 T3 T4;",
+        "    CATEGORICAL =",
+        paste(all.names[[i]],collapse="\n    "),
+        ";",
+        "    AUXILIARY ARE GENDER FRAT DX;",
+        "    CLASSES = C(4);",
+        "    TRAINING = T1 T2 T3 T4;",
+        "    MISSING are all .;",
+        "    IDVARIABLE = ID;",
+        "ANALYSIS:",
+        "    TYPE = MIXTURE;",
+        models.nud[[i]],
+        "SAVEDATA:",
+        #Get rid of BCH
+        #"SAVE = BCHWEIGHTS;",
+        "SAVE = CPROB;",
+        "FILE =", the.datafile.nud.3step,
+        sep="\n")  
+      
+      the.nud.name<-paste("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_nud_r",r,".inp",sep="")
+      the.nud<-file(the.nud.name)
+      writeLines(the.nud.text, the.nud)
+      close(the.nud)
+      runModels(the.nud.name,replaceOutfile="modifiedDate")
+      
+      }
+    }
+  }
+}
+
+```
+
+##Read in Vermunt from all LCAs
+
+```{r,cache=TRUE, eval=FALSE}
+                       '[AMT16$2] (a162);',
+                       '[AMT16$3] (a163);',
+                       '[AMT16$4] (a164);',
+                       '[AMT17$1] (a171);',
+                       '[AMT17$2] (a172);',
+                       '[AMT17$3] (a173);',
+                       '[AMT17$4] (a174);',
+                       '[AMT18$1] (a181);',
+                       '[AMT18$2] (a182);',
+                       '[AMT18$3] (a183);',
+                       '[AMT18$4] (a184);',
+                       '%C#4%',
+                       '[AMT8$1] (b81);',
+                       '[AMT8$2] (b82);',
+                       '[AMT8$3] (b83);',
+                       '[AMT8$4] (b84);',
+                       '[AMT9$1] (b91);',
+                       '[AMT9$2] (b92);',
+                       '[AMT9$3] (b93);',
+                       '[AMT9$4] (b94);',
+                       '[AMT10$1] (b101);',
+                       '[AMT10$2] (b102);',
+                       '[AMT10$3] (b103);',
+                       '[AMT10$4] (b104);',
+                       '[AMT11$1] (b111);',
+                       '[AMT11$2] (b112);',
+                       '[AMT11$3] (b113);',
+                       '[AMT11$4] (b114);',
+                       '[AMT12$1] (b121);',
+                       '[AMT12$2] (b122);',
+                       '[AMT12$3] (b123);',
+                       '[AMT12$4] (b124);',
+                       '[AMT13$1] (b131);',
+                       '[AMT13$2] (b132);',
+                       '[AMT13$3] (b133);',
+                       '[AMT13$4] (b134);',
+                       '[AMT14$1] (b141);',
+                       '[AMT14$2] (b142);',
+                       '[AMT14$3] (b143);',
+                       '[AMT14$4] (b144);',
+                       '[AMT15$1] (b151);',
+                       '[AMT15$2] (b152);',
+                       '[AMT15$3] (b153);',
+                       '[AMT15$4] (b154);',
+                       '[AMT16$1] (b161);',
+                       '[AMT16$2] (b162);',
+                       '[AMT16$3] (b163);',
+                       '[AMT16$4] (b164);',
+                       '[AMT17$1] (b171);',
+                       '[AMT17$2] (b172);',
+                       '[AMT17$3] (b173);',
+                       '[AMT17$4] (b174);',
+                       '[AMT18$1] (b181);',
+                       '[AMT18$2] (b182);',
+                       '[AMT18$3] (b183);',
+                       '[AMT18$4] (b184);',
+                       sep="\n")
+```
+
+##Fit Step 3 models for intercept-only, uniform DIF, and nonuniform DIF LCA
+```{r, cache=TRUE, eval=FALSE}
+library(MplusAutomation)
+
+c1l0<-c("i0d0c1l0n25","i0d1c1l0n25","i1d0c1l0n25","i1d1c1l0n25","i0d0c1l0n50","i0d1c1l0n50","i1d0c1l0n50","i1d1c1l0n50","i0d0c1l0n100","i0d1c1l0n100","i1d0c1l0n100","i1d1c1l0n100")
+c1l1<-c("i0d0c1l1n25","i0d1c1l1n25","i1d0c1l1n25","i1d1c1l1n25","i0d0c1l1n50","i0d1c1l1n50","i1d0c1l1n50","i1d1c1l1n50","i0d0c1l1n100","i0d1c1l1n100","i1d0c1l1n100","i1d1c1l1n100")
+c2l0<-c("i0d0c2l0n25","i0d1c2l0n25","i1d0c2l0n25","i1d1c2l0n25","i0d0c2l0n50","i0d1c2l0n50","i1d0c2l0n50","i1d1c2l0n50","i0d0c2l0n100","i0d1c2l0n100","i1d0c2l0n100","i1d1c2l0n100")
+c2l1<-c("i0d0c2l1n25","i0d1c2l1n25","i1d0c2l1n25","i1d1c2l1n25","i0d0c2l1n50","i0d1c2l1n50","i1d0c2l1n50","i1d1c2l1n50","i0d0c2l1n100","i0d1c2l1n100","i1d0c2l1n100","i1d1c2l1n100")
+all.sets<-list(c1l0,c1l1,c2l0,c2l1)
+
+names.c1l0<-c('ACY2','ACY3','ACY4','ACY6','ACY12','ACY14')
+names.c1l1<-c('ACY1','ACY2','ACY3','ACY4','ACY5','ACY6','ACY7','ACY8','ACY9','ACY10','ACY12','ACY13','ACY14','ACY15','ACY18')
+names.c2l0<-c('AMT10','AMT11','AMT12','AMT14','AMT16','AMT18')
+names.c2l1<-c('AMT8','AMT9','AMT10','AMT11','AMT12','AMT13','AMT14','AMT15','AMT16','AMT17','AMT18')
+
+all.names<-list(names.c1l0,names.c1l1,names.c2l0,names.c2l1)
+full.names<-list(names.c1l1,names.c1l1,names.c2l1,names.c2l1)
+##Fit Vermunt Step 3 to classifications arising from intercept-only, uniform DIF, and nonuniform DIF LCA
+```{r,cache=TRUE}
+library(MplusAutomation)
+c1l0<-c("i0d0c1l0n25","i0d1c1l0n25","i1d0c1l0n25","i1d1c1l0n25","i0d0c1l0n50","i0d1c1l0n50","i1d0c1l0n50","i1d1c1l0n50","i0d0c1l0n100","i0d1c1l0n100","i1d0c1l0n100","i1d1c1l0n100")
+c1l1<-c("i0d0c1l1n25","i0d1c1l1n25","i1d0c1l1n25","i1d1c1l1n25","i0d0c1l1n50","i0d1c1l1n50","i1d0c1l1n50","i1d1c1l1n50","i0d0c1l1n100","i0d1c1l1n100","i1d0c1l1n100","i1d1c1l1n100")
+c2l0<-c("i0d0c2l0n25","i0d1c2l0n25","i1d0c2l0n25","i1d1c2l0n25","i0d0c2l0n50","i0d1c2l0n50","i1d0c2l0n50","i1d1c2l0n50","i0d0c2l0n100","i0d1c2l0n100","i1d0c2l0n100","i1d1c2l0n100")
+c2l1<-c("i0d0c2l1n25","i0d1c2l1n25","i1d0c2l1n25","i1d1c2l1n25","i0d0c2l1n50","i0d1c2l1n50","i1d0c2l1n50","i1d1c2l1n50","i0d0c2l1n100","i0d1c2l1n100","i1d0c2l1n100","i1d1c2l1n100")
+all.sets<-list(c1l0,c1l1,c2l0,c2l1)
+
+names.c1l0<-c('ACY2','ACY3','ACY4','ACY6','ACY12','ACY14')
+names.c1l1<-c('ACY1','ACY2','ACY3','ACY4','ACY5','ACY6','ACY7','ACY8','ACY9','ACY10','ACY12','ACY13','ACY14','ACY15','ACY18')
+names.c2l0<-c('AMT10','AMT11','AMT12','AMT14','AMT16','AMT18')
+names.c2l1<-c('AMT8','AMT9','AMT10','AMT11','AMT12','AMT13','AMT14','AMT15','AMT16','AMT17','AMT18')
+
+all.names<-list(names.c1l0,names.c1l1,names.c2l0,names.c2l1)
+full.names<-list(names.c1l1,names.c1l1,names.c2l1,names.c2l1)
+
+# Fit Step 3 Models -----------------------------------
+for (i in 1:4) {
+  for (j in 1:12) {
+    for (r in 1:100) {
+      the.ud.out<-paste("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_io_r",r,".out",sep="")
+      if (file.exists(the.ud.out)==TRUE) {
+        
+        #Have to truncate these for Mplus
+        the.datafile.ud<-paste(all.sets[[i]][j],"_r",r,"_ud_v.dat",sep="")
+        the.datafile.io<-paste(all.sets[[i]][j],"_r",r,"_io_v.dat",sep="")
+        the.datafile.nud<-paste(all.sets[[i]][j],"_r",r,"_nud_v.dat",sep="")
+        
+
+        qlogit_io<-MplusAutomation::readModels(paste("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_io_r",r,".out",sep=""))$class_counts$logitProbs.mostLikely
+        qlogit_ud<-MplusAutomation::readModels(paste("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_ud_r",r,".out",sep=""))$class_counts$logitProbs.mostLikely
+        qlogit_nud<-MplusAutomation::readModels(paste("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_nud_r",r,".out",sep=""))$class_counts$logitProbs.mostLikely
+        
+        the.l33_io<-paste0("   [N#3@",qlogit_io[3,3],"];")
+        the.l43_io<-paste0("   [N#3@",qlogit_io[4,3],"];")
+        
+        the.l33_ud<-paste0("   [N#3@",qlogit_ud[3,3],"];")
+        the.l43_ud<-paste0("   [N#3@",qlogit_ud[4,3],"];")
+        
+        the.l33_nud<-paste0("   [N#3@",qlogit_nud[3,3],"];")
+        the.l43_nud<-paste0("   [N#3@",qlogit_nud[4,3],"];")
+        
+        
+        the.io.text.v.gender<-paste(
+          "TITLE:  Test run to get D matrix;",
+          "DATA:  FILE IS",paste0(the.datafile.io,";"),
+          "FORMAT=FREE;",
+          "VARIABLE:",
+          "NAMES ARE",
+          paste(all.names[[i]],collapse="\n    "),
+          "    T1 T2 T3 T4 ID GENDER FRAT DX", 
+          #Get rid of BCH
+          #"    BCHW1 BCHW2 BCHW3 BCHW4",
+          "    CPROB1 CPROB2 CPROB3 CPROB4 N;",
+          "    USEVARIABLES ARE N GENDER;",
+          "    NOMINAL = N;",
+          "    CLASSES = C(4);",
+          "    MISSING are all .;",
+          "    IDVARIABLE = ID;",
+          "ANALYSIS:",
+          "    TYPE = MIXTURE;",
+          "    STARTS = 0;",
+          "MODEL:",
+          "    %OVERALL%",
+          "    c ON gender;",
+          "    %C#1%",
+          "    [N#1@15];",
+          "    [N#2@-15];",
+          "    [N#3@-15];",
+          "    %C#2%",
+          "    [N#1@-15];",
+          "    [N#2@15];",
+          "    [N#3@-15];",
+          "    %C#3%",
+          "    [N#1@-15];",
+          "    [N#2@-15];",
+          the.l33_ud,
+          "    %C#4%",
+          "    [N#1@-15];",
+          "    [N#2@-15];",
+          the.l43_ud,
+          "OUTPUT:",
+          "   TECH3",
+          "SAVEDATA:",
+          "TECH3 = t3vg_", the.datafile.io,
+          sep="\n")  
+        
+        the.io.name.v.gender<-paste("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_io_r",r,"_v_gender.inp",sep="")
+        the.io.input.v.gender<-file(the.io.name.v.gender)
+        writeLines(the.io.text.v.gender, the.io.input.v.gender)
+        close(the.io.input.v.gender)
+        runModels(the.io.name.v.gender,replaceOutfile="modifiedDate")
+        
+        
+        the.io.text.v.frat<-paste(
+          "TITLE:  Test run to get D matrix;",
+          "DATA:  FILE IS",paste0(the.datafile.io,";"),
+          "FORMAT=FREE;",
+          "VARIABLE:",
+          "NAMES ARE",
+          paste(all.names[[i]],collapse="\n    "),
+          "    T1 T2 T3 T4 ID GENDER FRAT DX", 
+          #Get rid of BCH
+          #"    BCHW1 BCHW2 BCHW3 BCHW4",
+          "    CPROB1 CPROB2 CPROB3 CPROB4 N;",
+          "    USEVARIABLES ARE N FRAT;",
+          "    NOMINAL = N;",
+          "    CLASSES = C(4);",
+          "    MISSING are all .;",
+          "    IDVARIABLE = ID;",
+          "ANALYSIS:",
+          "    TYPE = MIXTURE;",
+          "    STARTS = 0;",
+          "MODEL:",
+          "    %OVERALL%",
+          "    c ON frat;",
+          "    %C#1%",
+          "    [N#1@15];",
+          "    [N#2@-15];",
+          "    [N#3@-15];",
+          "    %C#2%",
+          "    [N#1@-15];",
+          "    [N#2@15];",
+          "    [N#3@-15];",
+          "    %C#3%",
+          "    [N#1@-15];",
+          "    [N#2@-15];",
+          the.l33_io,
+          "    %C#4%",
+          "    [N#1@-15];",
+          "    [N#2@-15];",
+          the.l43_io,
+          "OUTPUT:",
+          "   TECH3",
+          "SAVEDATA:",
+          "TECH3 = t3vf_", the.datafile.io,
+          sep="\n")  
+        
+        the.io.name.v.frat<-paste("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_io_r",r,"_v_frat.inp",sep="")
+        the.io.input.v.frat<-file(the.io.name.v.frat)
+        writeLines(the.io.text.v.frat, the.io.input.v.frat)
+        close(the.io.input.v.frat)
+        runModels(the.io.name.v.frat,replaceOutfile="modifiedDate")
+        
+        
+        the.ud.text.v.gender<-paste(
+          "TITLE:  Test run to get D matrix;",
+          "DATA:  FILE IS",paste0(the.datafile.ud,";"),
+          "FORMAT=FREE;",
+          "VARIABLE:",
+          "NAMES ARE",
+          paste(all.names[[i]],collapse="\n    "),
+          "    T1 T2 T3 T4 ID GENDER FRAT DX",
+          #Get rid of BCH
+          #"    BCHW1 BCHW2 BCHW3 BCHW4",
+          "    CPROB1 CPROB2 CPROB3 CPROB4 N;",
+          "    USEVARIABLES ARE N GENDER;",
+          "    NOMINAL = N;",
+          "    CLASSES = C(4);",
+          "    MISSING are all .;",
+          "    IDVARIABLE = ID;",
+          "ANALYSIS:",
+          "    TYPE = MIXTURE;",
+          "    STARTS = 0;",
+          "MODEL:",
+          "    %OVERALL%",
+          "    c ON gender;",
+          "    %C#1%",
+          "    [N#1@15];",
+          "    [N#2@-15];",
+          "    [N#3@-15];",
+          "    %C#2%",
+          "    [N#1@-15];",
+          "    [N#2@15];",
+          "    [N#3@-15];",
+          "    %C#3%",
+          "    [N#1@-15];",
+          "    [N#2@-15];",
+          the.l33_ud,
+          "    %C#4%",
+          "    [N#1@-15];",
+          "    [N#2@-15];",
+          the.l43_ud,
+          "OUTPUT:",
+          "   TECH3",
+          "SAVEDATA:",
+          "TECH3 = t3vg_", the.datafile.ud,
+          sep="\n")  
+        
+        the.ud.name.v.gender<-paste("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_ud_r",r,"_v_gender.inp",sep="")
+        the.ud.input.v.gender<-file(the.ud.name.v.gender)
+        writeLines(the.ud.text.v.gender, the.ud.input.v.gender)
+        close(the.ud.input.v.gender)
+        runModels(the.ud.name.v.gender,replaceOutfile="modifiedDate")
+        
+        
+        the.ud.text.v.frat<-paste(
+          "TITLE:  Test run to get D matrix;",
+          "DATA:  FILE IS",paste0(the.datafile.ud,";"),
+          "FORMAT=FREE;",
+          "VARIABLE:",
+          "NAMES ARE",
+          paste(all.names[[i]],collapse="\n    "),
+          "    T1 T2 T3 T4 ID GENDER FRAT DX",
+          #Get rid of BCH
+          #"    BCHW1 BCHW2 BCHW3 BCHW4",
+          "    CPROB1 CPROB2 CPROB3 CPROB4 N;",
+          "    USEVARIABLES ARE N FRAT;",
+          "    NOMINAL = N;",
+          "    CLASSES = C(4);",
+          "    MISSING are all .;",
+          "    IDVARIABLE = ID;",
+          "ANALYSIS:",
+          "    TYPE = MIXTURE;",
+          "    STARTS = 0;",
+          "MODEL:",
+          "    %OVERALL%",
+          "    c ON frat;",
+          "    %C#1%",
+          "    [N#1@15];",
+          "    [N#2@-15];",
+          "    [N#3@-15];",
+          "    %C#2%",
+          "    [N#1@-15];",
+          "    [N#2@15];",
+          "    [N#3@-15];",
+          "    %C#3%",
+          "    [N#1@-15];",
+          "    [N#2@-15];",
+          the.l33_ud,
+          "    %C#4%",
+          "    [N#1@-15];",
+          "    [N#2@-15];",
+          the.l43_ud,
+          "OUTPUT:",
+          "   TECH3",
+          "SAVEDATA:",
+          "TECH3 = t3vf_", the.datafile.ud,
+          sep="\n")  
+        
+        the.ud.name.v.frat<-paste("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_ud_r",r,"_v_frat.inp",sep="")
+        the.ud.input.v.frat<-file(the.ud.name.v.frat)
+        writeLines(the.ud.text.v.frat, the.ud.input.v.frat)
+        close(the.ud.input.v.frat)
+        runModels(the.ud.name.v.frat,replaceOutfile="modifiedDate")
+        
+        the.nud.text.v.gender<-paste(
+          "TITLE:  Test run to get D matrix;",
+          "DATA:  FILE IS",paste0(the.datafile.nud,";"),
+          "FORMAT=FREE;",
+          "VARIABLE:",
+          "NAMES ARE",
+          paste(all.names[[i]],collapse="\n    "),
+          "    T1 T2 T3 T4 ID GENDER FRAT DX",
+          #Get rid of BCH
+          #"    BCHW1 BCHW2 BCHW3 BCHW4",
+          "    CPROB1 CPROB2 CPROB3 CPROB4 N;",
+          "    USEVARIABLES ARE N GENDER;",
+          "    NOMINAL = N;",
+          "    CLASSES = C(4);",
+          "    MISSING are all .;",
+          "    IDVARIABLE = ID;",
+          "ANALYSIS:",
+          "    TYPE = MIXTURE;",
+          "    STARTS = 0;",
+          "MODEL:",
+          "    %OVERALL%",
+          "    c ON gender;",
+          "    %C#1%",
+          "    [N#1@15];",
+          "    [N#2@-15];",
+          "    [N#3@-15];",
+          "    %C#2%",
+          "    [N#1@-15];",
+          "    [N#2@15];",
+          "    [N#3@-15];",
+          "    %C#3%",
+          "    [N#1@-15];",
+          "    [N#2@-15];",
+          the.l33_nud,
+          "    %C#4%",
+          "    [N#1@-15];",
+          "    [N#2@-15];",
+          the.l43_nud,
+          "OUTPUT:",
+          "   TECH3",
+          "SAVEDATA:",
+          "TECH3 = t3vg_", the.datafile.nud,
+          sep="\n")  
+        
+        the.nud.name.v.gender<-paste("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_nud_r",r,"_v_gender.inp",sep="")
+        the.nud.input.v.gender<-file(the.nud.name.v.gender)
+        writeLines(the.nud.text.v.gender, the.nud.input.v.gender)
+        close(the.nud.input.v.gender)
+        runModels(the.nud.name.v.gender,replaceOutfile="modifiedDate")
+        
+        
+        the.nud.text.v.frat<-paste(
+          "TITLE:  Test run to get D matrix;",
+          "DATA:  FILE IS",paste0(the.datafile.nud,";"),
+          "FORMAT=FREE;",
+          "VARIABLE:",
+          "NAMES ARE",
+          paste(all.names[[i]],collapse="\n    "),
+          "    T1 T2 T3 T4 ID GENDER FRAT DX",
+          #Get rid of BCH
+          #"    BCHW1 BCHW2 BCHW3 BCHW4",
+          "    CPROB1 CPROB2 CPROB3 CPROB4 N;",
+          "    USEVARIABLES ARE N FRAT;",
+          "    NOMINAL = N;",
+          "    CLASSES = C(4);",
+          "    MISSING are all .;",
+          "    IDVARIABLE = ID;",
+          "ANALYSIS:",
+          "    TYPE = MIXTURE;",
+          "    STARTS = 0;",
+          "MODEL:",
+          "    %OVERALL%",
+          "    c ON frat;",
+          "    %C#1%",
+          "    [N#1@15];",
+          "    [N#2@-15];",
+          "    [N#3@-15];",
+          "    %C#2%",
+          "    [N#1@-15];",
+          "    [N#2@15];",
+          "    [N#3@-15];",
+          "    %C#3%",
+          "    [N#1@-15];",
+          "    [N#2@-15];",
+          the.l33_nud,
+          "    %C#4%",
+          "    [N#1@-15];",
+          "    [N#2@-15];",
+          the.l43_nud,
+          "OUTPUT:",
+          "   TECH3",
+          "SAVEDATA:",
+          "TECH3 = t3vf_", the.datafile.nud,
+          sep="\n")  
+        
+        the.nud.name.v.frat<-paste("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_nud_r",r,"_v_frat.inp",sep="")
+        the.nud.input.v.frat<-file(the.nud.name.v.frat)
+        writeLines(the.nud.text.v.frat, the.nud.input.v.frat)
+        close(the.nud.input.v.frat)
+        runModels(the.nud.name.v.frat,replaceOutfile="modifiedDate")
+
+      }
+    }
+  }
+}
+```
+
+##Read in Vermunt from intercept-only, uniform DIF, and nonuniform DIF LCA
+```{r,cache=TRUE, eval=FALSE}
+# Intercept-only models ---------------------------------------------------
+c1.test.v.io.frat<-array(NA,dim=c(100,12,4))
+c3.test.v.io.frat<-array(NA,dim=c(100,12,4))
+c1.test.bch.io.frat<-array(NA,dim=c(100,12,4))
+c3.test.bch.io.frat<-array(NA,dim=c(100,12,4))
+c1.test.v.io.gender<-array(NA,dim=c(100,12,4))
+c3.test.v.io.gender<-array(NA,dim=c(100,12,4))
+c1.test.bch.io.gender<-array(NA,dim=c(100,12,4))
+c3.test.bch.io.gender<-array(NA,dim=c(100,12,4))
+
+fixbad<-function(x) {
+  if (x=="*********")
+    x<-NA
+  x
+}
+
+for (i in 1:4){
+  for (j in 1:12) {
+    for (r in 1:100) {
+      the.output.v.io.frat<-readModels(paste0("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_io_r",r,"_v_frat.out"))$parameters
+      #the.output.bch.io.frat<-readModels(paste0("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_io_r",r,"_bch_frat.out"))$parameters
+      the.output.v.io.gender<-readModels(paste0("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_io_r",r,"_v_gender.out"))$parameters
+      #the.output.bch.io.gender<-readModels(paste0("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_io_r",r,"_bch_gender.out"))$parameters
+      if (length(the.output.v.io.frat)>0) {
+        c1.4.v.io.frat<-subset(the.output.v.io.frat$unstandardized$est,the.output.v.io.frat$unstandardized$paramHeader=="C#1.ON")
+        c2.4.v.io.frat<-subset(the.output.v.io.frat$unstandardized$est,the.output.v.io.frat$unstandardized$paramHeader=="C#2.ON")
+        c3.4.v.io.frat<-subset(the.output.v.io.frat$unstandardized$est,the.output.v.io.frat$unstandardized$paramHeader=="C#3.ON")
+        c1.test.v.io.frat[r,j,i]<-fixbad(c1.4.v.io.frat)-fixbad(c2.4.v.io.frat)
+        c3.test.v.io.frat[r,j,i]<-fixbad(c3.4.v.io.frat)
+      }
+      #if (length(the.output.bch.io.frat)>0) {
+      #  c1.4.bch.io.frat<-subset(the.output.bch.io.frat$unstandardized$est,the.output.bch.io.frat$unstandardized$paramHeader=="C#1.ON")
+      #  c2.4.bch.io.frat<-subset(the.output.bch.io.frat$unstandardized$est,the.output.bch.io.frat$unstandardized$paramHeader=="C#2.ON")
+      #  c3.4.bch.io.frat<-subset(the.output.bch.io.frat$unstandardized$est,the.output.bch.io.frat$unstandardized$paramHeader=="C#3.ON")
+      #  c1.test.bch.io.frat[r,j,i]<-c1.4.bch.io.frat-c2.4.bch.io.frat
+      #  c3.test.bch.io.frat[r,j,i]<-c3.4.bch.io.frat
+      #}
+      if (length(the.output.v.io.gender)>0) {
+        c1.4.v.io.gender<-subset(the.output.v.io.gender$unstandardized$est,the.output.v.io.gender$unstandardized$paramHeader=="C#1.ON")
+        c2.4.v.io.gender<-subset(the.output.v.io.gender$unstandardized$est,the.output.v.io.gender$unstandardized$paramHeader=="C#2.ON")
+        c3.4.v.io.gender<-subset(the.output.v.io.gender$unstandardized$est,the.output.v.io.gender$unstandardized$paramHeader=="C#3.ON")
+        c1.test.v.io.gender[r,j,i]<-fixbad(c1.4.v.io.gender)-fixbad(c2.4.v.io.gender)
+        c3.test.v.io.gender[r,j,i]<-fixbad(c3.4.v.io.gender)
+      }
+      #if (length(the.output.bch.io.gender)>0) {
+      #  c1.4.bch.io.gender<-subset(the.output.bch.io.gender$unstandardized$est,the.output.bch.io.gender$unstandardized$paramHeader=="C#1.ON")
+      #  c2.4.bch.io.gender<-subset(the.output.bch.io.gender$unstandardized$est,the.output.bch.io.gender$unstandardized$paramHeader=="C#2.ON")
+      #  c3.4.bch.io.gender<-subset(the.output.bch.io.gender$unstandardized$est,the.output.bch.io.gender$unstandardized$paramHeader=="C#3.ON")
+      #  c1.test.bch.io.gender[r,j,i]<-c1.4.bch.io.gender-c2.4.bch.io.gender
+      #  c3.test.bch.io.gender[r,j,i]<-c3.4.bch.io.gender
+      #}
+    }
+  }
+}
+
+
+c1l0<-c("i0d0c1l0n25","i0d1c1l0n25","i1d0c1l0n25","i1d1c1l0n25","i0d0c1l0n50","i0d1c1l0n50","i1d0c1l0n50","i1d1c1l0n50","i0d0c1l0n100","i0d1c1l0n100","i1d0c1l0n100","i1d1c1l0n100")
+c1l1<-c("i0d0c1l1n25","i0d1c1l1n25","i1d0c1l1n25","i1d1c1l1n25","i0d0c1l1n50","i0d1c1l1n50","i1d0c1l1n50","i1d1c1l1n50","i0d0c1l1n100","i0d1c1l1n100","i1d0c1l1n100","i1d1c1l1n100")
+c2l0<-c("i0d0c2l0n25","i0d1c2l0n25","i1d0c2l0n25","i1d1c2l0n25","i0d0c2l0n50","i0d1c2l0n50","i1d0c2l0n50","i1d1c2l0n50","i0d0c2l0n100","i0d1c2l0n100","i1d0c2l0n100","i1d1c2l0n100")
+c2l1<-c("i0d0c2l1n25","i0d1c2l1n25","i1d0c2l1n25","i1d1c2l1n25","i0d0c2l1n50","i0d1c2l1n50","i1d0c2l1n50","i1d1c2l1n50","i0d0c2l1n100","i0d1c2l1n100","i1d0c2l1n100","i1d1c2l1n100")
+all.sets<-list(c1l0,c1l1,c2l0,c2l1)
+
+title.list<-c("Consequences, Long","Consequences, Short"," Motives, Long","Motives, Short")
+
+#trimmed.bch.io.frat<-c3.test.bch.io.frat
+#trimmed.bch.io.gender<-c3.test.bch.io.gender
+trimmed.v.io.frat<-c3.test.v.io.frat
+trimmed.v.io.gender<-c3.test.v.io.gender
+
+for (a in 1:100) {
+  for (b in 1:12) {
+    for (d in 1:4) {
+      #if ((is.na(c3.test.bch.io.frat[a,b,d])==FALSE)&(abs(c3.test.bch.io.frat[a,b,d])>10))
+      #{trimmed.bch.io.frat[a,b,d]<-NA}
+      #if ((is.na(c3.test.bch.io.gender[a,b,d])==FALSE)&(abs(c3.test.bch.io.gender[a,b,d])>10))
+      #{trimmed.bch.io.gender[a,b,d]<-NA}
+      if ((is.na(c3.test.v.io.frat[a,b,d])==FALSE)&(abs(c3.test.v.io.frat[a,b,d])>10))
+      {trimmed.v.io.frat[a,b,d]<-NA}
+      if ((is.na(c3.test.v.io.gender[a,b,d])==FALSE)&(abs(c3.test.v.io.gender[a,b,d])>10))
+      {trimmed.v.io.gender[a,b,d]<-NA}
+    }
+  }
+}
+
+# Uniform DIF models ---------------------------------------------------
+c1.test.v.ud.frat<-array(NA,dim=c(100,12,4))
+c3.test.v.ud.frat<-array(NA,dim=c(100,12,4))
+c1.test.bch.ud.frat<-array(NA,dim=c(100,12,4))
+c3.test.bch.ud.frat<-array(NA,dim=c(100,12,4))
+c1.test.v.ud.gender<-array(NA,dim=c(100,12,4))
+c3.test.v.ud.gender<-array(NA,dim=c(100,12,4))
+c1.test.bch.ud.gender<-array(NA,dim=c(100,12,4))
+c3.test.bch.ud.gender<-array(NA,dim=c(100,12,4))
+
+for (i in 1:4){
+  for (j in 1:12) {
+    for (r in 1:100) {
+      the.output.v.ud.frat<-readModels(paste0("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_ud_r",r,"_v_frat.out"))$parameters
+      #the.output.bch.ud.frat<-readModels(paste0("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_ud_r",r,"_bch_frat.out"))$parameters
+      the.output.v.ud.gender<-readModels(paste0("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_ud_r",r,"_v_gender.out"))$parameters
+      #the.output.bch.ud.gender<-readModels(paste0("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_ud_r",r,"_bch_gender.out"))$parameters
+      if (length(the.output.v.ud.frat)>0) {
+        c1.4.v.ud.frat<-subset(the.output.v.ud.frat$unstandardized$est,the.output.v.ud.frat$unstandardized$paramHeader=="C#1.ON")
+        c2.4.v.ud.frat<-subset(the.output.v.ud.frat$unstandardized$est,the.output.v.ud.frat$unstandardized$paramHeader=="C#2.ON")
+        c3.4.v.ud.frat<-subset(the.output.v.ud.frat$unstandardized$est,the.output.v.ud.frat$unstandardized$paramHeader=="C#3.ON")
+        c1.test.v.ud.frat[r,j,i]<-fixbad(c1.4.v.ud.frat)-fixbad(c2.4.v.ud.frat)
+        c3.test.v.ud.frat[r,j,i]<-fixbad(c3.4.v.ud.frat)
+      }
+      #if (length(the.output.bch.ud.frat)>0) {
+      #  c1.4.bch.ud.frat<-subset(the.output.bch.ud.frat$unstandardized$est,the.output.bch.ud.frat$unstandardized$paramHeader=="C#1.ON")
+      #  c2.4.bch.ud.frat<-subset(the.output.bch.ud.frat$unstandardized$est,the.output.bch.ud.frat$unstandardized$paramHeader=="C#2.ON")
+      #  c3.4.bch.ud.frat<-subset(the.output.bch.ud.frat$unstandardized$est,the.output.bch.ud.frat$unstandardized$paramHeader=="C#3.ON")
+      #  c1.test.bch.ud.frat[r,j,i]<-c1.4.bch.ud.frat-c2.4.bch.ud.frat
+      #  c3.test.bch.ud.frat[r,j,i]<-c3.4.bch.ud.frat
+      #}
+      if (length(the.output.v.ud.gender)>0) {
+        c1.4.v.ud.gender<-subset(the.output.v.ud.gender$unstandardized$est,the.output.v.ud.gender$unstandardized$paramHeader=="C#1.ON")
+        c2.4.v.ud.gender<-subset(the.output.v.ud.gender$unstandardized$est,the.output.v.ud.gender$unstandardized$paramHeader=="C#2.ON")
+        c3.4.v.ud.gender<-subset(the.output.v.ud.gender$unstandardized$est,the.output.v.ud.gender$unstandardized$paramHeader=="C#3.ON")
+        c1.test.v.ud.gender[r,j,i]<-fixbad(c1.4.v.ud.gender)-fixbad(c2.4.v.ud.gender)
+        c3.test.v.ud.gender[r,j,i]<-fixbad(c3.4.v.ud.gender)
+      }
+      #if (length(the.output.bch.ud.gender)>0) {
+      #c1.4.bch.ud.gender<-subset(the.output.bch.ud.gender$unstandardized$est,the.output.bch.ud.gender$unstandardized$paramHeader=="C#1.ON")
+      #c2.4.bch.ud.gender<-subset(the.output.bch.ud.gender$unstandardized$est,the.output.bch.ud.gender$unstandardized$paramHeader=="C#2.ON")
+      #c3.4.bch.ud.gender<-subset(the.output.bch.ud.gender$unstandardized$est,the.output.bch.ud.gender$unstandardized$paramHeader=="C#3.ON")
+      #c1.test.bch.ud.gender[r,j,i]<-c1.4.bch.ud.gender-c2.4.bch.ud.gender
+      #c3.test.bch.ud.gender[r,j,i]<-c3.4.bch.ud.gender
+      #}
+    }
+  }
+}
+
+# Non-uniform DIF models ---------------------------------------------------
+c1.test.v.nud.frat<-array(NA,dim=c(100,12,4))
+c3.test.v.nud.frat<-array(NA,dim=c(100,12,4))
+c1.test.bch.nud.frat<-array(NA,dim=c(100,12,4))
+c3.test.bch.nud.frat<-array(NA,dim=c(100,12,4))
+c1.test.v.nud.gender<-array(NA,dim=c(100,12,4))
+c3.test.v.nud.gender<-array(NA,dim=c(100,12,4))
+c1.test.bch.nud.gender<-array(NA,dim=c(100,12,4))
+c3.test.bch.nud.gender<-array(NA,dim=c(100,12,4))
+
+for (i in 1:4){
+  for (j in 1:12) {
+    for (r in 1:100) {
+      the.output.v.nud.frat<-readModels(paste0("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_nud_r",r,"_v_frat.out"))$parameters
+      #the.output.bch.nud.frat<-readModels(paste0("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_nud_r",r,"_bch_frat.out"))$parameters
+      the.output.v.nud.gender<-readModels(paste0("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_nud_r",r,"_v_gender.out"))$parameters
+      #the.output.bch.nud.gender<-readModels(paste0("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_nud_r",r,"_bch_gender.out"))$parameters
+      if (length(the.output.v.nud.frat)>0) {
+        c1.4.v.nud.frat<-subset(the.output.v.nud.frat$unstandardized$est,the.output.v.nud.frat$unstandardized$paramHeader=="C#1.ON")
+        c2.4.v.nud.frat<-subset(the.output.v.nud.frat$unstandardized$est,the.output.v.nud.frat$unstandardized$paramHeader=="C#2.ON")
+        c3.4.v.nud.frat<-subset(the.output.v.nud.frat$unstandardized$est,the.output.v.nud.frat$unstandardized$paramHeader=="C#3.ON")
+        c1.test.v.nud.frat[r,j,i]<-fixbad(c1.4.v.nud.frat)-fixbad(c2.4.v.nud.frat)
+        c3.test.v.nud.frat[r,j,i]<-fixbad(c3.4.v.nud.frat)
+      }
+      #if (length(the.output.bch.nud.frat)>0) {
+      #  c1.4.bch.nud.frat<-subset(the.output.bch.nud.frat$unstandardized$est,the.output.bch.nud.frat$unstandardized$paramHeader=="C#1.ON")
+      #  c2.4.bch.nud.frat<-subset(the.output.bch.nud.frat$unstandardized$est,the.output.bch.nud.frat$unstandardized$paramHeader=="C#2.ON")
+      #  c3.4.bch.nud.frat<-subset(the.output.bch.nud.frat$unstandardized$est,the.output.bch.nud.frat$unstandardized$paramHeader=="C#3.ON")
+      #  c1.test.bch.nud.frat[r,j,i]<-c1.4.bch.nud.frat-c2.4.bch.nud.frat
+      #  c3.test.bch.nud.frat[r,j,i]<-c3.4.bch.nud.frat
+      #}
+      if (length(the.output.v.nud.gender)>0) {
+        c1.4.v.nud.gender<-subset(the.output.v.nud.gender$unstandardized$est,the.output.v.nud.gender$unstandardized$paramHeader=="C#1.ON")
+        c2.4.v.nud.gender<-subset(the.output.v.nud.gender$unstandardized$est,the.output.v.nud.gender$unstandardized$paramHeader=="C#2.ON")
+        c3.4.v.nud.gender<-subset(the.output.v.nud.gender$unstandardized$est,the.output.v.nud.gender$unstandardized$paramHeader=="C#3.ON")
+        c1.test.v.nud.gender[r,j,i]<-fixbad(c1.4.v.nud.gender)-fixbad(c2.4.v.nud.gender)
+        c3.test.v.nud.gender[r,j,i]<-fixbad(c3.4.v.nud.gender)
+      }
+      #if (length(the.output.bch.nud.gender)>0) {
+      #c1.4.bch.nud.gender<-subset(the.output.bch.nud.gender$unstandardized$est,the.output.bch.nud.gender$unstandardized$paramHeader=="C#1.ON")
+      #c2.4.bch.nud.gender<-subset(the.output.bch.nud.gender$unstandardized$est,the.output.bch.nud.gender$unstandardized$paramHeader=="C#2.ON")
+      #c3.4.bch.nud.gender<-subset(the.output.bch.nud.gender$unstandardized$est,the.output.bch.nud.gender$unstandardized$paramHeader=="C#3.ON")
+      #c1.test.bch.nud.gender[r,j,i]<-c1.4.bch.nud.gender-c2.4.bch.nud.gender
+      #c3.test.bch.nud.gender[r,j,i]<-c3.4.bch.nud.gender
+      #}
+    }
+  }
+}
+
+c1l0<-c("i0d0c1l0n25","i0d1c1l0n25","i1d0c1l0n25","i1d1c1l0n25","i0d0c1l0n50","i0d1c1l0n50","i1d0c1l0n50","i1d1c1l0n50","i0d0c1l0n100","i0d1c1l0n100","i1d0c1l0n100","i1d1c1l0n100")
+c1l1<-c("i0d0c1l1n25","i0d1c1l1n25","i1d0c1l1n25","i1d1c1l1n25","i0d0c1l1n50","i0d1c1l1n50","i1d0c1l1n50","i1d1c1l1n50","i0d0c1l1n100","i0d1c1l1n100","i1d0c1l1n100","i1d1c1l1n100")
+c2l0<-c("i0d0c2l0n25","i0d1c2l0n25","i1d0c2l0n25","i1d1c2l0n25","i0d0c2l0n50","i0d1c2l0n50","i1d0c2l0n50","i1d1c2l0n50","i0d0c2l0n100","i0d1c2l0n100","i1d0c2l0n100","i1d1c2l0n100")
+c2l1<-c("i0d0c2l1n25","i0d1c2l1n25","i1d0c2l1n25","i1d1c2l1n25","i0d0c2l1n50","i0d1c2l1n50","i1d0c2l1n50","i1d1c2l1n50","i0d0c2l1n100","i0d1c2l1n100","i1d0c2l1n100","i1d1c2l1n100")
+all.sets<-list(c1l0,c1l1,c2l0,c2l1)
+
+title.list<-c("Consequences, Long","Consequences, Short"," Motives, Long","Motives, Short")
+
+#trimmed.bch.nud.frat<-c3.test.bch.nud.frat
+#trimmed.bch.nud.gender<-c3.test.bch.nud.gender
+trimmed.v.nud.frat<-c3.test.v.nud.frat
+trimmed.v.nud.gender<-c3.test.v.nud.gender
+
+for (a in 1:100) {
+  for (b in 1:12) {
+    for (d in 1:4) {
+      #if ((is.na(c3.test.bch.nud.frat[a,b,d])==FALSE)&(abs(c3.test.bch.nud.frat[a,b,d])>10))
+      #{trimmed.bch.nud.frat[a,b,d]<-NA}
+      #if ((is.na(c3.test.bch.nud.gender[a,b,d])==FALSE)&(abs(c3.test.bch.nud.gender[a,b,d])>10))
+      #{trimmed.bch.nud.gender[a,b,d]<-NA}
+      if ((is.na(c3.test.v.nud.frat[a,b,d])==FALSE)&(abs(c3.test.v.nud.frat[a,b,d])>10))
+      {trimmed.v.nud.frat[a,b,d]<-NA}
+      if ((is.na(c3.test.v.nud.gender[a,b,d])==FALSE)&(abs(c3.test.v.nud.gender[a,b,d])>10))
+      {trimmed.v.nud.gender[a,b,d]<-NA}
+    }
+  }
+}
+
+```
+
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.

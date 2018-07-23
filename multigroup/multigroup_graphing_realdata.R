@@ -81,17 +81,17 @@ ud.frat.v<-read.table("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/v_ud_
 title.list<-c("Consequences, Long","Consequences, Short"," Motives, Long","Motives, Short")
 
 
-nodif.noimpact.lr<-list(subset(io.frat.lr[,6],io.frat.lr[,1]==1),subset(io.frat.lr[,6],io.frat.lr[,1]==2),subset(io.frat.lr[,6],io.frat.lr[,1]==3),subset(io.frat.lr[,6],io.frat.lr[,1]==4))
-unmodeleddif.noimpact.lr<-list(subset(io.frat.lr[,7],io.frat.lr[,1]==1),subset(io.frat.lr[,7],io.frat.lr[,1]==2),subset(io.frat.lr[,7],io.frat.lr[,1]==3),subset(io.frat.lr[,7],io.frat.lr[,1]==4))
-modeleddif.noimpact.lr<-list(subset(ud.frat.lr[,7],ud.frat.lr[,1]==1),subset(ud.frat.lr[,7],ud.frat.lr[,1]==2),subset(ud.frat.lr[,7],ud.frat.lr[,1]==3),subset(ud.frat.lr[,7],ud.frat.lr[,1]==4))
+nodif.noimpact.lr<-list(subset(io.frat.lr[,10],io.frat.lr[,1]==1),subset(io.frat.lr[,10],io.frat.lr[,1]==2),subset(io.frat.lr[,10],io.frat.lr[,1]==3),subset(io.frat.lr[,10],io.frat.lr[,1]==4))
+unmodeleddif.noimpact.lr<-list(subset(io.frat.lr[,11],io.frat.lr[,1]==1),subset(io.frat.lr[,11],io.frat.lr[,1]==2),subset(io.frat.lr[,11],io.frat.lr[,1]==3),subset(io.frat.lr[,11],io.frat.lr[,1]==4))
+modeleddif.noimpact.lr<-list(subset(ud.frat.lr[,11],ud.frat.lr[,1]==1),subset(ud.frat.lr[,11],ud.frat.lr[,1]==2),subset(ud.frat.lr[,11],ud.frat.lr[,1]==3),subset(ud.frat.lr[,11],ud.frat.lr[,1]==4))
 
 
-nodif.noimpact.v<-list(subset(io.frat.v[,6],io.frat.v[,1]==1),subset(io.frat.v[,6],io.frat.v[,1]==2),subset(io.frat.v[,6],io.frat.v[,1]==3),subset(io.frat.v[,6],io.frat.v[,1]==4))
-unmodeleddif.noimpact.v<-list(subset(io.frat.v[,7],io.frat.v[,1]==1),subset(io.frat.v[,7],io.frat.v[,1]==2),subset(io.frat.v[,7],io.frat.v[,1]==3),subset(io.frat.v[,7],io.frat.v[,1]==4))
-modeleddif.noimpact.v<-list(subset(ud.frat.v[,7],ud.frat.v[,1]==1),subset(ud.frat.v[,7],ud.frat.v[,1]==2),subset(ud.frat.v[,7],ud.frat.v[,1]==3),subset(ud.frat.v[,7],ud.frat.v[,1]==4))
+nodif.noimpact.v<-list(subset(io.frat.v[,10],io.frat.v[,1]==1),subset(io.frat.v[,10],io.frat.v[,1]==2),subset(io.frat.v[,10],io.frat.v[,1]==3),subset(io.frat.v[,10],io.frat.v[,1]==4))
+unmodeleddif.noimpact.v<-list(subset(io.frat.v[,11],io.frat.v[,1]==1),subset(io.frat.v[,11],io.frat.v[,1]==2),subset(io.frat.v[,11],io.frat.v[,1]==3),subset(io.frat.v[,11],io.frat.v[,1]==4))
+modeleddif.noimpact.v<-list(subset(ud.frat.v[,11],ud.frat.v[,1]==1),subset(ud.frat.v[,11],ud.frat.v[,1]==2),subset(ud.frat.v[,11],ud.frat.v[,1]==3),subset(ud.frat.v[,11],ud.frat.v[,1]==4))
 
 
-pdf("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/multigroup_noimpact_realdata_05162018.pdf",width=14,height=10)
+pdf("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/multigroup_noimpact_realdata_n100_05162018.pdf",width=14,height=10)
 par(mfrow=c(2,2))
 par(mar=c(1,4.5,3.5,3.5))
 for (e in 1:4) {
@@ -115,16 +115,16 @@ dev.off()
 
 
 
-nodif.impact.lr<-list(subset(io.frat.lr[,8],io.frat.lr[,1]==1),subset(io.frat.lr[,8],io.frat.lr[,1]==2),subset(io.frat.lr[,8],io.frat.lr[,1]==3),subset(io.frat.lr[,8],io.frat.lr[,1]==4))
-unmodeleddif.impact.lr<-list(subset(io.frat.lr[,9],io.frat.lr[,1]==1),subset(io.frat.lr[,9],io.frat.lr[,1]==2),subset(io.frat.lr[,9],io.frat.lr[,1]==3),subset(io.frat.lr[,9],io.frat.lr[,1]==4))
-modeleddif.impact.lr<-list(subset(ud.frat.lr[,9],ud.frat.lr[,1]==1),subset(ud.frat.lr[,9],ud.frat.lr[,1]==2),subset(ud.frat.lr[,9],ud.frat.lr[,1]==3),subset(ud.frat.lr[,9],ud.frat.lr[,1]==4))
+nodif.impact.lr<-list(subset(io.frat.lr[,12],io.frat.lr[,1]==1),subset(io.frat.lr[,12],io.frat.lr[,1]==2),subset(io.frat.lr[,12],io.frat.lr[,1]==3),subset(io.frat.lr[,12],io.frat.lr[,1]==4))
+unmodeleddif.impact.lr<-list(subset(io.frat.lr[,13],io.frat.lr[,1]==1),subset(io.frat.lr[,13],io.frat.lr[,1]==2),subset(io.frat.lr[,13],io.frat.lr[,1]==3),subset(io.frat.lr[,13],io.frat.lr[,1]==4))
+modeleddif.impact.lr<-list(subset(ud.frat.lr[,13],ud.frat.lr[,1]==1),subset(ud.frat.lr[,13],ud.frat.lr[,1]==2),subset(ud.frat.lr[,13],ud.frat.lr[,1]==3),subset(ud.frat.lr[,13],ud.frat.lr[,1]==4))
 
-nodif.impact.v<-list(subset(io.frat.v[,8],io.frat.v[,1]==1),subset(io.frat.v[,8],io.frat.v[,1]==2),subset(io.frat.v[,8],io.frat.v[,1]==3),subset(io.frat.v[,8],io.frat.v[,1]==4))
-unmodeleddif.impact.v<-list(subset(io.frat.v[,9],io.frat.v[,1]==1),subset(io.frat.v[,9],io.frat.v[,1]==2),subset(io.frat.v[,9],io.frat.v[,1]==3),subset(io.frat.v[,9],io.frat.v[,1]==4))
-modeleddif.impact.v<-list(subset(ud.frat.v[,9],ud.frat.v[,1]==1),subset(ud.frat.v[,9],ud.frat.v[,1]==2),subset(ud.frat.v[,9],ud.frat.v[,1]==3),subset(ud.frat.v[,9],ud.frat.v[,1]==4))
+nodif.impact.v<-list(subset(io.frat.v[,12],io.frat.v[,1]==1),subset(io.frat.v[,12],io.frat.v[,1]==2),subset(io.frat.v[,12],io.frat.v[,1]==3),subset(io.frat.v[,12],io.frat.v[,1]==4))
+unmodeleddif.impact.v<-list(subset(io.frat.v[,13],io.frat.v[,1]==1),subset(io.frat.v[,13],io.frat.v[,1]==2),subset(io.frat.v[,13],io.frat.v[,1]==3),subset(io.frat.v[,13],io.frat.v[,1]==4))
+modeleddif.impact.v<-list(subset(ud.frat.v[,13],ud.frat.v[,1]==1),subset(ud.frat.v[,13],ud.frat.v[,1]==2),subset(ud.frat.v[,13],ud.frat.v[,1]==3),subset(ud.frat.v[,13],ud.frat.v[,1]==4))
 
 
-pdf("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/multigroup_impact_realdata_05162018.pdf",width=14,height=10)
+pdf("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/multigroup_impact_realdata_n100_05162018.pdf",width=14,height=10)
 par(mfrow=c(2,2))
 par(mar=c(1,4.5,3.5,3.5))
 for (e in 1:4) {

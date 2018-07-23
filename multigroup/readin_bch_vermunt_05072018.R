@@ -29,6 +29,12 @@ c3.test.v.io.gender<-array(NA,dim=c(100,12,4))
 c1.test.bch.io.gender<-array(NA,dim=c(100,12,4))
 c3.test.bch.io.gender<-array(NA,dim=c(100,12,4))
 
+fixbad<-function(x) {
+  if (x=="*********") 
+      x<-NA
+      x
+}
+
 for (i in 1:4){
   for (j in 1:12) {
     for (r in 1:100) {
@@ -40,8 +46,8 @@ for (i in 1:4){
         c1.4.v.io.frat<-subset(the.output.v.io.frat$unstandardized$est,the.output.v.io.frat$unstandardized$paramHeader=="C#1.ON")
         c2.4.v.io.frat<-subset(the.output.v.io.frat$unstandardized$est,the.output.v.io.frat$unstandardized$paramHeader=="C#2.ON")
         c3.4.v.io.frat<-subset(the.output.v.io.frat$unstandardized$est,the.output.v.io.frat$unstandardized$paramHeader=="C#3.ON")
-        c1.test.v.io.frat[r,j,i]<-c1.4.v.io.frat-c2.4.v.io.frat
-        c3.test.v.io.frat[r,j,i]<-c3.4.v.io.frat
+        c1.test.v.io.frat[r,j,i]<-fixbad(c1.4.v.io.frat)-fixbad(c2.4.v.io.frat)
+        c3.test.v.io.frat[r,j,i]<-fixbad(c3.4.v.io.frat)
       }
       #if (length(the.output.bch.io.frat)>0) {
       #  c1.4.bch.io.frat<-subset(the.output.bch.io.frat$unstandardized$est,the.output.bch.io.frat$unstandardized$paramHeader=="C#1.ON")
@@ -54,8 +60,8 @@ for (i in 1:4){
         c1.4.v.io.gender<-subset(the.output.v.io.gender$unstandardized$est,the.output.v.io.gender$unstandardized$paramHeader=="C#1.ON")
         c2.4.v.io.gender<-subset(the.output.v.io.gender$unstandardized$est,the.output.v.io.gender$unstandardized$paramHeader=="C#2.ON")
         c3.4.v.io.gender<-subset(the.output.v.io.gender$unstandardized$est,the.output.v.io.gender$unstandardized$paramHeader=="C#3.ON")
-        c1.test.v.io.gender[r,j,i]<-c1.4.v.io.gender-c2.4.v.io.gender
-        c3.test.v.io.gender[r,j,i]<-c3.4.v.io.gender
+        c1.test.v.io.gender[r,j,i]<-fixbad(c1.4.v.io.gender)-fixbad(c2.4.v.io.gender)
+        c3.test.v.io.gender[r,j,i]<-fixbad(c3.4.v.io.gender)
       }
       #if (length(the.output.bch.io.gender)>0) {
       #  c1.4.bch.io.gender<-subset(the.output.bch.io.gender$unstandardized$est,the.output.bch.io.gender$unstandardized$paramHeader=="C#1.ON")
@@ -119,8 +125,8 @@ for (i in 1:4){
         c1.4.v.ud.frat<-subset(the.output.v.ud.frat$unstandardized$est,the.output.v.ud.frat$unstandardized$paramHeader=="C#1.ON")
         c2.4.v.ud.frat<-subset(the.output.v.ud.frat$unstandardized$est,the.output.v.ud.frat$unstandardized$paramHeader=="C#2.ON")
         c3.4.v.ud.frat<-subset(the.output.v.ud.frat$unstandardized$est,the.output.v.ud.frat$unstandardized$paramHeader=="C#3.ON")
-        c1.test.v.ud.frat[r,j,i]<-c1.4.v.ud.frat-c2.4.v.ud.frat
-        c3.test.v.ud.frat[r,j,i]<-c3.4.v.ud.frat
+        c1.test.v.ud.frat[r,j,i]<-fixbad(c1.4.v.ud.frat)-fixbad(c2.4.v.ud.frat)
+        c3.test.v.ud.frat[r,j,i]<-fixbad(c3.4.v.ud.frat)
       }
       #if (length(the.output.bch.ud.frat)>0) {
       #  c1.4.bch.ud.frat<-subset(the.output.bch.ud.frat$unstandardized$est,the.output.bch.ud.frat$unstandardized$paramHeader=="C#1.ON")
@@ -133,8 +139,8 @@ for (i in 1:4){
         c1.4.v.ud.gender<-subset(the.output.v.ud.gender$unstandardized$est,the.output.v.ud.gender$unstandardized$paramHeader=="C#1.ON")
         c2.4.v.ud.gender<-subset(the.output.v.ud.gender$unstandardized$est,the.output.v.ud.gender$unstandardized$paramHeader=="C#2.ON")
         c3.4.v.ud.gender<-subset(the.output.v.ud.gender$unstandardized$est,the.output.v.ud.gender$unstandardized$paramHeader=="C#3.ON")
-        c1.test.v.ud.gender[r,j,i]<-c1.4.v.ud.gender-c2.4.v.ud.gender
-        c3.test.v.ud.gender[r,j,i]<-c3.4.v.ud.gender
+        c1.test.v.ud.gender[r,j,i]<-fixbad(c1.4.v.ud.gender)-fixbad(c2.4.v.ud.gender)
+        c3.test.v.ud.gender[r,j,i]<-fixbad(c3.4.v.ud.gender)
       }
       #if (length(the.output.bch.ud.gender)>0) {
         #c1.4.bch.ud.gender<-subset(the.output.bch.ud.gender$unstandardized$est,the.output.bch.ud.gender$unstandardized$paramHeader=="C#1.ON")
@@ -175,7 +181,7 @@ for (a in 1:100) {
     }
   }
 }
-```
+
 
 #For columns: Do 1, 5, and 9 to get at no DIF no impact condition with N=25, N=50, and N=100, respectively
 #For u indices: 1 through 4, 9 through 12 will be frat; 5 through 9, 13 through 16 will be gender

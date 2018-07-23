@@ -1,9 +1,23 @@
+library(haven)
 
-c1l0<-c("i0d0c1l0n25","i0d1c1l0n25","i1d0c1l0n25","i1d1c1l0n25","i0d0c1l0n50","i0d1c1l0n50","i1d0c1l0n50","i1d1c1l0n50","i0d0c1l0n100","i0d1c1l0n100","i1d0c1l0n100","i1d1c1l0n100")
-c1l1<-c("i0d0c1l1n25","i0d1c1l1n25","i1d0c1l1n25","i1d1c1l1n25","i0d0c1l1n50","i0d1c1l1n50","i1d0c1l1n50","i1d1c1l1n50","i0d0c1l1n100","i0d1c1l1n100","i1d0c1l1n100","i1d1c1l1n100")
-c2l0<-c("i0d0c2l0n25","i0d1c2l0n25","i1d0c2l0n25","i1d1c2l0n25","i0d0c2l0n50","i0d1c2l0n50","i1d0c2l0n50","i1d1c2l0n50","i0d0c2l0n100","i0d1c2l0n100","i1d0c2l0n100","i1d1c2l0n100")
-c2l1<-c("i0d0c2l1n25","i0d1c2l1n25","i1d0c2l1n25","i1d1c2l1n25","i0d0c2l1n50","i0d1c2l1n50","i1d0c2l1n50","i1d1c2l1n50","i0d0c2l1n100","i0d1c2l1n100","i1d0c2l1n100","i1d1c2l1n100")
+valid<-read_sas("M:/xstudy2/Simulation/aim02/July2017/valid.sas7bdat")
+valid<-valid[,c("ID","GEN1A001","COL1Z007")]
+names(valid)<-c("ID","gender","frat")
+
+c1l0<-c("p45n25d0c1l0","p45n25d1c1l0","p25n25d0c1l0","p25n25d1c1l0","p45n50d0c1l0","p45n50d1c1l0","p25n50d0c1l0","p25n50d1c1l0","p45n100d0c1l0","p45n100d1c1l0","p25n100d0c1l0","p25n100d1c1l0")
+c1l1<-c("p45n25d0c1l1","p45n25d1c1l1","p25n25d0c1l1","p25n25d1c1l1","p45n50d0c1l1","p45n50d1c1l1","p25n50d0c1l1","p25n50d1c1l1","p45n100d0c1l1","p45n100d1c1l1","p25n100d0c1l1","p25n100d1c1l1")
+c2l0<-c("p45n25d0c2l0","p45n25d1c2l0","p25n25d0c2l0","p25n25d1c2l0","p45n50d0c2l0","p45n50d1c2l0","p25n50d0c2l0","p25n50d1c2l0","p45n100d0c2l0","p45n100d1c2l0","p25n100d0c2l0","p25n100d1c2l0")
+c2l1<-c("p45n25d0c2l1","p45n25d1c2l1","p25n25d0c2l1","p25n25d1c2l1","p45n50d0c2l1","p45n50d1c2l1","p25n50d0c2l1","p25n50d1c2l1","p45n100d0c2l1","p45n100d1c2l1","p25n100d0c2l1","p25n100d1c2l1")
 all.sets<-list(c1l0,c1l1,c2l0,c2l1)
+
+#runModels("C:/Users/vcole/Desktop/aim2/p45n50d0c1l0")
+#runModels("C:/Users/vcole/Desktop/aim2/p45n50d0c1l1")
+#runModels("C:/Users/vcole/Desktop/aim2/p45n50d1c1l0")
+#runModels("C:/Users/vcole/Desktop/aim2/p45n50d1c1l1")
+#runModels("C:/Users/vcole/Desktop/aim2/p45n50d0c2l0")
+#runModels("C:/Users/vcole/Desktop/aim2/p45n50d0c2l1")
+#runModels("C:/Users/vcole/Desktop/aim2/p45n50d1c2l0")
+#runModels("C:/Users/vcole/Desktop/aim2/p45n50d1c2l1")
 
 names.c1l0<-c('ACY2','ACY3','ACY4','ACY6','ACY12','ACY14')
 names.c1l1<-c('ACY1','ACY2','ACY3','ACY4','ACY5','ACY6','ACY7','ACY8','ACY9','ACY10','ACY12','ACY13','ACY14','ACY15','ACY18')
@@ -15,8 +29,6 @@ full.names<-list(names.c1l1,names.c1l1,names.c2l1,names.c2l1)
 
 
 # Model Specifications ----------------------------------------------------
-
-
 
 
 #Alcohol consequences, intercept only, short form
@@ -60,7 +72,7 @@ model.io.acy.l0<-paste('Model:',
 
 
 #Alcohol consequences, intercept only, short form
-model.nud.acy.l0<-paste('Model:',
+model.ud.acy.l0<-paste('Model:',
                        '%OVERALL%',
                        '[ACY2$1];',
                        '[ACY3$1];',
@@ -84,22 +96,22 @@ model.nud.acy.l0<-paste('Model:',
                        '[ACY14$1] (b14);',
                        '%C#3%',
                        '[ACY2$1] (a2);',
-                       '[ACY3$1] (c3);',
-                       '[ACY4$1] (c4);',
+                       '[ACY3$1] ;',
+                       '[ACY4$1] ;',
                        '[ACY6$1] (a6);',
-                       '[ACY12$1] (c12);',
+                       '[ACY12$1] ;',
                        '[ACY14$1] (a14);',
                        '%C#4%',
                        '[ACY2$1] (b2);',
-                       '[ACY3$1] (d3);',
-                       '[ACY4$1] (d4);',
+                       '[ACY3$1] ;',
+                       '[ACY4$1] ;',
                        '[ACY6$1] (b6);',
-                       '[ACY12$1] (d12);',
+                       '[ACY12$1] ;',
                        '[ACY14$1] (b14);',
                        sep="\n")
 
 #Alcohol consequences, uniform DIF, long form
-model.nud.acy.l1<-paste('Model:',
+model.ud.acy.l1<-paste('Model:',
                        '%OVERALL%',
                        '[ACY1$1];',
                        '[ACY2$1];',
@@ -151,15 +163,15 @@ model.nud.acy.l1<-paste('Model:',
                        '%C#3%',
                        '[ACY1$1] (a1);',
                        '[ACY2$1] (a2);',
-                       '[ACY3$1] (c3);',
-                       '[ACY4$1] (c4);',
+                       '[ACY3$1];',
+                       '[ACY4$1];',
                        '[ACY5$1] (a5);',
                        '[ACY6$1] (a6);',
                        '[ACY7$1] (a7);',
                        '[ACY8$1] (a8);',
                        '[ACY9$1] (a9);',
                        '[ACY10$1] (a10);',
-                       '[ACY12$1] (c12);',
+                       '[ACY12$1];',
                        '[ACY13$1] (a13);',
                        '[ACY14$1] (a14);',
                        '[ACY15$1] (a15);',
@@ -167,15 +179,15 @@ model.nud.acy.l1<-paste('Model:',
                        '%C#4%',
                        '[ACY1$1] (b1);',
                        '[ACY2$1] (b2);',
-                       '[ACY3$1] (d3); ',
-                       '[ACY4$1] (d4); ',
+                       '[ACY3$1]; ',
+                       '[ACY4$1]; ',
                        '[ACY5$1] (b5);',
                        '[ACY6$1] (b6);',
                        '[ACY7$1] (b7);',
                        '[ACY8$1] (b8);',
                        '[ACY9$1] (b9);',
                        '[ACY10$1] (b10);',
-                       '[ACY12$1] (d12); ',
+                       '[ACY12$1]; ',
                        '[ACY13$1] (b13);',
                        '[ACY14$1] (b14);',
                        '[ACY15$1] (b15);',
@@ -268,7 +280,7 @@ model.io.acy.l1<-paste('Model:',
 
 ####MOTIVES
 #Alcohol motives, short form, uniform DIF
-model.nud.amt.l0<-paste("Model:",
+model.ud.amt.l0<-paste("Model:",
                        "%OVERALL%",
                        "%C#1%",
                        '[AMT10$1] (a101);',
@@ -329,10 +341,10 @@ model.nud.amt.l0<-paste("Model:",
                        '[AMT11$2] (a112);',
                        '[AMT11$3] (a113);',
                        '[AMT11$4] (a114);',
-                       '[AMT12$1] (c121);',
-                       '[AMT12$2] (c122);',
-                       '[AMT12$3] (c123);',
-                       '[AMT12$4] (c124);',
+                       '[AMT12$1];',
+                       '[AMT12$2];',
+                       '[AMT12$3];',
+                       '[AMT12$4];',
                        '[AMT14$1] (a141);',
                        '[AMT14$2] (a142);',
                        '[AMT14$3] (a143);',
@@ -354,10 +366,10 @@ model.nud.amt.l0<-paste("Model:",
                        '[AMT11$2] (b112);',
                        '[AMT11$3] (b113);',
                        '[AMT11$4] (b114);',
-                       '[AMT12$1] (d121);',
-                       '[AMT12$2] (d122);',
-                       '[AMT12$3] (d123);',
-                       '[AMT12$4] (d124);',
+                       '[AMT12$1];',
+                       '[AMT12$2];',
+                       '[AMT12$3];',
+                       '[AMT12$4];',
                        '[AMT14$1] (b141);',
                        '[AMT14$2] (b142);',
                        '[AMT14$3] (b143);',
@@ -478,7 +490,7 @@ model.io.amt.l0<-paste('Model:',
                        ,sep="\n")
 
 #Alcohol motives, long form, uniform DIF
-model.nud.amt.l1<-paste("Model:",
+model.ud.amt.l1<-paste("Model:",
                        "%OVERALL%",
                        "%C#1%",
                        '[AMT8$1] (a81);',
@@ -587,10 +599,10 @@ model.nud.amt.l1<-paste("Model:",
                        '[AMT11$2] (a112);',
                        '[AMT11$3] (a113);',
                        '[AMT11$4] (a114);',
-                       '[AMT12$1] (c121);',
-                       '[AMT12$2] (c122);',
-                       '[AMT12$3] (c123);',
-                       '[AMT12$4] (c124);',
+                       '[AMT12$1] ;',
+                       '[AMT12$2] ;',
+                       '[AMT12$3] ;',
+                       '[AMT12$4] ;',
                        '[AMT13$1] (a131);',
                        '[AMT13$2] (a132);',
                        '[AMT13$3] (a133);',
@@ -632,10 +644,10 @@ model.nud.amt.l1<-paste("Model:",
                        '[AMT11$2] (b112);',
                        '[AMT11$3] (b113);',
                        '[AMT11$4] (b114);',
-                       '[AMT12$1] (d121);',
-                       '[AMT12$2] (d122);',
-                       '[AMT12$3] (d123);',
-                       '[AMT12$4] (d124);',
+                       '[AMT12$1] ;',
+                       '[AMT12$2] ;',
+                       '[AMT12$3] ;',
+                       '[AMT12$4] ;',
                        '[AMT13$1] (b131);',
                        '[AMT13$2] (b132);',
                        '[AMT13$3] (b133);',
@@ -849,10 +861,9 @@ model.io.amt.l1<-paste("Model:",
                        sep="\n")
 
 
+
 models.io<-list(model.io.acy.l0,model.io.acy.l1,model.io.amt.l0,model.io.amt.l1)
-models.nud<-list(model.nud.acy.l0,model.nud.acy.l1,model.nud.amt.l0,model.nud.amt.l1)
-
-
+models.ud<-list(model.ud.acy.l0,model.ud.acy.l1,model.ud.amt.l0,model.ud.amt.l1)
 
 library(MplusAutomation)
 
@@ -860,120 +871,155 @@ library(MplusAutomation)
 for (i in 1:4) {
   for (j in 1:12) {
     for (r in 1:100) {
-      the.filename<-paste0("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_r",r,".csv")
+      the.filename<-paste0("C:/Users/vcole/Desktop/aim2/",all.sets[[i]][j],"/",all.sets[[i]][j],"R",r,".csv")
       if (file.exists(the.filename)==1) {
-      indata<-read.csv(the.filename,header=FALSE) #Read in one of the data files, as currently formatted for Mplus
-      names(indata)<-c("Dx","ID",full.names[[i]],"NumberHits","study","R","T1original","T2original")
-      
-      ###Training data
-      ###Note that T1original and T2original are the corresponding training values in the MIMIC solution
-      indata$T1<-0
-      indata$T2<-0
-      indata$T3<-0
-      indata$T4<-0
-      
-      #Study 1, diagnosed. If you are in Study 1 and have AUD, you can only be a member of class 1, so T1=1, T2=0, T3=0, T4=0.
-      indata$T1[indata$study==1&indata$Dx==1]<-1
-      #Study 1, undiagnosed. If you are in Study 1 and do not have AUD, you can only be a member of class 2, so T1=0, T2=1, T3=0, T4=0.
-      indata$T2[indata$study==1&indata$Dx==0]<-1
-      #Study 2, diagnosed or undiagnosed. You can be in class 3, is diagnosed for Study 2, or class 4, which is undiagnosed for Study 2. So T1=0, T2=0, T3=1, and T4=1. 
-      indata$T3[indata$study==2]<-1
-      indata$T4[indata$study==2]<-1
-      
-      
-      gender.p<-c(0.4285714, 0.4871795)
-      frat.p<-c(0.1889401, 0.3128205)
-      
-      indata$gender<-NA
-      indata$frat<-NA
-      for (a in 1:nrow(indata)) {
-        if (indata$Dx[a]==0) {
-          indata$gender[a]<-rbinom(1,1,gender.p[1])
-          indata$frat[a]<-rbinom(1,1,frat.p[1])
-        }
-        if (indata$Dx[a]==1) {
-          indata$gender[a]<-rbinom(1,1,gender.p[2])
-          indata$frat[a]<-rbinom(1,1,frat.p[2])
-        }
-      }
-      
-      #write.table(indata,paste0("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_r",r,"_mg.csv"),sep=",",row.names=FALSE,col.names=FALSE,na=".")
-      
-      the.datafile.original<-paste0(all.sets[[i]][j],"_r",r,"_mg.csv")
-      the.datafile.nud<-paste0(all.sets[[i]][j],"_r",r,"_nud_v.dat")
-      
-      the.nud.text<-paste(
-        "TITLE:  Test run to get D matrix;",
-        "DATA:  FILE IS",paste0(the.datafile.original,";"),
-        "FORMAT=FREE;",
-        "VARIABLE: NAMES ARE",
-        paste(names(indata),collapse="\n    "),
-        ";",
-        "    USEVARIABLES =",
-        paste(all.names[[i]],collapse="\n    "),
-        "T1 T2 T3 T4;",
-        "    CATEGORICAL =",
-        paste(all.names[[i]],collapse="\n    "),
-        ";",
-        "    AUXILIARY ARE GENDER FRAT DX;",
-        "    CLASSES = C(4);",
-        "    TRAINING = T1 T2 T3 T4;",
-        "    MISSING are all .;",
-        "    IDVARIABLE = ID;",
-        "ANALYSIS:",
-        "    TYPE = MIXTURE;",
-        models.nud[[i]],
-        "SAVEDATA:",
-        #Get rid of BCH
-        #"SAVE = BCHWEIGHTS;",
-        "SAVE = CPROB;",
-        "FILE =", the.datafile.nud,
-        sep="\n")  
-      
-      the.nud.name<-paste("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_nud_r",r,".inp",sep="")
-      the.nud<-file(the.nud.name)
-      writeLines(the.nud.text, the.nud)
-      close(the.nud)
-      runModels(the.nud.name,replaceOutfile="modifiedDate")
-      
+        indata<-read.csv(the.filename,header=FALSE) #Read in one of the data files, as currently formatted for Mplus
+        names(indata)<-c("Dx","ID",full.names[[i]],"NumberHits","study","R","T1original","T2original")
+        
+        ###Training data
+        ###Note that T1original and T2original are the corresponding training values in the MIMIC solution
+        indata$T1<-0
+        indata$T2<-0
+        indata$T3<-0
+        indata$T4<-0
+        
+        #Study 1, diagnosed. If you are in Study 1 and have AUD, you can only be a member of class 1, so T1=1, T2=0, T3=0, T4=0.
+        indata$T1[indata$study==1&indata$Dx==1]<-1
+        #Study 1, undiagnosed. If you are in Study 1 and do not have AUD, you can only be a member of class 2, so T1=0, T2=1, T3=0, T4=0.
+        indata$T2[indata$study==1&indata$Dx==0]<-1
+        #Study 2, diagnosed or undiagnosed. You can be in class 3, is diagnosed for Study 2, or class 4, which is undiagnosed for Study 2. So T1=0, T2=0, T3=1, and T4=1. 
+        indata$T3[indata$study==2]<-1
+        indata$T4[indata$study==2]<-1
+        
+        
+#         gender.p<-c(0.4285714, 0.4871795)
+#         frat.p<-c(0.1889401, 0.3128205)
+#         
+#         indata$gender<-NA
+#         indata$frat<-NA
+#         for (a in 1:nrow(indata)) {
+#           if (indata$Dx[a]==0) {
+#             indata$gender[a]<-rbinom(1,1,gender.p[1])
+#             indata$frat[a]<-rbinom(1,1,frat.p[1])
+#           }
+#           if (indata$Dx[a]==1) {
+#             indata$gender[a]<-rbinom(1,1,gender.p[2])
+#             indata$frat[a]<-rbinom(1,1,frat.p[2])
+#           }
+#         }
+        
+        indata<-merge(indata,valid,by="ID")
+
+        write.table(indata,paste0("C:/Users/vcole/Desktop/aim2/",all.sets[[i]][j],"/",all.sets[[i]][j],"_r",r,"_mg.csv"),sep=",",row.names=FALSE,col.names=FALSE,na=".")
+        
+        the.datafile.original<-paste0(all.sets[[i]][j],"_r",r,"_mg.csv")
+        the.datafile.io.3step<-paste0(all.sets[[i]][j],"_r",r,"_io_v.dat")
+        the.datafile.ud.3step<-paste0(all.sets[[i]][j],"_r",r,"_ud_v.dat")
+        
+        the.io.text<-paste(
+          "TITLE:  Test run to get D matrix;",
+          "DATA:  FILE IS",paste0(the.datafile.original,";"),
+          "FORMAT=FREE;",
+          "VARIABLE: NAMES ARE",
+          paste(names(indata),collapse="\n    "),
+          ";",
+          "    USEVARIABLES =",
+          paste(all.names[[i]],collapse="\n    "),
+          "T1 T2 T3 T4;",
+          "    CATEGORICAL =",
+          paste(all.names[[i]],collapse="\n    "),
+          ";",
+          "    AUXILIARY ARE GENDER FRAT DX;",
+          "    CLASSES = C(4);",
+          "    TRAINING = T1 T2 T3 T4;",
+          "    MISSING are all .;",
+          "    IDVARIABLE = ID;",
+          "ANALYSIS:",
+          "    TYPE = MIXTURE;",
+          "    PROCESS = 4;",
+          models.io[[i]],
+          "SAVEDATA:",
+          "SAVE = CPROB;",
+          "FILE =", the.datafile.io.3step,
+          sep="\n")  
+        
+        the.io.name<-paste("C:/Users/vcole/Desktop/aim2/",all.sets[[i]][j],"/",all.sets[[i]][j],"_io_r",r,".inp",sep="")
+        the.io<-file(the.io.name)
+        writeLines(the.io.text, the.io)
+        close(the.io)
+        #runModels(the.io.name,replaceOutfile="never")
+        
+        the.ud.text<-paste(
+          "TITLE:  Test run to get D matrix;",
+          "DATA:  FILE IS",paste0(the.datafile.original,";"),
+          "FORMAT=FREE;",
+          "VARIABLE: NAMES ARE",
+          paste(names(indata),collapse="\n    "),
+          ";",
+          "    USEVARIABLES =",
+          paste(all.names[[i]],collapse="\n    "),
+          "T1 T2 T3 T4;",
+          "    CATEGORICAL =",
+          paste(all.names[[i]],collapse="\n    "),
+          ";",
+          "    AUXILIARY ARE GENDER FRAT DX;",
+          "    CLASSES = C(4);",
+          "    TRAINING = T1 T2 T3 T4;",
+          "    MISSING are all .;",
+          "    IDVARIABLE = ID;",
+          "ANALYSIS:",
+          "    TYPE = MIXTURE;",
+          "    PROCESS = 4;",
+          models.ud[[i]],
+          "SAVEDATA:",
+          "SAVE = CPROB;",
+          "FILE =", the.datafile.ud.3step,
+          sep="\n")  
+        
+        the.ud.name<-paste("C:/Users/vcole/Desktop/aim2/",all.sets[[i]][j],"/",all.sets[[i]][j],"_ud_r",r,".inp",sep="")
+        the.ud<-file(the.ud.name)
+        writeLines(the.ud.text, the.ud)
+        close(the.ud)
+        #runModels(the.ud.name,replaceOutfile="never")
+        
       }
     }
   }
 }
 
-
-# Fit Step 3 Models -----------------------------------
+#####
 for (i in 1:4) {
   for (j in 1:12) {
     for (r in 1:100) {
-      the.nud.out<-paste("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_nud_r",r,".out",sep="")
-      if (file.exists(the.nud.out)==TRUE) {
+      the.ud.out<-paste("C:/Users/vcole/Desktop/aim2/",all.sets[[i]][j],"/",all.sets[[i]][j],"_io_r",r,".out",sep="")
+      if (file.exists(the.ud.out)==TRUE) {
         
         #Have to truncate these for Mplus
-        the.datafile.nud<-paste(all.sets[[i]][j],"_r",r,"_nud_v.dat",sep="")
+        the.datafile.ud<-paste(all.sets[[i]][j],"_r",r,"_ud_v.dat",sep="")
+        the.datafile.io<-paste(all.sets[[i]][j],"_r",r,"_io_v.dat",sep="")
         
-        qlogit_nud<-MplusAutomation::readModels(paste("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_nud_r",r,".out",sep=""))$class_counts$logitProbs.mostLikely
-        qlogit_io<-MplusAutomation::readModels(paste("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_io_r",r,".out",sep=""))$class_counts$logitProbs.mostLikely
+        qlogit_ud<-MplusAutomation::readModels(paste("C:/Users/vcole/Desktop/aim2/",all.sets[[i]][j],"/",all.sets[[i]][j],"_ud_r",r,".out",sep=""))$class_counts$logitProbs.mostLikely
+        qlogit_io<-MplusAutomation::readModels(paste("C:/Users/vcole/Desktop/aim2/",all.sets[[i]][j],"/",all.sets[[i]][j],"_io_r",r,".out",sep=""))$class_counts$logitProbs.mostLikely
         
-        the.l33_nud<-paste0("   [N#3@",qlogit_nud[3,3],"];")
-        the.l43_nud<-paste0("   [N#3@",qlogit_nud[4,3],"];")
+        the.l33_ud<-paste0("   [N#3@",qlogit_ud[3,3],"];")
+        the.l43_ud<-paste0("   [N#3@",qlogit_ud[4,3],"];")
         
+        the.l33_io<-paste0("   [N#3@",qlogit_io[3,3],"];")
+        the.l43_io<-paste0("   [N#3@",qlogit_io[4,3],"];")
         
-        the.nud.text.v.gender<-paste(
+        the.ud.text.v.gender<-paste(
           "TITLE:  Test run to get D matrix;",
-          "DATA:  FILE IS",paste0(the.datafile.nud,";"),
+          "DATA:  FILE IS",paste0(the.datafile.ud,";"),
           "FORMAT=FREE;",
           "VARIABLE:",
           "NAMES ARE",
           paste(all.names[[i]],collapse="\n    "),
           "    T1 T2 T3 T4 ID GENDER FRAT DX",
-          #Get rid of BCH
-          #"    BCHW1 BCHW2 BCHW3 BCHW4",
           "    CPROB1 CPROB2 CPROB3 CPROB4 N;",
           "    USEVARIABLES ARE N GENDER;",
           "    NOMINAL = N;",
           "    CLASSES = C(4);",
-          "    MISSING are all .;",
+          "    MISSING are all *;",
           "    IDVARIABLE = ID;",
           "ANALYSIS:",
           "    TYPE = MIXTURE;",
@@ -992,39 +1038,37 @@ for (i in 1:4) {
           "    %C#3%",
           "    [N#1@-15];",
           "    [N#2@-15];",
-          the.l33_nud,
+          the.l33_ud,
           "    %C#4%",
           "    [N#1@-15];",
           "    [N#2@-15];",
-          the.l43_nud,
+          the.l43_ud,
           "OUTPUT:",
           "   TECH3",
           "SAVEDATA:",
-          "TECH3 = t3vg_", the.datafile.nud,
+          "TECH3 = t3vg_", the.datafile.ud.3step,
           sep="\n")  
         
-        the.nud.name.v.gender<-paste("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_nud_r",r,"_v_gender.inp",sep="")
-        the.nud.input.v.gender<-file(the.nud.name.v.gender)
-        writeLines(the.nud.text.v.gender, the.nud.input.v.gender)
-        close(the.nud.input.v.gender)
-        runModels(the.nud.name.v.gender,replaceOutfile="modifiedDate")
+        the.ud.name.v.gender<-paste("C:/Users/vcole/Desktop/aim2/",all.sets[[i]][j],"/",all.sets[[i]][j],"_ud_r",r,"_v_gender.inp",sep="")
+        the.ud.input.v.gender<-file(the.ud.name.v.gender)
+        writeLines(the.ud.text.v.gender, the.ud.input.v.gender)
+        close(the.ud.input.v.gender)
+        runModels(the.ud.name.v.gender,replaceOutfile="never")
         
         
-        the.nud.text.v.frat<-paste(
+        the.ud.text.v.frat<-paste(
           "TITLE:  Test run to get D matrix;",
-          "DATA:  FILE IS",paste0(the.datafile.nud,";"),
+          "DATA:  FILE IS",paste0(the.datafile.ud,";"),
           "FORMAT=FREE;",
           "VARIABLE:",
           "NAMES ARE",
           paste(all.names[[i]],collapse="\n    "),
           "    T1 T2 T3 T4 ID GENDER FRAT DX",
-          #Get rid of BCH
-          #"    BCHW1 BCHW2 BCHW3 BCHW4",
           "    CPROB1 CPROB2 CPROB3 CPROB4 N;",
           "    USEVARIABLES ARE N FRAT;",
           "    NOMINAL = N;",
           "    CLASSES = C(4);",
-          "    MISSING are all .;",
+          "    MISSING are all *;",
           "    IDVARIABLE = ID;",
           "ANALYSIS:",
           "    TYPE = MIXTURE;",
@@ -1043,24 +1087,124 @@ for (i in 1:4) {
           "    %C#3%",
           "    [N#1@-15];",
           "    [N#2@-15];",
-          the.l33_nud,
+          the.l33_ud,
           "    %C#4%",
           "    [N#1@-15];",
           "    [N#2@-15];",
-          the.l43_nud,
+          the.l43_ud,
           "OUTPUT:",
           "   TECH3",
           "SAVEDATA:",
-          "TECH3 = t3vf_", the.datafile.nud,
+          "TECH3 = t3vf_", the.datafile.ud.3step,
           sep="\n")  
         
-        the.nud.name.v.frat<-paste("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_nud_r",r,"_v_frat.inp",sep="")
-        the.nud.input.v.frat<-file(the.nud.name.v.frat)
-        writeLines(the.nud.text.v.frat, the.nud.input.v.frat)
-        close(the.nud.input.v.frat)
-        runModels(the.nud.name.v.frat,replaceOutfile="modifiedDate")
+        the.ud.name.v.frat<-paste("C:/Users/vcole/Desktop/aim2/",all.sets[[i]][j],"/",all.sets[[i]][j],"_ud_r",r,"_v_frat.inp",sep="")
+        the.ud.input.v.frat<-file(the.ud.name.v.frat)
+        writeLines(the.ud.text.v.frat, the.ud.input.v.frat)
+        close(the.ud.input.v.frat)
+        runModels(the.ud.name.v.frat,replaceOutfile="never")
         
-      }
+      
+        
+      
+      the.io.text.v.gender<-paste(
+        "TITLE:  Test run to get D matrix;",
+        "DATA:  FILE IS",paste0(the.datafile.io,";"),
+        "FORMAT=FREE;",
+        "VARIABLE:",
+        "NAMES ARE",
+        paste(all.names[[i]],collapse="\n    "),
+        "    T1 T2 T3 T4 ID GENDER FRAT DX",
+        "    CPROB1 CPROB2 CPROB3 CPROB4 N;",
+        "    USEVARIABLES ARE N GENDER;",
+        "    NOMINAL = N;",
+        "    CLASSES = C(4);",
+        "    MISSING are all *;",
+        "    IDVARIABLE = ID;",
+        "ANALYSIS:",
+        "    TYPE = MIXTURE;",
+        "    STARTS = 0;",
+        "MODEL:",
+        "    %OVERALL%",
+        "    c ON gender;",
+        "    %C#1%",
+        "    [N#1@15];",
+        "    [N#2@-15];",
+        "    [N#3@-15];",
+        "    %C#2%",
+        "    [N#1@-15];",
+        "    [N#2@15];",
+        "    [N#3@-15];",
+        "    %C#3%",
+        "    [N#1@-15];",
+        "    [N#2@-15];",
+        the.l33_ud,
+        "    %C#4%",
+        "    [N#1@-15];",
+        "    [N#2@-15];",
+        the.l43_ud,
+        "OUTPUT:",
+        "   TECH3",
+        "SAVEDATA:",
+        "TECH3 = t3vg_", the.datafile.io.3step,
+        sep="\n")  
+      
+      the.io.name.v.gender<-paste("C:/Users/vcole/Desktop/aim2/",all.sets[[i]][j],"/",all.sets[[i]][j],"_io_r",r,"_v_gender.inp",sep="")
+      the.io.input.v.gender<-file(the.io.name.v.gender)
+      writeLines(the.io.text.v.gender, the.io.input.v.gender)
+      close(the.io.input.v.gender)
+      runModels(the.io.name.v.gender,replaceOutfile="never")
+      
+      
+      
+      
+      the.io.text.v.frat<-paste(
+        "TITLE:  Test run to get D matrix;",
+        "DATA:  FILE IS",paste0(the.datafile.io,";"),
+        "FORMAT=FREE;",
+        "VARIABLE:",
+        "NAMES ARE",
+        paste(all.names[[i]],collapse="\n    "),
+        "    T1 T2 T3 T4 ID GENDER FRAT DX",
+        "    CPROB1 CPROB2 CPROB3 CPROB4 N;",
+        "    USEVARIABLES ARE N FRAT;",
+        "    NOMINAL = N;",
+        "    CLASSES = C(4);",
+        "    MISSING are all *;",
+        "    IDVARIABLE = ID;",
+        "ANALYSIS:",
+        "    TYPE = MIXTURE;",
+        "    STARTS = 0;",
+        "MODEL:",
+        "    %OVERALL%",
+        "    c ON frat;",
+        "    %C#1%",
+        "    [N#1@15];",
+        "    [N#2@-15];",
+        "    [N#3@-15];",
+        "    %C#2%",
+        "    [N#1@-15];",
+        "    [N#2@15];",
+        "    [N#3@-15];",
+        "    %C#3%",
+        "    [N#1@-15];",
+        "    [N#2@-15];",
+        the.l33_io,
+        "    %C#4%",
+        "    [N#1@-15];",
+        "    [N#2@-15];",
+        the.l43_io,
+        "OUTPUT:",
+        "   TECH3",
+        "SAVEDATA:",
+        "TECH3 = t3vf_", the.datafile.io.3step,
+        sep="\n")  
+      
+      the.io.name.v.frat<-paste("C:/Users/vcole/Desktop/aim2/",all.sets[[i]][j],"/",all.sets[[i]][j],"_io_r",r,"_v_frat.inp",sep="")
+      the.io.input.v.frat<-file(the.io.name.v.frat)
+      writeLines(the.io.text.v.frat, the.io.input.v.frat)
+      close(the.io.input.v.frat)
+      runModels(the.io.name.v.frat,replaceOutfile="never")
     }
   }
 }
