@@ -249,7 +249,7 @@ acy.function(1,100,1,1)
 
 
 ##Fit Step 1 models for LCA data
-```{r}
+```{r,eval=FALSE}
 library(MplusAutomation)
 c1l0<-c("i0d0c1l0n25","i0d1c1l0n25","i1d0c1l0n25","i1d1c1l0n25","i0d0c1l0n50","i0d1c1l0n50","i1d0c1l0n50","i1d1c1l0n50","i0d0c1l0n100","i0d1c1l0n100","i1d0c1l0n100","i1d1c1l0n100")
 c1l1<-c("i0d0c1l1n25","i0d1c1l1n25","i1d0c1l1n25","i1d1c1l1n25","i0d0c1l1n50","i0d1c1l1n50","i1d0c1l1n50","i1d1c1l1n50","i0d0c1l1n100","i0d1c1l1n100","i1d0c1l1n100","i1d1c1l1n100")
@@ -1800,87 +1800,8 @@ for (i in 1:4) {
 
 ```
 
-##Read in Vermunt from all LCAs
-
-```{r,cache=TRUE, eval=FALSE}
-                       '[AMT16$2] (a162);',
-                       '[AMT16$3] (a163);',
-                       '[AMT16$4] (a164);',
-                       '[AMT17$1] (a171);',
-                       '[AMT17$2] (a172);',
-                       '[AMT17$3] (a173);',
-                       '[AMT17$4] (a174);',
-                       '[AMT18$1] (a181);',
-                       '[AMT18$2] (a182);',
-                       '[AMT18$3] (a183);',
-                       '[AMT18$4] (a184);',
-                       '%C#4%',
-                       '[AMT8$1] (b81);',
-                       '[AMT8$2] (b82);',
-                       '[AMT8$3] (b83);',
-                       '[AMT8$4] (b84);',
-                       '[AMT9$1] (b91);',
-                       '[AMT9$2] (b92);',
-                       '[AMT9$3] (b93);',
-                       '[AMT9$4] (b94);',
-                       '[AMT10$1] (b101);',
-                       '[AMT10$2] (b102);',
-                       '[AMT10$3] (b103);',
-                       '[AMT10$4] (b104);',
-                       '[AMT11$1] (b111);',
-                       '[AMT11$2] (b112);',
-                       '[AMT11$3] (b113);',
-                       '[AMT11$4] (b114);',
-                       '[AMT12$1] (b121);',
-                       '[AMT12$2] (b122);',
-                       '[AMT12$3] (b123);',
-                       '[AMT12$4] (b124);',
-                       '[AMT13$1] (b131);',
-                       '[AMT13$2] (b132);',
-                       '[AMT13$3] (b133);',
-                       '[AMT13$4] (b134);',
-                       '[AMT14$1] (b141);',
-                       '[AMT14$2] (b142);',
-                       '[AMT14$3] (b143);',
-                       '[AMT14$4] (b144);',
-                       '[AMT15$1] (b151);',
-                       '[AMT15$2] (b152);',
-                       '[AMT15$3] (b153);',
-                       '[AMT15$4] (b154);',
-                       '[AMT16$1] (b161);',
-                       '[AMT16$2] (b162);',
-                       '[AMT16$3] (b163);',
-                       '[AMT16$4] (b164);',
-                       '[AMT17$1] (b171);',
-                       '[AMT17$2] (b172);',
-                       '[AMT17$3] (b173);',
-                       '[AMT17$4] (b174);',
-                       '[AMT18$1] (b181);',
-                       '[AMT18$2] (b182);',
-                       '[AMT18$3] (b183);',
-                       '[AMT18$4] (b184);',
-                       sep="\n")
-```
-
-##Fit Step 3 models for intercept-only, uniform DIF, and nonuniform DIF LCA
-```{r, cache=TRUE, eval=FALSE}
-library(MplusAutomation)
-
-c1l0<-c("i0d0c1l0n25","i0d1c1l0n25","i1d0c1l0n25","i1d1c1l0n25","i0d0c1l0n50","i0d1c1l0n50","i1d0c1l0n50","i1d1c1l0n50","i0d0c1l0n100","i0d1c1l0n100","i1d0c1l0n100","i1d1c1l0n100")
-c1l1<-c("i0d0c1l1n25","i0d1c1l1n25","i1d0c1l1n25","i1d1c1l1n25","i0d0c1l1n50","i0d1c1l1n50","i1d0c1l1n50","i1d1c1l1n50","i0d0c1l1n100","i0d1c1l1n100","i1d0c1l1n100","i1d1c1l1n100")
-c2l0<-c("i0d0c2l0n25","i0d1c2l0n25","i1d0c2l0n25","i1d1c2l0n25","i0d0c2l0n50","i0d1c2l0n50","i1d0c2l0n50","i1d1c2l0n50","i0d0c2l0n100","i0d1c2l0n100","i1d0c2l0n100","i1d1c2l0n100")
-c2l1<-c("i0d0c2l1n25","i0d1c2l1n25","i1d0c2l1n25","i1d1c2l1n25","i0d0c2l1n50","i0d1c2l1n50","i1d0c2l1n50","i1d1c2l1n50","i0d0c2l1n100","i0d1c2l1n100","i1d0c2l1n100","i1d1c2l1n100")
-all.sets<-list(c1l0,c1l1,c2l0,c2l1)
-
-names.c1l0<-c('ACY2','ACY3','ACY4','ACY6','ACY12','ACY14')
-names.c1l1<-c('ACY1','ACY2','ACY3','ACY4','ACY5','ACY6','ACY7','ACY8','ACY9','ACY10','ACY12','ACY13','ACY14','ACY15','ACY18')
-names.c2l0<-c('AMT10','AMT11','AMT12','AMT14','AMT16','AMT18')
-names.c2l1<-c('AMT8','AMT9','AMT10','AMT11','AMT12','AMT13','AMT14','AMT15','AMT16','AMT17','AMT18')
-
-all.names<-list(names.c1l0,names.c1l1,names.c2l0,names.c2l1)
-full.names<-list(names.c1l1,names.c1l1,names.c2l1,names.c2l1)
 ##Fit Vermunt Step 3 to classifications arising from intercept-only, uniform DIF, and nonuniform DIF LCA
-```{r,cache=TRUE}
+```{r,cache=TRUE, eval=FALSE}
 library(MplusAutomation)
 c1l0<-c("i0d0c1l0n25","i0d1c1l0n25","i1d0c1l0n25","i1d1c1l0n25","i0d0c1l0n50","i0d1c1l0n50","i1d0c1l0n50","i1d1c1l0n50","i0d0c1l0n100","i0d1c1l0n100","i1d0c1l0n100","i1d1c1l0n100")
 c1l1<-c("i0d0c1l1n25","i0d1c1l1n25","i1d0c1l1n25","i1d1c1l1n25","i0d0c1l1n50","i0d1c1l1n50","i1d0c1l1n50","i1d1c1l1n50","i0d0c1l1n100","i0d1c1l1n100","i1d0c1l1n100","i1d1c1l1n100")
@@ -2235,6 +2156,7 @@ for (i in 1:4) {
 
 ##Read in Vermunt from intercept-only, uniform DIF, and nonuniform DIF LCA
 ```{r,cache=TRUE, eval=FALSE}
+
 # Intercept-only models ---------------------------------------------------
 c1.test.v.io.frat<-array(NA,dim=c(100,12,4))
 c3.test.v.io.frat<-array(NA,dim=c(100,12,4))
@@ -2368,6 +2290,34 @@ for (i in 1:4){
   }
 }
 
+c1l0<-c("i0d0c1l0n25","i0d1c1l0n25","i1d0c1l0n25","i1d1c1l0n25","i0d0c1l0n50","i0d1c1l0n50","i1d0c1l0n50","i1d1c1l0n50","i0d0c1l0n100","i0d1c1l0n100","i1d0c1l0n100","i1d1c1l0n100")
+c1l1<-c("i0d0c1l1n25","i0d1c1l1n25","i1d0c1l1n25","i1d1c1l1n25","i0d0c1l1n50","i0d1c1l1n50","i1d0c1l1n50","i1d1c1l1n50","i0d0c1l1n100","i0d1c1l1n100","i1d0c1l1n100","i1d1c1l1n100")
+c2l0<-c("i0d0c2l0n25","i0d1c2l0n25","i1d0c2l0n25","i1d1c2l0n25","i0d0c2l0n50","i0d1c2l0n50","i1d0c2l0n50","i1d1c2l0n50","i0d0c2l0n100","i0d1c2l0n100","i1d0c2l0n100","i1d1c2l0n100")
+c2l1<-c("i0d0c2l1n25","i0d1c2l1n25","i1d0c2l1n25","i1d1c2l1n25","i0d0c2l1n50","i0d1c2l1n50","i1d0c2l1n50","i1d1c2l1n50","i0d0c2l1n100","i0d1c2l1n100","i1d0c2l1n100","i1d1c2l1n100")
+all.sets<-list(c1l0,c1l1,c2l0,c2l1)
+
+title.list<-c("Consequences, Long","Consequences, Short"," Motives, Long","Motives, Short")
+
+#trimmed.bch.ud.frat<-c3.test.bch.ud.frat
+#trimmed.bch.ud.gender<-c3.test.bch.ud.gender
+trimmed.v.ud.frat<-c3.test.v.ud.frat
+trimmed.v.ud.gender<-c3.test.v.ud.gender
+
+for (a in 1:100) {
+  for (b in 1:12) {
+    for (d in 1:4) {
+      #if ((is.na(c3.test.bch.ud.frat[a,b,d])==FALSE)&(abs(c3.test.bch.ud.frat[a,b,d])>10))
+      #{trimmed.bch.ud.frat[a,b,d]<-NA}
+      #if ((is.na(c3.test.bch.ud.gender[a,b,d])==FALSE)&(abs(c3.test.bch.ud.gender[a,b,d])>10))
+      #{trimmed.bch.ud.gender[a,b,d]<-NA}
+      if ((is.na(c3.test.v.ud.frat[a,b,d])==FALSE)&(abs(c3.test.v.ud.frat[a,b,d])>10))
+      {trimmed.v.ud.frat[a,b,d]<-NA}
+      if ((is.na(c3.test.v.ud.gender[a,b,d])==FALSE)&(abs(c3.test.v.ud.gender[a,b,d])>10))
+      {trimmed.v.ud.gender[a,b,d]<-NA}
+    }
+  }
+}
+
 # Non-uniform DIF models ---------------------------------------------------
 c1.test.v.nud.frat<-array(NA,dim=c(100,12,4))
 c3.test.v.nud.frat<-array(NA,dim=c(100,12,4))
@@ -2447,4 +2397,316 @@ for (a in 1:100) {
 
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+##Machine learning -- output the classifications from ML and the Vermunt inputs
+
+```{r,include=FALSE,echo=FALSE,message=FALSE,warning=FALSE,cache=TRUE}
+require(adabag)
+require(randomForest)
+library(knitr)
+library(mclust)
+library(psych)
+
+
+
+c1l0<-c("i0d0c1l0n25","i0d1c1l0n25","i1d0c1l0n25","i1d1c1l0n25","i0d0c1l0n50","i0d1c1l0n50","i1d0c1l0n50","i1d1c1l0n50","i0d0c1l0n100","i0d1c1l0n100","i1d0c1l0n100","i1d1c1l0n100")
+c1l1<-c("i0d0c1l1n25","i0d1c1l1n25","i1d0c1l1n25","i1d1c1l1n25","i0d0c1l1n50","i0d1c1l1n50","i1d0c1l1n50","i1d1c1l1n50","i0d0c1l1n100","i0d1c1l1n100","i1d0c1l1n100","i1d1c1l1n100")
+c2l0<-c("i0d0c2l0n25","i0d1c2l0n25","i1d0c2l0n25","i1d1c2l0n25","i0d0c2l0n50","i0d1c2l0n50","i1d0c2l0n50","i1d1c2l0n50","i0d0c2l0n100","i0d1c2l0n100","i1d0c2l0n100","i1d1c2l0n100")
+c2l1<-c("i0d0c2l1n25","i0d1c2l1n25","i1d0c2l1n25","i1d1c2l1n25","i0d0c2l1n50","i0d1c2l1n50","i1d0c2l1n50","i1d1c2l1n50","i0d0c2l1n100","i0d1c2l1n100","i1d0c2l1n100","i1d1c2l1n100")
+all.sets<-list(c1l0,c1l1,c2l0,c2l1)
+
+names.c1l0<-c('ACY2','ACY3','ACY4','ACY6','ACY12','ACY14')
+names.c1l1<-c('ACY1','ACY2','ACY3','ACY4','ACY5','ACY6','ACY7','ACY8','ACY9','ACY10','ACY12','ACY13','ACY14','ACY15','ACY18')
+names.c2l0<-c('AMT10','AMT11','AMT12','AMT14','AMT16','AMT18')
+names.c2l1<-c('AMT8','AMT9','AMT10','AMT11','AMT12','AMT13','AMT14','AMT15','AMT16','AMT17','AMT18')
+
+all.names<-list(names.c1l0,names.c1l1,names.c2l0,names.c2l1)
+full.names<-list(names.c1l1,names.c1l1,names.c2l1,names.c2l1)
+
+for (i in 1:4) {
+  for (j in 1:12) {
+    for (r in 1:100) {
+      the.filename<-paste0("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_r",r,"_io_v.dat")
+      if ((file.info(the.filename)$size>0)&file.exists(the.filename)) {
+        indata<-read.table(the.filename,header=FALSE,na="*") #Read in one of the data files, as currently formatted for Mplus
+        names(indata)<-c(all.names[[i]],"T1","T2","T3","T4","R","gender","frat","Dx","P1","P2","P3","P4","N")
+        
+        train<-subset(indata,indata$T1==1|indata$T2==1)
+        test<-subset(indata,indata$T3==1&indata$T4==1)
+        train$Dx<-as.factor(train$Dx)
+    
+        fit<-randomForest(y=train$Dx, x=train[,c(all.names[[i]])],
+                        data=train, 
+                        importance=TRUE, 
+                        ntree=2000)
+        pps<-predict(fit,test,type="prob")
+            
+        indata$P4[(nrow(train)+1):(nrow(train)+nrow(test))]<-pps[,1] #First column of pps = undiagnosed. Class 4 = undiagnosed.
+        indata$P3[(nrow(train)+1):(nrow(train)+nrow(test))]<-pps[,2] #Second column of pps = diagnosed. Class 3 = diagnosed. 
+        indata$N[(nrow(train)+1):(nrow(train)+nrow(test))]<-round(pps)%*%c(4,3) #This is a hackish way to get class assignments for the members of study 2;
+                
+        write.table(indata,paste0("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_r",r,"_ml_v.dat"),row.names=FALSE,col.names=FALSE,na="*")
+        
+        Pmat<-diag(4)
+        Qmat<-diag(4)
+        
+        table.with.zeroes<-function(x){
+          uvec<-rep(NA,4)
+          for (u in 1:length(x))
+          uvec[u]<-length(subset(indata$N,indata$N==u))
+          uvec
+          }
+        
+        Ns<-table.with.zeroes(1:4)
+        
+        
+        df.1<-subset(indata,indata$N==1)
+        df.2<-subset(indata,indata$N==2)
+        df.3<-subset(indata,indata$N==3)
+        df.4<-subset(indata,indata$N==4)
+        
+        justclasses<-indata[c("N")]
+        justprobs<-indata[,c("P1","P2","P3","P4")]
+        
+        #We know that Class 1 is AUD, so Class 3 is AUD
+        #We know that Class 2 is non-AUD, so Class 4 is non-AUD
+        
+        for (p in 1:4) {
+          for (q in 1:4) {
+            if (length(subset(justclasses$N,justclasses$N==q))>0)
+            Pmat[q,p]<-mean(subset(justprobs[,p],justclasses==q))
+          }
+        }
+        
+        Qmat<-matrix(NA,ncol=4,nrow=4)
+        for (p in 1:4) {
+           for (q in 1:4) {
+             Qmat[p,q]<-(Pmat[q,p]*Ns[q])/sum(Pmat[,p]*Ns)
+           }
+         }
+        
+        logitmat<-matrix(-15,4,3)
+        logitmat[1,1]<-15
+        logitmat[2,2]<-15
+        logitmat[3,3]<-log(Qmat[3,3]/(1-Qmat[3,3]))
+        logitmat[4,3]<-log(Qmat[4,3]/(1-Qmat[4,3]))
+    
+        the.l33_ml<-paste0("   [N#3@",logitmat[3,3],"];")
+        the.l43_ml<-paste0("   [N#3@",logitmat[4,3],"];")
+    
+        the.datafile.ml<-paste(all.sets[[i]][j],"_r",r,"_ml_v.dat",sep="")
+    
+        the.ml.text.v.gender<-paste(
+              "TITLE:  Test run to get D matrix;",
+              "DATA:  FILE IS",paste0(the.datafile.ml,";"),
+              "FORMAT=FREE;",
+              "VARIABLE:",
+              "NAMES ARE",
+              paste(all.names[[i]],collapse="\n    "),
+              "    T1 T2 T3 T4 ID GENDER FRAT DX",
+              #Get rid of BCH
+              #"    BCHW1 BCHW2 BCHW3 BCHW4",
+              "    CPROB1 CPROB2 CPROB3 CPROB4 N;",
+              "    USEVARIABLES ARE N GENDER;",
+              "    NOMINAL = N;",
+              "    CLASSES = C(4);",
+              "    MISSING are all .;",
+              "    IDVARIABLE = ID;",
+              "ANALYSIS:",
+              "    TYPE = MIXTURE;",
+              "    STARTS = 0;",
+              "MODEL:",
+              "    %OVERALL%",
+              "    c ON gender;",
+              "    %C#1%",
+              "    [N#1@15];",
+              "    [N#2@-15];",
+              "    [N#3@-15];",
+              "    %C#2%",
+              "    [N#1@-15];",
+              "    [N#2@15];",
+              "    [N#3@-15];",
+              "    %C#3%",
+              "    [N#1@-15];",
+              "    [N#2@-15];",
+              the.l33_ml,
+              "    %C#4%",
+              "    [N#1@-15];",
+              "    [N#2@-15];",
+              the.l43_ml,
+              "OUTPUT:",
+              "   TECH3",
+              "SAVEDATA:",
+              "TECH3 = t3vg_MLgender", the.datafile.ml,
+              sep="\n")  
+    
+            the.ml.name.v.gender<-paste("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_ml_r",r,"_v_gender.inp",sep="")
+            the.ml.input.v.gender<-file(the.ml.name.v.gender)
+            writeLines(the.ml.text.v.gender, the.ml.input.v.gender)
+            close(the.ml.input.v.gender)
+            runModels(the.ml.name.v.gender,replaceOutfile="modifiedDate")
+        
+        the.ml.text.v.frat<-paste(
+              "TITLE:  Test run to get D matrix;",
+              "DATA:  FILE IS",paste0(the.datafile.ml,";"),
+              "FORMAT=FREE;",
+              "VARIABLE:",
+              "NAMES ARE",
+              paste(all.names[[i]],collapse="\n    "),
+              "    T1 T2 T3 T4 ID GENDER FRAT DX",
+              #Get rid of BCH
+              #"    BCHW1 BCHW2 BCHW3 BCHW4",
+              "    CPROB1 CPROB2 CPROB3 CPROB4 N;",
+              "    USEVARIABLES ARE N FRAT;",
+              "    NOMINAL = N;",
+              "    CLASSES = C(4);",
+              "    MISSING are all .;",
+              "    IDVARIABLE = ID;",
+              "ANALYSIS:",
+              "    TYPE = MIXTURE;",
+              "    STARTS = 0;",
+              "MODEL:",
+              "    %OVERALL%",
+              "    c ON frat;",
+              "    %C#1%",
+              "    [N#1@15];",
+              "    [N#2@-15];",
+              "    [N#3@-15];",
+              "    %C#2%",
+              "    [N#1@-15];",
+              "    [N#2@15];",
+              "    [N#3@-15];",
+              "    %C#3%",
+              "    [N#1@-15];",
+              "    [N#2@-15];",
+              the.l33_ml,
+              "    %C#4%",
+              "    [N#1@-15];",
+              "    [N#2@-15];",
+              the.l43_ml,
+              "OUTPUT:",
+              "   TECH3",
+              "SAVEDATA:",
+              "TECH3 = t3vg_MLfrat", the.datafile.ml,
+              sep="\n")  
+            
+            the.ml.name.v.frat<-paste("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_ml_r",r,"_v_frat.inp",sep="")
+            the.ml.input.v.frat<-file(the.ml.name.v.frat)
+            writeLines(the.ml.text.v.frat, the.ml.input.v.frat)
+            close(the.ml.input.v.frat)
+            runModels(the.ml.name.v.frat,replaceOutfile="modifiedDate")
+        }
+      }
+    }
+  }
+
+```
+
+##Read in the Vermunt outputs from machine learning
+
+
+```{r, echo=FALSE,message=FALSE,warning=FALSE}
+c1l0<-c("i0d0c1l0n25","i0d1c1l0n25","i1d0c1l0n25","i1d1c1l0n25","i0d0c1l0n50","i0d1c1l0n50","i1d0c1l0n50","i1d1c1l0n50","i0d0c1l0n100","i0d1c1l0n100","i1d0c1l0n100","i1d1c1l0n100")
+c1l1<-c("i0d0c1l1n25","i0d1c1l1n25","i1d0c1l1n25","i1d1c1l1n25","i0d0c1l1n50","i0d1c1l1n50","i1d0c1l1n50","i1d1c1l1n50","i0d0c1l1n100","i0d1c1l1n100","i1d0c1l1n100","i1d1c1l1n100")
+c2l0<-c("i0d0c2l0n25","i0d1c2l0n25","i1d0c2l0n25","i1d1c2l0n25","i0d0c2l0n50","i0d1c2l0n50","i1d0c2l0n50","i1d1c2l0n50","i0d0c2l0n100","i0d1c2l0n100","i1d0c2l0n100","i1d1c2l0n100")
+c2l1<-c("i0d0c2l1n25","i0d1c2l1n25","i1d0c2l1n25","i1d1c2l1n25","i0d0c2l1n50","i0d1c2l1n50","i1d0c2l1n50","i1d1c2l1n50","i0d0c2l1n100","i0d1c2l1n100","i1d0c2l1n100","i1d1c2l1n100")
+all.sets<-list(c1l0,c1l1,c2l0,c2l1)
+
+names.c1l0<-c('ACY2','ACY3','ACY4','ACY6','ACY12','ACY14')
+names.c1l1<-c('ACY1','ACY2','ACY3','ACY4','ACY5','ACY6','ACY7','ACY8','ACY9','ACY10','ACY12','ACY13','ACY14','ACY15','ACY18')
+names.c2l0<-c('AMT10','AMT11','AMT12','AMT14','AMT16','AMT18')
+names.c2l1<-c('AMT8','AMT9','AMT10','AMT11','AMT12','AMT13','AMT14','AMT15','AMT16','AMT17','AMT18')
+
+all.names<-list(names.c1l0,names.c1l1,names.c2l0,names.c2l1)
+full.names<-list(names.c1l1,names.c1l1,names.c2l1,names.c2l1)
+
+
+library(MplusAutomation)
+
+
+
+# Machine learning ---------------------------------------------------
+c1.test.v.ml.frat<-array(NA,dim=c(100,12,4))
+c3.test.v.ml.frat<-array(NA,dim=c(100,12,4))
+c1.test.bch.ml.frat<-array(NA,dim=c(100,12,4))
+c3.test.bch.ml.frat<-array(NA,dim=c(100,12,4))
+c1.test.v.ml.gender<-array(NA,dim=c(100,12,4))
+c3.test.v.ml.gender<-array(NA,dim=c(100,12,4))
+c1.test.bch.ml.gender<-array(NA,dim=c(100,12,4))
+c3.test.bch.ml.gender<-array(NA,dim=c(100,12,4))
+
+fixbad<-function(x) {
+  if (x=="*********") 
+      x<-NA
+      x
+}
+
+for (i in 1:4){
+  for (j in 1:12) {
+    for (r in 1:100) {
+      the.output.v.ml.frat<-readModels(paste0("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_ml_r",r,"_v_frat.out"))$parameters
+      #the.output.bch.io.frat<-readModels(paste0("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_io_r",r,"_bch_frat.out"))$parameters
+      the.output.v.ml.gender<-readModels(paste0("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_ml_r",r,"_v_gender.out"))$parameters
+      #the.output.bch.io.gender<-readModels(paste0("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_io_r",r,"_bch_gender.out"))$parameters
+      if (length(the.output.v.ml.frat)>0) {
+        c1.4.v.ml.frat<-subset(the.output.v.ml.frat$unstandardized$est,the.output.v.ml.frat$unstandardized$paramHeader=="C#1.ON")
+        c2.4.v.ml.frat<-subset(the.output.v.ml.frat$unstandardized$est,the.output.v.ml.frat$unstandardized$paramHeader=="C#2.ON")
+        c3.4.v.ml.frat<-subset(the.output.v.ml.frat$unstandardized$est,the.output.v.ml.frat$unstandardized$paramHeader=="C#3.ON")
+        c1.test.v.ml.frat[r,j,i]<-fixbad(c1.4.v.ml.frat)-fixbad(c2.4.v.ml.frat)
+        c3.test.v.ml.frat[r,j,i]<-fixbad(c3.4.v.ml.frat)
+      }
+      #if (length(the.output.bch.ml.frat)>0) {
+      #  c1.4.bch.ml.frat<-subset(the.output.bch.ml.frat$unstandardized$est,the.output.bch.ml.frat$unstandardized$paramHeader=="C#1.ON")
+      #  c2.4.bch.ml.frat<-subset(the.output.bch.ml.frat$unstandardized$est,the.output.bch.ml.frat$unstandardized$paramHeader=="C#2.ON")
+      #  c3.4.bch.ml.frat<-subset(the.output.bch.ml.frat$unstandardized$est,the.output.bch.ml.frat$unstandardized$paramHeader=="C#3.ON")
+      #  c1.test.bch.ml.frat[r,j,i]<-c1.4.bch.ml.frat-c2.4.bch.ml.frat
+      #  c3.test.bch.ml.frat[r,j,i]<-c3.4.bch.ml.frat
+      #}
+      if (length(the.output.v.ml.gender)>0) {
+        c1.4.v.ml.gender<-subset(the.output.v.ml.gender$unstandardized$est,the.output.v.ml.gender$unstandardized$paramHeader=="C#1.ON")
+        c2.4.v.ml.gender<-subset(the.output.v.ml.gender$unstandardized$est,the.output.v.ml.gender$unstandardized$paramHeader=="C#2.ON")
+        c3.4.v.ml.gender<-subset(the.output.v.ml.gender$unstandardized$est,the.output.v.ml.gender$unstandardized$paramHeader=="C#3.ON")
+        c1.test.v.ml.gender[r,j,i]<-fixbad(c1.4.v.ml.gender)-fixbad(c2.4.v.ml.gender)
+        c3.test.v.ml.gender[r,j,i]<-fixbad(c3.4.v.ml.gender)
+      }
+      #if (length(the.output.bch.ml.gender)>0) {
+      #  c1.4.bch.ml.gender<-subset(the.output.bch.ml.gender$unstandardized$est,the.output.bch.ml.gender$unstandardized$paramHeader=="C#1.ON")
+      #  c2.4.bch.ml.gender<-subset(the.output.bch.ml.gender$unstandardized$est,the.output.bch.ml.gender$unstandardized$paramHeader=="C#2.ON")
+      #  c3.4.bch.ml.gender<-subset(the.output.bch.ml.gender$unstandardized$est,the.output.bch.ml.gender$unstandardized$paramHeader=="C#3.ON")
+      #  c1.test.bch.ml.gender[r,j,i]<-c1.4.bch.ml.gender-c2.4.bch.ml.gender
+      #  c3.test.bch.ml.gender[r,j,i]<-c3.4.bch.ml.gender
+      #}
+    }
+  }
+}
+
+
+c1l0<-c("i0d0c1l0n25","i0d1c1l0n25","i1d0c1l0n25","i1d1c1l0n25","i0d0c1l0n50","i0d1c1l0n50","i1d0c1l0n50","i1d1c1l0n50","i0d0c1l0n100","i0d1c1l0n100","i1d0c1l0n100","i1d1c1l0n100")
+c1l1<-c("i0d0c1l1n25","i0d1c1l1n25","i1d0c1l1n25","i1d1c1l1n25","i0d0c1l1n50","i0d1c1l1n50","i1d0c1l1n50","i1d1c1l1n50","i0d0c1l1n100","i0d1c1l1n100","i1d0c1l1n100","i1d1c1l1n100")
+c2l0<-c("i0d0c2l0n25","i0d1c2l0n25","i1d0c2l0n25","i1d1c2l0n25","i0d0c2l0n50","i0d1c2l0n50","i1d0c2l0n50","i1d1c2l0n50","i0d0c2l0n100","i0d1c2l0n100","i1d0c2l0n100","i1d1c2l0n100")
+c2l1<-c("i0d0c2l1n25","i0d1c2l1n25","i1d0c2l1n25","i1d1c2l1n25","i0d0c2l1n50","i0d1c2l1n50","i1d0c2l1n50","i1d1c2l1n50","i0d0c2l1n100","i0d1c2l1n100","i1d0c2l1n100","i1d1c2l1n100")
+all.sets<-list(c1l0,c1l1,c2l0,c2l1)
+
+title.list<-c("Consequences, Long","Consequences, Short"," Motives, Long","Motives, Short")
+
+#trimmed.bch.ml.frat<-c3.test.bch.ml.frat
+#trimmed.bch.ml.gender<-c3.test.bch.ml.gender
+trimmed.v.ml.frat<-c3.test.v.ml.frat
+trimmed.v.ml.gender<-c3.test.v.ml.gender
+
+for (a in 1:100) {
+  for (b in 1:12) {
+    for (d in 1:4) {
+      #if ((is.na(c3.test.bch.ml.frat[a,b,d])==FALSE)&(abs(c3.test.bch.ml.frat[a,b,d])>10))
+      #{trimmed.bch.ml.frat[a,b,d]<-NA}
+      #if ((is.na(c3.test.bch.ml.gender[a,b,d])==FALSE)&(abs(c3.test.bch.ml.gender[a,b,d])>10))
+      #{trimmed.bch.ml.gender[a,b,d]<-NA}
+      if ((is.na(c3.test.v.ml.frat[a,b,d])==FALSE)&(abs(c3.test.v.ml.frat[a,b,d])>10))
+      {trimmed.v.ml.frat[a,b,d]<-NA}
+      if ((is.na(c3.test.v.ml.gender[a,b,d])==FALSE)&(abs(c3.test.v.ml.gender[a,b,d])>10))
+      {trimmed.v.ml.gender[a,b,d]<-NA}
+    }
+  }
+}
+
+```

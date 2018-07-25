@@ -900,7 +900,7 @@ for (i in 1:4) {
       #write.table(indata,paste0("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_r",r,"_mg.csv"),sep=",",row.names=FALSE,col.names=FALSE,na=".")
       
       the.datafile.original<-paste0(all.sets[[i]][j],"_r",r,"_mg.csv")
-      the.datafile.nud<-paste0(all.sets[[i]][j],"_r",r,"_nud_v.dat")
+      the.datafile.nud.3step<-paste0(all.sets[[i]][j],"_r",r,"_nud_v.dat")
       
       the.nud.text<-paste(
         "TITLE:  Test run to get D matrix;",
@@ -927,7 +927,7 @@ for (i in 1:4) {
         #Get rid of BCH
         #"SAVE = BCHWEIGHTS;",
         "SAVE = CPROB;",
-        "FILE =", the.datafile.nud,
+        "FILE =", the.datafile.nud.3step,
         sep="\n")  
       
       the.nud.name<-paste("M:/xstudy2/Simulation/aim02/July2017/sim/knownclass/rerun/",all.sets[[i]][j],"/",all.sets[[i]][j],"_nud_r",r,".inp",sep="")
